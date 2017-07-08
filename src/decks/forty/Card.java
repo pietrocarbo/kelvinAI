@@ -1,4 +1,4 @@
-package decks.italian;
+package decks.forty;
 
 public class Card {
 
