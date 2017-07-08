@@ -14,6 +14,9 @@ public class Hand {
         cardsLeft = hand.size();
     }
 
+    public List<Card> getHand() {
+        return hand;
+    }
 
     @Override
     public String toString () {

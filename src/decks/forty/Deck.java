@@ -23,6 +23,10 @@ public class Deck {
         return this;
     }
 
+    public Card peekLast () {
+        return new Card(deck.get(deck.size()-1).getRank(), deck.get(deck.size()-1).getSuit());
+    }
+
     public List<Card> deal (Integer nOfCards)  {
         if (cardsLeft < nOfCards) {
             System.err.println("Request to deal more cards then left in the deck");
