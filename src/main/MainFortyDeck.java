@@ -1,12 +1,11 @@
 package main;
 
-import decks.forty.Card;
-import decks.forty.Deck;
-import decks.forty.Hand;
+import decks.forty.*;
+
 
 import java.util.List;
 
-public class Main {
+public class MainFortyDeck {
 
     public static void main(String[] args) {
 
