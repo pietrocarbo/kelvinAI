@@ -25,8 +25,7 @@ public class Deck {
     public String toString () {
         StringBuilder strBuilder = new StringBuilder();
         for (Card card : deck ) {
-            strBuilder.append(card);
-            strBuilder.append("\n");
+            strBuilder.append(card + "\n");
         }
         return strBuilder.toString();
     }
