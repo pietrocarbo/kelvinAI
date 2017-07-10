@@ -14,6 +14,23 @@ public class Hand {
         cardsLeft = hand.size();
     }
 
+    public Hand addOne (Card toAdd) {
+        hand.add(toAdd);
+        return this;
+    }
+
+    public Hand addAll (List<Card> toAdd) {
+        hand.addAll(toAdd);
+        return this;
+    }
+
+    public void removeOne (Card toRemove) {
+        if (!hand.remove(toRemove)) {
+            System.err.println("Request to remove card '" + toRemove + "' not in the hand");
+            System.exit(-1);
+        }
+    }
+
     public List<Card> getHand() {
         return hand;
     }
@@ -27,4 +44,5 @@ public class Hand {
         }
         return strBuilder.toString();
     }
+
 }

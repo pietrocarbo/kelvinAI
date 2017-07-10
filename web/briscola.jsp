@@ -1,4 +1,4 @@
-<%@ page import="main.HW" %>
+<%--<%@ page import="main.HW" %>--%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -19,11 +19,8 @@
     function foo () {
         var c = document.getElementById("myCanvas");
         var ctx = c.getContext("2d");
-
-        ctx.fillText("<%= HW.getMessage() %>", 10, 50);
+        <%--ctx.fillText("<%= HW.getMessage() %>", 10, 50);--%>
     }
-
-    foo();
 
 </script>
 
