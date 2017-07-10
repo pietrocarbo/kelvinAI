@@ -23,7 +23,7 @@ public class BriscolaEngine implements cardGame {
     public BriscolaEngine () {
         mazzo = new Deck();
         briscola = mazzo.shuffle().peekLast();
-        turnsLeft = 17;
+        turnsLeft = 20;
         toPlay = 1;
 
         manoP1 = new Hand(mazzo.deal(3));
@@ -35,40 +35,57 @@ public class BriscolaEngine implements cardGame {
         tavolo = new Hand(new ArrayList<Card>());
     }
 
+    public Integer changeTurn () {
+        return toPlay = (toPlay == 2 ? 1 : 2);
+    }
+
     public boolean play (Card card) {
-        if (isGameOver()) {
-            System.out.println("Game Over. Scores: P1 (" + pointScored(puntiP1) + "), P2(" + pointScored(puntiP2) + ")");
-            return false;
-        }
 
         if (toPlay == 1) {
             manoP1.removeOne(card);
             tavolo.addOne(card);
-            toPlay = 2;
+            collectAndDeal();
+
         } else if (toPlay == 2) {
-            manoP1.removeOne(card);
+            manoP2.removeOne(card);
             tavolo.addOne(card);
             collectAndDeal();
-            toPlay = 1;
-            turnsLeft--;
         }
-        return true;
+
+        if (isGameOver()) {
+            System.out.println("Game over (" + mazzo.getDeck().size() + " cards in deck). Scores: P1 (" + puntiP1.getHand().size() + " cards, " + pointScored(puntiP1) + " points), P2(" + puntiP2.getHand().size() + " cards, " +  pointScored(puntiP2) + " points)");
+            return true;
+        }
+
+        return false;
     }
 
     public void collectAndDeal () {
-        System.out.println("Collecting from the " + tavolo.getHand().size() + " elements of this board " + tavolo.getHand());
-        Integer winner = chooseWinner();
-        System.out.println("Player " + winner + " won ply with " + tavolo.getHand().get(winner) + " over " + tavolo.getHand().get(1-winner));
-        if (winner == 1) {
-            puntiP1.addAll(tavolo.getHand());
-            tavolo.getHand().clear();
-            manoP1.addOne(mazzo.deal(1).get(0));
-            manoP2.addOne(mazzo.deal(1).get(0));
+
+        if (tavolo.getHand().size() != 2) {
+            changeTurn();
+
         } else {
-            puntiP2.addAll(tavolo.getHand());
-            tavolo.getHand().clear();
-            manoP2.addOne(mazzo.deal(1).get(0));
-            manoP1.addOne(mazzo.deal(1).get(0));
+            System.out.println("***\nCollecting from the (" + tavolo.getHand().size() + " elements) the board " + tavolo.getHand());
+            toPlay = chooseWinner();
+            System.out.println("Player " + toPlay + " won this ply\n***\n");
+
+            if (toPlay == 1) {
+                puntiP1.addAll(tavolo.getHand());
+                tavolo.getHand().clear();
+                if (turnsLeft > 3) {
+                    manoP1.addOne(mazzo.deal(1).get(0));
+                    manoP2.addOne(mazzo.deal(1).get(0));
+                }
+            } else {
+                puntiP2.addAll(tavolo.getHand());
+                tavolo.getHand().clear();
+                if (turnsLeft > 3) {
+                    manoP2.addOne(mazzo.deal(1).get(0));
+                    manoP1.addOne(mazzo.deal(1).get(0));
+                }
+            }
+            turnsLeft--;
         }
     }
 
@@ -135,6 +152,10 @@ public class BriscolaEngine implements cardGame {
         return puntiP2;
     }
 
+    public Integer getTurnsLeft() {
+        return turnsLeft;
+    }
+
     @Override
     public Integer whoseTurn() {
         return toPlay;
@@ -147,12 +168,12 @@ public class BriscolaEngine implements cardGame {
 
     @Override
     public String toString() {
-        return "P1\t\t\t\t\t\t\t\t\t\t\t\t" + manoP1.getHand() + "\n" +
+        return "P1\t\t\t\t\t\t\t\t\t\t\t\t" + manoP1 + "\n" +
                 "\n" +
-                "(ply left " + turnsLeft + ", toPlay " + toPlay + ", briscola " + briscola + ")\t" +
+                "(plyes left " + turnsLeft + " , toPlay " + toPlay + ", briscola " + briscola + ")\t\t\t" +
                 "board " + tavolo.getHand() + "\n" +
                 "\n" +
-                "P2\t\t\t\t\t\t\t\t\t\t\t\t" + manoP2.getHand() +
+                "P2\t\t\t\t\t\t\t\t\t\t\t\t" + manoP2 +
                 "\n-------------------------------------------------------------------------------------------------------------------------------------------------\n";
     }
 }

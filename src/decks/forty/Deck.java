@@ -18,6 +18,14 @@ public class Deck {
         cardsLeft = deck.size();
     }
 
+    public List<Card> getDeck() {
+        return deck;
+    }
+
+    public Integer getCardsLeft() {
+        return cardsLeft;
+    }
+
     public Deck shuffle () {
         Collections.shuffle(deck);
         return this;

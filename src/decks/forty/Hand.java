@@ -37,12 +37,16 @@ public class Hand {
 
     @Override
     public String toString () {
-        StringBuilder strBuilder = new StringBuilder();
+        StringBuilder strBuilder = new StringBuilder("[");
         int i = 1;
         for (Card card : hand) {
-            strBuilder.append(i++ + ". " + card + "\n");
+            strBuilder.append(i++ + ". " + card + ", ");
         }
-        return strBuilder.toString();
+        int idxOfLastComma = strBuilder.lastIndexOf(",");
+        return (idxOfLastComma != -1) ?
+                strBuilder.replace(idxOfLastComma, idxOfLastComma+1, "]").toString()
+                :
+                strBuilder.append("]").toString();
     }
 
 }
