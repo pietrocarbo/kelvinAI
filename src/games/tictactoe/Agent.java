@@ -28,8 +28,8 @@ class Action {
 }
 
 public class Agent {
-    private int[][] board;
-    private final int CONVERT_UNIT = 1;   // has to be unsigned
+
+    private final int SEED_UNIT = 1;   // has to be unsigned
     private int nodeVisited = 0;
 
     // getPlayer(board) -> current player
@@ -52,7 +52,7 @@ public class Agent {
     public List<Action> getActions (int[][] board) {
         ArrayList<Action> movesAvailible = new ArrayList<>();
 
-        int markerValue = (getPlayer(board) == 1 ) ? CONVERT_UNIT : -CONVERT_UNIT;
+        int markerValue = (getPlayer(board) == 1 ) ? SEED_UNIT : -SEED_UNIT;
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -107,7 +107,7 @@ public class Agent {
     public int[] ply (String[][] stringBoard) {
         nodeVisited = 0;
         Action bestMove = null;
-        int[][] board = convertBoardFormat(stringBoard, this.CONVERT_UNIT);
+        int[][] board = convertBoardFormat(stringBoard, this.SEED_UNIT);
 
         double resultValue = Double.NEGATIVE_INFINITY; // ai is MAX node, so initialize best move utility with -infinity
         int player = getPlayer(board);  // 0 is AI, 1 is Human
@@ -129,7 +129,7 @@ public class Agent {
         nodeVisited++;
 
         if (isTerminal(board))
-            return getUtility(board, player);
+            return getUtility(board);
 
         double value = Double.POSITIVE_INFINITY;
 
@@ -143,7 +143,7 @@ public class Agent {
         nodeVisited++;
 
         if (isTerminal(board))
-            return getUtility(board, player);
+            return getUtility(board);
 
         double value = Double.NEGATIVE_INFINITY;
 
@@ -153,55 +153,119 @@ public class Agent {
         return value;
     }
 
-    public double getUtility(int[][] board, int player) {
-        int counter = 0, aiPly = 0, aiWin = CONVERT_UNIT * 3, humanPly = 0, humanWin = CONVERT_UNIT * -3;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (board[i][j] > 0)        aiPly++;
-                else if (board[i][j] < 0)   humanPly++;
-            }
-        }
-        if ((aiPly + humanPly) == 9)   return 0.0;
+    public double getUtility (int[][] board) {
+        double utility = 0.0;
 
-        counter = board[0][0] + board[0][1] + board[0][2];
-        if (counter == aiWin )          return 1.0;
-        else if (counter == humanWin)   return -1.0;
+        utility += scoreLine(board,0, 0, 0, 1, 0, 2);  // row 0
+        utility += scoreLine(board,1, 0, 1, 1, 1, 2);  // row 1
+        utility += scoreLine(board,2, 0, 2, 1, 2, 2);  // row 2
+        utility += scoreLine(board,0, 0, 1, 0, 2, 0);  // col 0
+        utility += scoreLine(board,0, 1, 1, 1, 2, 1);  // col 1
+        utility += scoreLine(board,0, 2, 1, 2, 2, 2);  // col 2
+        utility += scoreLine(board,0, 0, 1, 1, 2, 2);  // diagonal
+        utility += scoreLine(board,0, 2, 1, 1, 2, 0);  // antidiagonal
 
-        counter = board[1][0] + board[1][1] + board[1][2];
-        if (counter == aiWin)           return 1.0;
-        else if (counter == humanWin)   return -1.0;
-
-        counter = board[2][0] + board[2][1] + board[2][2];
-        if (counter == aiWin)           return 1.0;
-        else if (counter == humanWin)   return -1.0;
-
-        counter = board[0][0] + board[1][0] + board[2][0];
-        if (counter == aiWin)           return 1.0;
-        else if (counter == humanWin)   return -1.0;
-
-        counter = board[0][1] + board[1][1] + board[2][1];
-        if (counter == aiWin)           return 1.0;
-        else if (counter == humanWin)   return -1.0;
-
-        counter = board[0][2] + board[1][2] + board[2][2];
-        if (counter == aiWin)           return 1.0;
-        else if (counter == humanWin)   return -1.0;
-
-        counter = board[0][0] + board[1][1] + board[2][2];
-        if (counter == aiWin)           return 1.0;
-        else if (counter == humanWin)   return -1.0;
-
-        counter = board[2][0] + board[1][1] + board[0][2];
-        if (counter == aiWin)           return 1.0;
-        else if (counter == humanWin)   return -1.0;
-
-        System.err.println("getUtility(): called on a non-terminal board");
-        System.exit(-1);
-        return 0.0;
+        return utility;
     }
 
+    public double scoreLine (int[][] board, int row1, int col1, int row2, int col2, int row3, int col3) {
+
+        int score = 0;
+
+        if (board[row1][col1] == SEED_UNIT) {
+            score = 1;
+        } else if (board[row1][col1] == -SEED_UNIT) {
+            score = -1;
+        }
+
+        if (board[row2][col2] == SEED_UNIT) {
+            if (score == 1) {
+                score = 10;
+            } else if (score == -1) { // mixed seeds line
+                return 0;
+            } else {  // cell1 was empty
+                score = 1;
+            }
+        } else if (board[row2][col2] == -SEED_UNIT) {
+            if (score == -1) {
+                score = -10;
+            } else if (score == 1) { // mixed seeds line
+                return 0;
+            } else {  // cell1 was empty
+                score = -1;
+            }
+        }
+
+        if (board[row3][col3] == SEED_UNIT) {
+            if (score > 0) {  // cell1 and/or cell2 are AI seed
+                score *= 10;
+            } else if (score < 0) {  // mixed seeds line
+                return 0;
+            } else {  // cell1 and cell2 are empty
+                score = 1;
+            }
+        } else if (board[row3][col3] == -SEED_UNIT) {
+            if (score < 0) {  // cell1 and/or cell2 are human seed
+                score *= 10;
+            } else if (score > 1) {  // mixed line seeds
+                return 0;
+            } else {  // cell1 and cell2 are empty
+                score = -1;
+            }
+        }
+
+        return score;
+    }
+
+//    public double getUtility(int[][] board, int player) {
+//        int counter = 0, aiPly = 0, aiWin = SEED_UNIT * 3, humanPly = 0, humanWin = SEED_UNIT * -3;
+//        for (int i = 0; i < 3; i++) {
+//            for (int j = 0; j < 3; j++) {
+//                if (board[i][j] > 0)        aiPly++;
+//                else if (board[i][j] < 0)   humanPly++;
+//            }
+//        }
+//        if ((aiPly + humanPly) == 9)   return 0.0;
+//
+//        counter = board[0][0] + board[0][1] + board[0][2];
+//        if (counter == aiWin )          return 1.0;
+//        else if (counter == humanWin)   return -1.0;
+//
+//        counter = board[1][0] + board[1][1] + board[1][2];
+//        if (counter == aiWin)           return 1.0;
+//        else if (counter == humanWin)   return -1.0;
+//
+//        counter = board[2][0] + board[2][1] + board[2][2];
+//        if (counter == aiWin)           return 1.0;
+//        else if (counter == humanWin)   return -1.0;
+//
+//        counter = board[0][0] + board[1][0] + board[2][0];
+//        if (counter == aiWin)           return 1.0;
+//        else if (counter == humanWin)   return -1.0;
+//
+//        counter = board[0][1] + board[1][1] + board[2][1];
+//        if (counter == aiWin)           return 1.0;
+//        else if (counter == humanWin)   return -1.0;
+//
+//        counter = board[0][2] + board[1][2] + board[2][2];
+//        if (counter == aiWin)           return 1.0;
+//        else if (counter == humanWin)   return -1.0;
+//
+//        counter = board[0][0] + board[1][1] + board[2][2];
+//        if (counter == aiWin)           return 1.0;
+//        else if (counter == humanWin)   return -1.0;
+//
+//        counter = board[2][0] + board[1][1] + board[0][2];
+//        if (counter == aiWin)           return 1.0;
+//        else if (counter == humanWin)   return -1.0;
+//
+//        System.err.println("getUtility(): called on a non-terminal board");
+//        System.exit(-1);
+//        return 0.0;
+//    }
+
     public boolean isTerminal (int[][] board) {
-        int counter = 0, aiPly = 0, aiWin = CONVERT_UNIT*3, humanPly = 0, humanWin = CONVERT_UNIT*-3;
+        int counter = 0, aiPly = 0, aiWin = SEED_UNIT*3, humanPly = 0, humanWin = SEED_UNIT*-3;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (board[i][j] > 0)        aiPly++;
