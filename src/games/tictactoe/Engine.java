@@ -10,13 +10,13 @@ public class Engine {
 
     private int turns;
 
-    private int playing;
+    private int player;
 
     private String winningMessage;
 
     public Engine(int starter) {
         this.scanner = new Scanner(System.in);
-        this.playing = starter == 0 ? 0 : 1;  // AI is 0, Human is 1
+        this.player = starter == 0 ? 0 : 1;  // AI is 0, Human is 1
         this.turns = 0;
         this.winningMessage = "It's draw, there is no winner";
         for (int i = 0; i < 3; i++) {
@@ -29,14 +29,14 @@ public class Engine {
     public void play() {
         System.out.println("Input your next move (eg. 0,0) after each board");
 
-        Agent ai = new Agent();
+        Agent ai = new Agent(player);
 
         while (!checkAndDeclareWinner(grid)) {
 
             System.out.println(this);
             Integer row, column;
 
-            if (playing == 0) {
+            if (player == 0) {
                 int[] aiMove = ai.ply(grid);
                 row = aiMove[0];
                 column = aiMove[1];
@@ -44,7 +44,7 @@ public class Engine {
 
                 if (isLegalMove(grid, row, column)) {
                     grid[row][column] = "O";
-                    playing = 1 - playing;
+                    player = 1 - player;
                     turns++;
                 } else {
                     System.err.println("Wrong AI input value '" + aiMove + "' repeat please");
@@ -63,7 +63,7 @@ public class Engine {
 
                 if (isLegalMove(grid, row, column)) {
                     grid[row][column] = "X";
-                    playing = 1 - playing;
+                    player = 1 - player;
                     turns++;
                 } else {
                     System.err.println("Wrong input value '" + input + "' repeat please");

@@ -17,7 +17,7 @@ public class Main {
 //        BriscolaEngine briscolaEngine = new BriscolaEngine();
 //        briscolaEngine.play1vsAI();
 
-        Engine tictactoe = new Engine(0);  // 0 for AI to start, other int for Human to start
+        Engine tictactoe = new Engine(1);  // 0 for AI to start, (1 or) other int for Human to start
         tictactoe.play();
 
     }
