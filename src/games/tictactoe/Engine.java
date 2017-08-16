@@ -95,6 +95,8 @@ public class Engine {
         if (declareThree(grid, 0,0, 1, 1, 2,2))   return true;
         if (declareThree(grid, 2,0, 1, 1, 0,2))   return true;
 
+        if (turns == 9)             return true;  // se nessuno ha vinto ma il campo è pieno
+
         return false;
     }
 
@@ -108,8 +110,6 @@ public class Engine {
             return true;
         } else if (check == 1) {
             this.winningMessage = "Player X won in " + r1 + "," + c1 + " - " + r2 + "," + c2 + " - " + r3 + "," + c3;
-            return true;
-        } else if (turns == 9) {
             return true;
         }
         return false;
