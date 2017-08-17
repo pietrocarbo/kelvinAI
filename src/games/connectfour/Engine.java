@@ -26,10 +26,8 @@ public class Engine {
         }
     }
 
-    public void play(){
+    public void play1vs1() {
         System.out.println("Input your next move (eg. 0-6) after each board");
-
-        Agent ai = new Agent(player);
 
         while (!checkAndDeclareWinner(grid)) {
 
@@ -40,7 +38,7 @@ public class Engine {
             if (!input.matches("^\\d$")) {
                 System.err.println("Wrong input format '" + input + "' repeat please");
                 continue;
-            }else {
+            } else {
                 column = Integer.parseInt(input);
 
                 if (isLegalMove(grid, column)) {
@@ -55,6 +53,61 @@ public class Engine {
                 } else {
                     System.err.println("Wrong input value '" + input + "' repeat please");
                     continue;
+                }
+            }
+        }
+
+        System.out.println(this);
+        System.out.println(winningMessage);
+    }
+
+    public void play1vsAI() {
+
+        System.out.println("Input your next move (eg. 0-6) after each board");
+        Agent ai = new Agent(player);
+        int row, column;
+
+        while (!checkAndDeclareWinner(grid)) {
+
+            System.out.println(this);
+
+            if (player == 0) {
+                int[] aiMove = ai.ply(grid);
+                row = aiMove[0];
+                column = aiMove[1];
+                //System.out.println("[ai-metrics] expanded " + aiMove[2] + " nodes for current move");
+
+                if (isLegalMove(grid, column)) {
+                    grid[row][column] = "O";
+                    player = 1 - player;
+                    turns++;
+                } else {
+                    System.err.println("Wrong AI input value '" + aiMove + "' repeat please");
+                    continue;
+                }
+            } else {
+
+                String input = scanner.next();
+
+                if (!input.matches("^\\d$")) {
+                    System.err.println("Wrong input format '" + input + "' repeat please");
+                    continue;
+                } else {
+                    column = Integer.parseInt(input);
+
+                    if (isLegalMove(grid, column)) {
+                        for (int i = 0; i < 6; i++) {
+                            if (grid[i][column].equals("_")) {
+                                grid[i][column] = "X";
+                                player = 1 - player;
+                                turns++;
+                                break;
+                            }
+                        }
+                    } else {
+                        System.err.println("Wrong input value '" + input + "' repeat please");
+                        continue;
+                    }
                 }
             }
         }
@@ -117,7 +170,7 @@ public class Engine {
         }
 */
 
-        //Controllo le diagonali
+        // Controllo le diagonali
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
         for (int[] d : directions) {
             int dx = d[0];
@@ -137,31 +190,31 @@ public class Engine {
             }
         }
 
-        //Controllo che la grid sia full e senza vincitori(parità)
+        // Controllo che la grid sia full e senza vincitori(parità)
         if (turns == (7*6))             return true;
         return false;
     }
 
-    public boolean isLegalMove(String[][] grid,int column){
+    public boolean isLegalMove(String[][] grid, int column){
         return column >= 0 && column <= 6 && grid[5][column].equals("_");
     }
 
     @Override
     public String toString () {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("\n---------- turn " + this.turns + " (next to play " + (player == 0 ? "0" : "X") + ")\n");
+        stringBuilder.append("\n---- turn " + this.turns + " (next to play " + (player == 0 ? "0" : "X") + ") ----\n");
 
         for(int i = 5; i >= 0; i--){
             stringBuilder.append("|");
             for(int j = 0; j <= 6;j++){
                 stringBuilder.append(grid[i][j] + "|");
             }
-            stringBuilder.append("\n");
+            stringBuilder.append("\t\t " + i + ".\n");
         }
 
-        stringBuilder.append("-");
-        for(int i = 0; i <= 6; i++){
-            stringBuilder.append(i + "-");
+        stringBuilder.append("\n.");
+        for (int i = 0; i <= 6; i++){
+            stringBuilder.append(i + ".");
         }
         stringBuilder.append("\n");
 

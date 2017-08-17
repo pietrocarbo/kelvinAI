@@ -21,8 +21,8 @@ public class Main {
         //tictactoe.play();
 
 
-        games.connectfour.Engine connect4 = new games.connectfour.Engine(0);
-        connect4.play();
+        games.connectfour.Engine connect4 = new games.connectfour.Engine(1);
+        connect4.play1vsAI();
     }
 
 }
