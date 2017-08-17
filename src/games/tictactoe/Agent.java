@@ -84,6 +84,7 @@ public class Agent {
             copyBoard(board, newBoard);
             newBoard[move.getRow()][move.getColumn()] = move.getMarker();
         }
+
         return newBoard;
     }
 
@@ -94,6 +95,16 @@ public class Agent {
             }
         }
         return copiedBoard;
+    }
+
+    private void StampBoard(int[][] board) {
+        System.out.println("--- BOARD ---");
+        for(int i = 0; i < board.length;i++){
+            for(int y = 0; y < board.length;y++){
+                System.out.print("|" + board[i][y]);
+            }
+            System.out.println("|");
+        }
     }
 
     private int[][] convertBoardFormat(String[][] stringBoard, int convertUnit) {
@@ -128,6 +139,8 @@ public class Agent {
 
             double value = minValue(getResult(board, action), player); // recursion called with new board
 
+//            System.out.println("value -> " + value);
+
             if (value > resultValue) {
                 bestMove = action;
                 resultValue = value;
@@ -145,8 +158,9 @@ public class Agent {
 
         double value = Double.POSITIVE_INFINITY;
 
-        for (Action action : getActions(board))
+        for (Action action : getActions(board)) {
             value = Math.min(value, maxValue(getResult(board, action), player));
+        }
 
         return value;
     }
