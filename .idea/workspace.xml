@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3d5f5be4-3cb7-4032-90bf-874cbd97a982" name="Default" comment="String to CHAR board">
+    <list default="true" id="3d5f5be4-3cb7-4032-90bf-874cbd97a982" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/games/connectfour/Agent.java" afterPath="$PROJECT_DIR$/src/games/connectfour/Agent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/games/connectfour/Game.java" afterPath="$PROJECT_DIR$/src/games/connectfour/Game.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -1144,11 +1142,18 @@
       <option name="project" value="LOCAL" />
       <updated>1503058845090</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="String to CHAR board">
+      <created>1503075900373</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1503075900373</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="119496000" />
+    <option name="totallyTimeSpent" value="119521000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="23" width="1680" height="982" extended-state="6" />
