@@ -4,15 +4,15 @@ public class Action {
 
     private int column;
     private int row;
-    private String seed;
+    private char seed;
 
-    public Action(int column, int row, String seed) {
+    public Action(int row, int column, char seed) {
         this.column = column;
         this.row = row;
         this.seed = seed;
     }
 
-    public Action(int column, String seed) {
+    public Action(int column, char seed) {
         this.column = column;
         this.seed = seed;
     }
@@ -25,7 +25,7 @@ public class Action {
         return row;
     }
 
-    public String getSeed() {
+    public char getSeed() {
         return seed;
     }
 }

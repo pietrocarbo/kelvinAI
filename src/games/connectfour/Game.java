@@ -5,39 +5,39 @@ import java.util.List;
 
 public class Game {
 
-    private static String seedStarter;
+    private static char seedStarter;
 
-    public Game(String seedStarter) {
+    public Game(char seedStarter) {
         this.seedStarter = seedStarter;
     }
 
-    public static String getPlayer (String[][] board) {
+    public static char getPlayer (char[][] board) {
 
         int plyCounter = 0;
 
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
 
-                if(board[i][j].equals("X")) { // Human
+                if(board[i][j] == 'X') { // Human
                     plyCounter++;
-                } else if (board[i][j].equals("O")) { // AI
+                } else if (board[i][j] == 'O') { // AI
                     plyCounter--;
                 }
             }
         }
 
         return (plyCounter == 0 ? seedStarter :
-                    plyCounter > 0 ? "O" : "X");  // "O" (return 0) is AI turn, "X" (return 1) is human turn, starter return (-1)
+                    plyCounter > 0 ? 'O' : 'X');  // "O" (return 0) is AI turn, "X" (return 1) is human turn, starter return (-1)
     }
 
-    public static List<Action> getActions (String[][] board) {
+    public static List<Action> getActions (char[][] board) {
 
         List<Action> result = new ArrayList<Action>();
 
         for (int j = 0; j < 7; j++) { // for each column
             for (int i = 0; i < 6; i++) { // and then for each row upwards
 
-                if(board[i][j].equals("_")) { // blank
+                if(board[i][j] == '_') { // blank
                     result.add(new Action(i, j, getPlayer(board)));
                     break;
                 }
@@ -46,20 +46,20 @@ public class Game {
         return result;
     }
 
-    public static String[][] getResult (String[][] board, Action move) {
-        String[][] newBoard = new String[6][7];
-//        if (move.getColumn() >= 0 && move.getColumn() <= 6 && !board[5][move.getColumn()].equals("_") ) {
-//            System.err.println("getResult(): it was generated a move for a non-empty square");
-//            System.exit(-1);
-//        } else {
+    public static char[][] getResult (char[][] board, Action move) {
+        char[][] newBoard = new char[6][7];
+        if (move.getColumn() >= 0 && move.getColumn() <= 6 && board[5][move.getColumn()] != '_') {
+            System.err.println("getResult(): it was generated a move for a non-empty square");
+            System.exit(-1);
+        } else {
             copyBoard(board, newBoard);
             newBoard[move.getRow()][move.getColumn()] = move.getSeed();
-        //}
+        }
 
         return newBoard;
     }
 
-    private static String[][] copyBoard(String[][] originalBoard, String[][] copiedBoard) {
+    private static char[][] copyBoard(char[][] originalBoard, char[][] copiedBoard) {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
                 copiedBoard[i][j] = originalBoard[i][j];
@@ -68,7 +68,7 @@ public class Game {
         return copiedBoard;
     }
 
-    public static int declareWinner (String[][] board) {
+    public static int declareWinner (char[][] board) {
 
         // check every directions from each square
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
@@ -80,10 +80,10 @@ public class Game {
                     int lastx = x + 3*dx;
                     int lasty = y + 3*dy;
                     if (0 <= lastx && lastx < 6 && 0 <= lasty && lasty < 7) {
-                        String w = board[x][y];
-                        if (!w.equals("_") && w.equals(board[x+dx][y+dy]) && w.equals(board[x+2*dx][y+2*dy]) && w.equals(board[lastx][lasty])) {
-                            if (w.equals("0"))   return 0;
-                            else if (w.equals("X"))   return 1;
+                        char w = board[x][y];
+                        if (w != '_'  && w == board[x+dx][y+dy] && w == board[x+2*dx][y+2*dy] && w == board[lastx][lasty]) {
+                            if (w == '0')   return 0;
+                            else if (w == 'X')   return 1;
                         }
                     }
                 }
@@ -94,7 +94,7 @@ public class Game {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
 
-                if(!board[i][j].equals("_")) { // not blank
+                if(board[i][j] != '_') { // not blank
                     turns++;
                 }
             }
@@ -105,7 +105,7 @@ public class Game {
         return -2;
     }
 
-    public static boolean isTerminal (String[][] board) {
+    public static boolean isTerminal (char[][] board) {
 
         int winner = declareWinner(board);
         if (winner == 0 || winner == 1 || winner == 2)  return true;
@@ -113,7 +113,7 @@ public class Game {
         return false;
     }
 
-    public static double getUtility(String[][] board) {
+    public static double getUtility(char[][] board) {
 
         double draw = 0.0, AIwin = 10.0, AIloss = -10.0;
 

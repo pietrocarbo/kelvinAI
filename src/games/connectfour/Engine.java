@@ -6,7 +6,7 @@ public class Engine {
 
     private Scanner scanner;
 
-    private String[][] grid = new String[6][7];
+    private char[][] grid = new char[6][7];
 
     private int turns;
 
@@ -21,7 +21,7 @@ public class Engine {
         this.winningMessage = "It's draw, there is no winner";
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
-                this.grid[i][j] = "_";
+                this.grid[i][j] = '_';
             }
         }
     }
@@ -43,8 +43,8 @@ public class Engine {
 
                 if (isLegalMove(grid, column)) {
                     for(int i = 0;i < 6;i++) {
-                        if(grid[i][column].equals("_")) {
-                            grid[i][column] = player == 0 ? "O" : "X";
+                        if(grid[i][column] == '_') {
+                            grid[i][column] = player == 0 ? 'O' : 'X';
                             player = 1 - player;
                             turns++;
                             break;
@@ -78,7 +78,7 @@ public class Engine {
                 //System.out.println("[ai-metrics] expanded " + aiMove[2] + " nodes for current move");
 
                 if (isLegalMove(grid, column)) {
-                    grid[row][column] = "O";
+                    grid[row][column] = 'O';
                     player = 1 - player;
                     turns++;
                 } else {
@@ -97,8 +97,8 @@ public class Engine {
 
                     if (isLegalMove(grid, column)) {
                         for (int i = 0; i < 6; i++) {
-                            if (grid[i][column].equals("_")) {
-                                grid[i][column] = "X";
+                            if (grid[i][column] == '_') {
+                                grid[i][column] = 'X';
                                 player = 1 - player;
                                 turns++;
                                 break;
@@ -116,7 +116,7 @@ public class Engine {
         System.out.println(winningMessage);
     }
 
-    public boolean checkAndDeclareWinner(String[][] grid){
+    public boolean checkAndDeclareWinner(char[][] grid){
         /*
         int occurrences = 0;
         String lastSeed = "_";
@@ -180,8 +180,8 @@ public class Engine {
                     int lastx = x + 3*dx;
                     int lasty = y + 3*dy;
                     if (0 <= lastx && lastx < 6 && 0 <= lasty && lasty < 7) {
-                        String w = grid[x][y];
-                        if (!w.equals("_") && w.equals(grid[x+dx][y+dy]) && w.equals(grid[x+2*dx][y+2*dy]) && w.equals(grid[lastx][lasty])) {
+                        char w = grid[x][y];
+                        if (w != '_'  && w == grid[x+dx][y+dy] && w == grid[x+2*dx][y+2*dy] && w == grid[lastx][lasty]) {
                             winningMessage = "Player " + w + " won the game";
                             return true;
                         }
@@ -195,8 +195,8 @@ public class Engine {
         return false;
     }
 
-    public boolean isLegalMove(String[][] grid, int column){
-        return column >= 0 && column <= 6 && grid[5][column].equals("_");
+    public boolean isLegalMove(char[][] grid, int column){
+        return column >= 0 && column <= 6 && grid[5][column] == '_';
     }
 
     @Override
