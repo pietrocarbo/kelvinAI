@@ -5,7 +5,7 @@ public class Agent {
     private static char seedStarter;
     private long nodeVisited = 0;
     private long depth = 0;
-    private final int SEARCH_DEPTH = 1;
+    private final int SEARCH_DEPTH = 2;
 
     public static char getSeedStarter() {
         return seedStarter;
@@ -60,7 +60,7 @@ public class Agent {
         System.out.println("[debug] nodes visited " + nodeVisited + ", depth " + depth);
 
         if (Game.isTerminal(board))
-            return Game.getUtility(board);
+            return Game.evaluateHeuristic(board);
 
         double value = Double.POSITIVE_INFINITY;
 
@@ -81,7 +81,7 @@ public class Agent {
         System.out.println("[debug] nodes visited " + nodeVisited + ", depth " + depth);
 
         if (Game.isTerminal(board))
-            return Game.getUtility(board);
+            return Game.evaluateHeuristic(board);
 
         double value = Double.NEGATIVE_INFINITY;
 
