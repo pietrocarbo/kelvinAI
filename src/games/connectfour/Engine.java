@@ -31,7 +31,7 @@ public class Engine {
 
         while (!checkAndDeclareWinner(grid)) {
 
-            System.out.println(this);
+            System.out.println(Engine.printBoard(grid, turns, player));
             String input =  scanner.next();
             int column;
 
@@ -57,7 +57,7 @@ public class Engine {
             }
         }
 
-        System.out.println(this);
+        System.out.println(Engine.printBoard(grid, turns, player));
         System.out.println(winningMessage);
     }
 
@@ -69,7 +69,7 @@ public class Engine {
 
         while (!checkAndDeclareWinner(grid)) {
 
-            System.out.println(this);
+            System.out.println(Engine.printBoard(grid, turns, player));
 
             if (player == 0) {
                 int[] aiMove = ai.ply(grid);
@@ -112,7 +112,7 @@ public class Engine {
             }
         }
 
-        System.out.println(this);
+        System.out.println(Engine.printBoard(grid, turns, player));
         System.out.println(winningMessage);
     }
 
@@ -199,10 +199,10 @@ public class Engine {
         return column >= 0 && column <= 6 && grid[5][column] == '_';
     }
 
-    @Override
-    public String toString () {
+
+    public static String printBoard (char[][] grid, int turns, int player) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("\n---- turn " + this.turns + " (next to play " + (player == 0 ? "0" : "X") + ") ----\n");
+        stringBuilder.append("\n---- turn " + turns + " (next to play " + (player == 0 ? "0" : "X") + ") ----\n");
 
         for(int i = 5; i >= 0; i--){
             stringBuilder.append("|");

@@ -1,6 +1,7 @@
 package games.connectfour;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Game {
@@ -43,6 +44,7 @@ public class Game {
                 }
             }
         }
+        Collections.shuffle(result);
         return result;
     }
 
@@ -128,6 +130,116 @@ public class Game {
             System.exit(-1);
             return 0.0;
         }
+    }
+
+    public static double evaluateHeuristic (char[][] board) {
+
+        double one = 1.0, two = 10.0/2.0, three = 50.0/3.0, four = 1000.0/4.0;
+        double score = 0.0;
+
+        double[][] horizontalSB = new double[6][7];
+        double[][] verticalSB = new double[6][7];
+        double[][] diagonalSB = new double[6][7];
+        double[][] antidiagonalSB = new double[6][7];
+
+        List<double[][]> scoreBoards = new ArrayList<>();
+        scoreBoards.add(horizontalSB);
+        scoreBoards.add(antidiagonalSB);
+        scoreBoards.add(diagonalSB);
+        scoreBoards.add(verticalSB);
+
+
+        System.out.println(Engine.printBoard(board, -1, 0));
+
+        int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
+        for (int i = 0; i < 4; i++) {
+            int dx = directions[i][0];
+            int dy = directions[i][1];
+
+            for (int x = 0; x < 6; x++) {
+                for (int y = 0; y < 7; y++) {
+                    char w = board[x][y];
+
+                    int lastx4 = x + 3*dx;
+                    int lasty4 = y + 3*dy;
+
+                    int lastx3 = x + 2*dx;
+                    int lasty3 = y + 2*dy;
+
+                    int lastx2 = x + dx;
+                    int lasty2 = y + dy;
+
+
+                    if (w != '_' && scoreBoards.get(i)[x][y] == 0.0) {
+
+                        if (0 <= lastx4 && lastx4 < 6 && 0 <= lasty4 && lasty4 < 7) {
+
+                            if (w == board[x + dx][y + dy] && w == board[x + 2 * dx][y + 2 * dy] && w == board[lastx4][lasty4]) {
+                                System.out.println("four in a row");
+                                if (w == '0') {
+                                    scoreBoards.get(i)[x][y] += four;
+                                    scoreBoards.get(i)[x+dx][y+dy] += four;
+                                    scoreBoards.get(i)[x+2*dx][y+2*dy] += four;
+                                    scoreBoards.get(i)[lastx4][lasty4] += four;
+                                }
+                                else if (w == 'X') {
+                                    scoreBoards.get(i)[x][y] -= four;
+                                    scoreBoards.get(i)[x+dx][y+dy] -= four;
+                                    scoreBoards.get(i)[x+2*dx][y+2*dy] -= four;
+                                    scoreBoards.get(i)[lastx4][lasty4] -= four;
+                                }
+                            }
+
+                        } else if (0 <= lastx3 && lastx3 < 6 && 0 <= lasty3 && lasty3 < 7) {
+
+                            if (w == board[x + dx][y + dy] && w == board[lastx3][lasty3]) {
+                                System.out.println("three in a row");
+                                if (w == '0') {
+                                    scoreBoards.get(i)[x][y] += three;
+                                    scoreBoards.get(i)[x+dx][y+dy] += three;
+                                    scoreBoards.get(i)[lastx3][lasty3] += three;
+                                } else if (w == 'X') {
+                                    scoreBoards.get(i)[x][y] -= three;
+                                    scoreBoards.get(i)[x+dx][y+dy] -= three;
+                                    scoreBoards.get(i)[lastx3][lasty3] -= three;
+                                }
+                            }
+
+                        } else if (0 <= lastx2 && lastx2 < 6 && 0 <= lasty2 && lasty2 < 7) {
+                            System.out.println("sono qua");
+                            if (w == board[lastx2][lasty2]) {
+                                System.out.println("two in a row");
+                                if (w == '0') {
+                                    scoreBoards.get(i)[x][y] += two;
+                                    scoreBoards.get(i)[lastx2][lasty2] += two;
+                                } else if (w == 'X')  {
+                                    scoreBoards.get(i)[x][y] -= two;
+                                    scoreBoards.get(i)[lastx2][lasty2] -= two;
+                                }
+                            }
+
+                        } else {
+                            System.out.println("one in a row");
+                            if (w == '0')           scoreBoards.get(i)[x][y] += one;
+                            else if (w == 'X')      scoreBoards.get(i)[x][y] -= one;
+
+                        }
+
+                    }
+                }
+            }
+        }
+
+
+        for (double[][] scoreTable : scoreBoards) {
+            for (int x = 0; x < 6; x++) {
+                for (int y = 0; y < 7; y++) {
+                    score += scoreTable[x][y];
+                }
+            }
+        }
+        System.out.println("score of previous table " + score);
+        return score;
     }
 
 }

@@ -5,7 +5,7 @@ public class Agent {
     private static char seedStarter;
     private long nodeVisited = 0;
     private long depth = 0;
-
+    private final int SEARCH_DEPTH = 1;
 
     public static char getSeedStarter() {
         return seedStarter;
@@ -27,13 +27,11 @@ public class Agent {
     }
 
     public int[] ply (char[][] board) {
-        nodeVisited++;
         int moveCounter = 0;
 
         Game game = new Game(seedStarter);
 
         Action bestMove = null;
-        // int[][] board = convertBoardFormat(stringBoard, SEED_UNIT);
 
         double resultValue = Double.NEGATIVE_INFINITY; // ai is MAX node, so initialize best move utility with -infinity
         char player = Game.getPlayer(board);  // 0 is AI, 1 is Human, -1 is starter
@@ -67,7 +65,9 @@ public class Agent {
         double value = Double.POSITIVE_INFINITY;
 
         for (Action action : Game.getActions(board)) {
-            // if (depth > 10000)   return value;
+            if (depth > SEARCH_DEPTH) {
+                return Game.evaluateHeuristic(board);
+            }
             value = Math.min(value, maxValue(Game.getResult(board, action), player));
         }
 
@@ -86,7 +86,9 @@ public class Agent {
         double value = Double.NEGATIVE_INFINITY;
 
         for (Action action : Game.getActions(board)) {
-             // if (depth > 10000)   return value;
+            if (depth > SEARCH_DEPTH) {
+                return Game.evaluateHeuristic(board);
+            }
             value = Math.max(value, minValue(Game.getResult(board, action), player));
         }
         return value;

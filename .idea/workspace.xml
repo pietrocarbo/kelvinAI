@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3d5f5be4-3cb7-4032-90bf-874cbd97a982" name="Default" comment="">
+    <list default="true" id="3d5f5be4-3cb7-4032-90bf-874cbd97a982" name="Default" comment="String to CHAR board">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/games/connectfour/Action.java" afterPath="$PROJECT_DIR$/src/games/connectfour/Action.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/games/connectfour/Agent.java" afterPath="$PROJECT_DIR$/src/games/connectfour/Agent.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/games/connectfour/Engine.java" afterPath="$PROJECT_DIR$/src/games/connectfour/Engine.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/games/connectfour/Game.java" afterPath="$PROJECT_DIR$/src/games/connectfour/Game.java" />
@@ -32,31 +31,31 @@
       <file leaf-file-name="Engine.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/games/connectfour/Engine.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3366">
-              <caret line="198" column="67" lean-forward="false" selection-start-line="198" selection-start-column="67" selection-end-line="198" selection-end-column="67" />
+            <state relative-caret-position="493">
+              <caret line="114" column="67" lean-forward="false" selection-start-line="114" selection-start-column="67" selection-end-line="114" selection-end-column="67" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Agent.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Agent.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/games/connectfour/Agent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="69" column="15" lean-forward="false" selection-start-line="69" selection-start-column="15" selection-end-line="69" selection-end-column="15" />
+            <state relative-caret-position="573">
+              <caret line="70" column="40" lean-forward="true" selection-start-line="70" selection-start-column="40" selection-end-line="70" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Game.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Game.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/games/connectfour/Game.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="291">
-              <caret line="83" column="124" lean-forward="true" selection-start-line="83" selection-start-column="24" selection-end-line="83" selection-end-column="124" />
+            <state relative-caret-position="453">
+              <caret line="208" column="56" lean-forward="false" selection-start-line="208" selection-start-column="56" selection-end-line="208" selection-end-column="56" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#891#899#0" expanded="true" />
+                <element signature="e#921#929#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -87,9 +86,11 @@
       <find>cle</find>
       <find>briscolaEngine</find>
       <find>ai</find>
+      <find>listaPazza</find>
     </findStrings>
     <replaceStrings>
       <replace>game</replace>
+      <replace>scoreBoards</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -132,9 +133,9 @@
         <option value="$PROJECT_DIR$/src/games/tictactoe/Agent.java" />
         <option value="$PROJECT_DIR$/src/main/Main.java" />
         <option value="$PROJECT_DIR$/src/games/connectfour/Action.java" />
-        <option value="$PROJECT_DIR$/src/games/connectfour/Game.java" />
         <option value="$PROJECT_DIR$/src/games/connectfour/Engine.java" />
         <option value="$PROJECT_DIR$/src/games/connectfour/Agent.java" />
+        <option value="$PROJECT_DIR$/src/games/connectfour/Game.java" />
       </list>
     </option>
   </component>
@@ -1022,7 +1023,7 @@
       <workItem from="1500458580626" duration="4618000" />
       <workItem from="1502887333436" duration="5329000" />
       <workItem from="1502893656500" duration="177000" />
-      <workItem from="1503055284200" duration="3533000" />
+      <workItem from="1503055284200" duration="11999000" />
     </task>
     <task id="LOCAL-00001" summary="briscola playing hand logic, printing game status and accepting input">
       <created>1499680771045</created>
@@ -1087,11 +1088,18 @@
       <option name="project" value="LOCAL" />
       <updated>1502980576801</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="String to CHAR board">
+      <created>1503058845090</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1503058845090</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="104009000" />
+    <option name="totallyTimeSpent" value="112475000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
@@ -1111,7 +1119,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36334404" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39442658" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290461" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1119,7 +1127,7 @@
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290461" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34190783" sideWeight="0.49573562" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33118972" sideWeight="0.49573562" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15778251" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
@@ -1149,14 +1157,23 @@
     <MESSAGE value="fixed winning control (before draw control) in engine" />
     <MESSAGE value="fixed getPlayer(), tictactoe UNBEATABLE" />
     <MESSAGE value="[ADD ai playing with minmax (NOT WORKING: Stack Overflow)" />
-    <option name="LAST_COMMIT_MESSAGE" value="[ADD ai playing with minmax (NOT WORKING: Stack Overflow)" />
+    <MESSAGE value="String to CHAR board" />
+    <option name="LAST_COMMIT_MESSAGE" value="String to CHAR board" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/games/connectfour/Game.java</url>
+          <line>241</line>
+          <properties />
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="28" />
+      <option name="time" value="29" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1456,28 +1473,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/games/connectfour/Engine.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3366">
-          <caret line="198" column="67" lean-forward="false" selection-start-line="198" selection-start-column="67" selection-end-line="198" selection-end-column="67" />
+        <state relative-caret-position="493">
+          <caret line="114" column="67" lean-forward="false" selection-start-line="114" selection-start-column="67" selection-end-line="114" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/games/connectfour/Agent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="573">
+          <caret line="70" column="40" lean-forward="true" selection-start-line="70" selection-start-column="40" selection-end-line="70" selection-end-column="40" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/games/connectfour/Game.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="83" column="124" lean-forward="true" selection-start-line="83" selection-start-column="24" selection-end-line="83" selection-end-column="124" />
+        <state relative-caret-position="453">
+          <caret line="208" column="56" lean-forward="false" selection-start-line="208" selection-start-column="56" selection-end-line="208" selection-end-column="56" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#891#899#0" expanded="true" />
+            <element signature="e#921#929#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/games/connectfour/Agent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="69" column="15" lean-forward="false" selection-start-line="69" selection-start-column="15" selection-end-line="69" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
