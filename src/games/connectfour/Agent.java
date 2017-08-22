@@ -5,12 +5,13 @@ public class Agent {
     private static char seedStarter;
     private long nodesVisited = 0;
     private long depth = 0;
-    private final int SEARCH_DEPTH = 1;
+    private int SEARCH_DEPTH = 0;
     private Game game;
 
-    public Agent(int starter) {
+    public Agent(int starter, int depth) {
         if (starter == 0)   seedStarter = 'O';
         else                seedStarter = 'X';
+        SEARCH_DEPTH = depth;
         game = new Game(seedStarter);
     }
 

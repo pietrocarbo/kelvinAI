@@ -70,7 +70,7 @@ public class Engine {
     public void playHumanVsAI() {
 
         System.out.println("Input your next move (eg. 0-6) after each board");
-        Agent ai = new Agent(player);
+        Agent ai = new Agent(player,1);
         int row, column, gameOverChecks = -1;
 
         while (gameOverChecks < 0) {
@@ -125,6 +125,59 @@ public class Engine {
             System.out.println("Player O won the game");
         else if (gameOverChecks == 1)
             System.out.println("Player X won the game");
+    }
+
+    public int playAIVsAI(int depthAI1, int depthAI2) {
+
+        //System.out.println("Input your next move (eg. 0-6) after each board");
+        Agent ai1 = new Agent(0,depthAI1);
+        Agent ai2 = new Agent(0,depthAI2);
+        int row, column, gameOverChecks = -1;
+
+        while (gameOverChecks < 0) {
+            Engine.printBoard(grid, turns, (player == 0 ? "0" : "X"));
+
+            if (player == 0) {
+                int[] ai1Move = ai1.ply(grid);
+                row = ai1Move[0];
+                column = ai1Move[1];
+
+                if (isLegalMove(grid, column)) {
+                    grid[row][column] = 'O';
+                    player = 1 - player;
+                    turns++;
+                } else {
+                    System.err.println("Wrong AI(1) input value '" + ai1Move + "' repeat please");
+                    continue;
+                }
+
+            } else {
+                int[] ai2Move = ai2.ply(grid);
+                row = ai2Move[0];
+                column = ai2Move[1];
+
+                if (isLegalMove(grid, column)) {
+                    grid[row][column] = 'X';
+                    player = 1 - player;
+                    turns++;
+                } else {
+                    System.err.println("Wrong AI(2) input value '" + ai2Move + "' repeat please");
+                    continue;
+                }
+            }
+            gameOverChecks = Game.gameOverChecks(grid, turns);
+        }
+
+
+        Engine.printBoard(grid, turns, "END BOARD");
+        if (gameOverChecks == 2)
+            System.out.println(winningMessage);
+        else if (gameOverChecks == 0)
+            System.out.println("Player O(AI 1) won the game");
+        else if (gameOverChecks == 1)
+            System.out.println("Player X(AI 2) won the game");
+
+        return gameOverChecks;
     }
 
 

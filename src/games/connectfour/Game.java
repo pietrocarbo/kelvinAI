@@ -42,7 +42,7 @@ public class Game {
             }
         }
 
-        // Collections.shuffle(result);  // random moves ordering
+         Collections.shuffle(result);  // random moves ordering
         return result;
     }
 
