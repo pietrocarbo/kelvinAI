@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3d5f5be4-3cb7-4032-90bf-874cbd97a982" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/games/connectfour/Agent.java" afterPath="$PROJECT_DIR$/src/games/connectfour/Agent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/games/connectfour/Engine.java" afterPath="$PROJECT_DIR$/src/games/connectfour/Engine.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/games/connectfour/Game.java" afterPath="$PROJECT_DIR$/src/games/connectfour/Game.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/Main.java" afterPath="$PROJECT_DIR$/src/main/Main.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -954,7 +950,7 @@
       <workItem from="1503055284200" duration="11999000" />
       <workItem from="1503312815401" duration="8329000" />
       <workItem from="1503398746509" duration="20688000" />
-      <workItem from="1503435616655" duration="3839000" />
+      <workItem from="1503435616655" duration="3867000" />
     </task>
     <task id="LOCAL-00001" summary="briscola playing hand logic, printing game status and accepting input">
       <created>1499680771045</created>
@@ -1033,11 +1029,18 @@
       <option name="project" value="LOCAL" />
       <updated>1503075900373</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="String to CHAR board">
+      <created>1503439562646</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1503439562646</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="152383000" />
+    <option name="totallyTimeSpent" value="152411000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
