@@ -22,7 +22,7 @@ public class Main {
 
 
         games.connectfour.Engine connect4 = new games.connectfour.Engine(1);
-        connect4.play1vsAI();
+        connect4.playHumanVsAI();
     }
 
 }

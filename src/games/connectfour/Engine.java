@@ -7,11 +7,8 @@ public class Engine {
     private Scanner scanner;
 
     private char[][] grid = new char[6][7];
-
     private int turns;
-
     private int player;
-
     private String winningMessage;
 
     public Engine(int starter) {
@@ -26,24 +23,26 @@ public class Engine {
         }
     }
 
-    public void play1vs1() {
+    public void playHumanVsHuman() {
         System.out.println("Input your next move (eg. 0-6) after each board");
+        int gameOverChecks = -1;
 
-        while (!checkAndDeclareWinner(grid)) {
+        while (gameOverChecks < 0) {
 
-            System.out.println(Engine.printBoard(grid, turns, player));
-            String input =  scanner.next();
+            Engine.printBoard(grid, turns, (player == 0 ? "0" : "X"));
+            String input = scanner.next();
             int column;
 
             if (!input.matches("^\\d$")) {
                 System.err.println("Wrong input format '" + input + "' repeat please");
                 continue;
+
             } else {
                 column = Integer.parseInt(input);
 
                 if (isLegalMove(grid, column)) {
-                    for(int i = 0;i < 6;i++) {
-                        if(grid[i][column] == '_') {
+                    for (int i = 0; i < 6; i++) {
+                        if (grid[i][column] == '_') {
                             grid[i][column] = player == 0 ? 'O' : 'X';
                             player = 1 - player;
                             turns++;
@@ -55,27 +54,32 @@ public class Engine {
                     continue;
                 }
             }
+            gameOverChecks = Game.gameOverChecks(grid, turns);
         }
 
-        System.out.println(Engine.printBoard(grid, turns, player));
-        System.out.println(winningMessage);
+
+        Engine.printBoard(grid, turns, "END BOARD");
+        if (gameOverChecks == 2)
+            System.out.println(winningMessage);
+        else if (gameOverChecks == 0)
+            System.out.println("Player O won the game");
+        else if (gameOverChecks == 1)
+            System.out.println("Player X won the game");
     }
 
-    public void play1vsAI() {
+    public void playHumanVsAI() {
 
         System.out.println("Input your next move (eg. 0-6) after each board");
         Agent ai = new Agent(player);
-        int row, column;
+        int row, column, gameOverChecks = -1;
 
-        while (!checkAndDeclareWinner(grid)) {
-
-            System.out.println(Engine.printBoard(grid, turns, player));
+        while (gameOverChecks < 0) {
+            Engine.printBoard(grid, turns, (player == 0 ? "0" : "X"));
 
             if (player == 0) {
                 int[] aiMove = ai.ply(grid);
                 row = aiMove[0];
                 column = aiMove[1];
-                //System.out.println("[ai-metrics] expanded " + aiMove[2] + " nodes for current move");
 
                 if (isLegalMove(grid, column)) {
                     grid[row][column] = 'O';
@@ -85,8 +89,8 @@ public class Engine {
                     System.err.println("Wrong AI input value '" + aiMove + "' repeat please");
                     continue;
                 }
-            } else {
 
+            } else {
                 String input = scanner.next();
 
                 if (!input.matches("^\\d$")) {
@@ -105,19 +109,53 @@ public class Engine {
                             }
                         }
                     } else {
-                        System.err.println("Wrong input value '" + input + "' repeat please");
+                        System.err.println("Wrong human input value '" + input + "' repeat please");
                         continue;
                     }
                 }
             }
+            gameOverChecks = Game.gameOverChecks(grid, turns);
         }
 
-        System.out.println(Engine.printBoard(grid, turns, player));
-        System.out.println(winningMessage);
+
+        Engine.printBoard(grid, turns, "END BOARD");
+        if (gameOverChecks == 2)
+            System.out.println(winningMessage);
+        else if (gameOverChecks == 0)
+            System.out.println("Player O won the game");
+        else if (gameOverChecks == 1)
+            System.out.println("Player X won the game");
     }
 
-    public boolean checkAndDeclareWinner(char[][] grid){
-        /*
+
+    public boolean isLegalMove(char[][] grid, int column){
+        return column >= 0 && column <= 6 && grid[5][column] == '_';
+    }
+
+
+    public static void printBoard (char[][] grid, int turns, String player) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n---- turn " + turns + " (next to play " + player + ") ----\n");
+
+        for(int i = 5; i >= 0; i--){
+            stringBuilder.append("|");
+            for(int j = 0; j <= 6;j++){
+                stringBuilder.append(grid[i][j] + "|");
+            }
+            stringBuilder.append("\t\t " + i + ".\n");
+        }
+
+        stringBuilder.append("\n.");
+        for (int i = 0; i <= 6; i++){
+            stringBuilder.append(i + ".");
+        }
+        stringBuilder.append("\n");
+
+        System.out.println(stringBuilder.toString());
+    }
+}
+
+    /* public boolean oldCheckAndDeclareWinner (char[][] grid) {
         int occurrences = 0;
         String lastSeed = "_";
 
@@ -168,56 +206,4 @@ public class Engine {
             occurrences = 0;
             lastSeed = "_";
         }
-*/
-
-        // Controllo le diagonali
-        int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
-        for (int[] d : directions) {
-            int dx = d[0];
-            int dy = d[1];
-            for (int x = 0; x < 6; x++) {
-                for (int y = 0; y < 7; y++) {
-                    int lastx = x + 3*dx;
-                    int lasty = y + 3*dy;
-                    if (0 <= lastx && lastx < 6 && 0 <= lasty && lasty < 7) {
-                        char w = grid[x][y];
-                        if (w != '_'  && w == grid[x+dx][y+dy] && w == grid[x+2*dx][y+2*dy] && w == grid[lastx][lasty]) {
-                            winningMessage = "Player " + w + " won the game";
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-        // Controllo che la grid sia full e senza vincitori(parità)
-        if (turns == (7*6))             return true;
-        return false;
-    }
-
-    public boolean isLegalMove(char[][] grid, int column){
-        return column >= 0 && column <= 6 && grid[5][column] == '_';
-    }
-
-
-    public static String printBoard (char[][] grid, int turns, int player) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("\n---- turn " + turns + " (next to play " + (player == 0 ? "0" : "X") + ") ----\n");
-
-        for(int i = 5; i >= 0; i--){
-            stringBuilder.append("|");
-            for(int j = 0; j <= 6;j++){
-                stringBuilder.append(grid[i][j] + "|");
-            }
-            stringBuilder.append("\t\t " + i + ".\n");
-        }
-
-        stringBuilder.append("\n.");
-        for (int i = 0; i <= 6; i++){
-            stringBuilder.append(i + ".");
-        }
-        stringBuilder.append("\n");
-
-        return stringBuilder.toString();
-    }
-}
+}*/

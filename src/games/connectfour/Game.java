@@ -5,21 +5,19 @@ import java.util.Collections;
 import java.util.List;
 
 public class Game {
-
-    private static char seedStarter;
+    private char seedStarter;
 
     public Game(char seedStarter) {
         this.seedStarter = seedStarter;
     }
 
-    public static char getPlayer (char[][] board) {
-
+    public char getPlayer (char[][] board) {
         int plyCounter = 0;
 
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
 
-                if(board[i][j] == 'X') { // Human
+                if(board[i][j] == 'X') { // human
                     plyCounter++;
                 } else if (board[i][j] == 'O') { // AI
                     plyCounter--;
@@ -31,39 +29,36 @@ public class Game {
                     plyCounter > 0 ? 'O' : 'X');  // "O" (return 0) is AI turn, "X" (return 1) is human turn, starter return (-1)
     }
 
-    public static List<Action> getActions (char[][] board) {
-
-        //TODO: Controllare che vengano esplorate tutte le mosse dispobili in modo corretto
-
+    public List<Action> getActions (char[][] board) {
         List<Action> result = new ArrayList<Action>();
+        char nextPlayer = getPlayer(board);
 
         for (int j = 0; j < 7; j++) { // for each column
             for (int i = 0; i < 6; i++) { // and then for each row upwards
-
                 if(board[i][j] == '_') { // blank
-                    result.add(new Action(i, j, getPlayer(board)));
+                    result.add(new Action(i, j, nextPlayer));
                     break;
                 }
             }
         }
-        Collections.shuffle(result);
+
+        // Collections.shuffle(result);  // random moves ordering
         return result;
     }
 
-    public static char[][] getResult (char[][] board, Action move) {
+    public char[][] getResult (char[][] board, Action move) {
         char[][] newBoard = new char[6][7];
-        if (move.getColumn() >= 0 && move.getColumn() <= 6 && board[5][move.getColumn()] != '_') {
+        if (move.getColumn() >= 0 && move.getColumn() <= 6 && board[move.getRow()][move.getColumn()] != '_') {
             System.err.println("getResult(): it was generated a move for a non-empty square");
             System.exit(-1);
         } else {
             copyBoard(board, newBoard);
             newBoard[move.getRow()][move.getColumn()] = move.getSeed();
         }
-
         return newBoard;
     }
 
-    private static char[][] copyBoard(char[][] originalBoard, char[][] copiedBoard) {
+    private char[][] copyBoard(char[][] originalBoard, char[][] copiedBoard) {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
                 copiedBoard[i][j] = originalBoard[i][j];
@@ -72,7 +67,7 @@ public class Game {
         return copiedBoard;
     }
 
-    public static int declareWinner (char[][] board) {
+    public static int gameOverChecks (char[][] board, int turns) {
 
         // check every directions from each square
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
@@ -86,7 +81,7 @@ public class Game {
                     if (0 <= lastx && lastx < 6 && 0 <= lasty && lasty < 7) {
                         char w = board[x][y];
                         if (w != '_'  && w == board[x+dx][y+dy] && w == board[x+2*dx][y+2*dy] && w == board[lastx][lasty]) {
-                            if (w == 'O')   return 0;
+                            if (w == 'O')        return 0;
                             else if (w == 'X')   return 1;
                         }
                     }
@@ -94,34 +89,196 @@ public class Game {
             }
         }
 
-        int turns = 0;
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 7; j++) {
-
-                if(board[i][j] != '_') { // not blank
-                    turns++;
+        if (turns < 0) {
+            for (int i = 0; i < 6; i++) {
+                for (int j = 0; j < 7; j++) {
+                    if (board[i][j] != '_') { // not blank square
+                        turns++;
+                    }
                 }
             }
         }
 
         // draw check
-        if (turns == (7*6))             return -1;
-        return -2;
+        if (turns == (7*6))             return 2;
+        return -1; // game is not over
     }
 
-    public static boolean isTerminal (char[][] board) {
+    public boolean isTerminal (char[][] board) {
 
-        int winner = declareWinner(board);
+        int winner = gameOverChecks (board, 0);
         if (winner == 0 || winner == 1 || winner == 2)  return true;
 
         return false;
     }
 
-    public static double getUtility(char[][] board) {
+    public double getUtilityHeuristic (char[][] board) {
+
+        char nextPlayer = getPlayer(board);
+        Engine.printBoard(board, calculateTurn(board), "H.E. " + nextPlayer);
+        int boardScore = 0, two = 5, three = 50, matchpoint = 1000, four = 50000;
+
+        int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
+        for (int i = 0; i < 4; i++) {  // for each direction
+            int dx = directions[i][0];
+            int dy = directions[i][1];
+
+            for (int x = 0; x < 6; x++) {  // for each square
+                for (int y = 0; y < 7; y++) {
+
+                    int idxX2 = x + dx;
+                    int idxY2 = y + dy;
+
+                    int idxX3 = x + 2 * dx;
+                    int idxY3 = y + 2 * dy;
+
+                    int idxX4 = x + 3 * dx;
+                    int idxY4 = y + 3 * dy;
+
+                    int[] indexes = new int[]{x, y, idxX2, idxY2, idxX3, idxY3, idxX4, idxY4};
+
+                    if (0 <= idxX4 && idxX4 < 6 && 0 <= idxY4 && idxY4 < 7) {
+
+                        char first = board[x][y];
+                        char second = board[idxX2][idxY2];
+                        char third = board[idxX3][idxY3];
+                        char fourth = board[idxX4][idxY4];
+                        Row row = areThereMoreThenTwoInARowAndNotOpposingSeed(first, second, third, fourth);
+
+                        if (row.getGivesPoint()) {
+
+                            int totalOccurrences = row.getTotalOccurrences();
+                            Support supportInfo;
+                            if (totalOccurrences != 4 && i != 0) { // check support if it is not a victory and direction is not vertical
+                                supportInfo = checkBottomSupport(board, row.getOccurrences(), indexes, i == 3 ? true : false);
+                            } else {
+                                supportInfo = new Support(true, 0);
+                            }
+
+                            int rowScore = 0, missingSupports = supportInfo.getTotalSquareMissing();
+                            switch (totalOccurrences) {
+                                case 2:
+                                    rowScore = two - missingSupports;
+                                    break;
+                                case 3:
+                                    if (missingSupports == 0 && row.getSeed() == nextPlayer) rowScore += matchpoint;
+                                    else {
+                                        rowScore = three - 5 * missingSupports;
+                                    }
+                                    break;
+                                case 4:
+                                    rowScore += four;
+                                    break;
+                                default:
+                                    System.err.println("Error in score calculation!");
+                                    System.exit(-1);
+                                    break;
+                            }
+                            if (rowScore < 0) rowScore = 0;   // too many supports missing
+                            if (row.getSeed() == 'X') rowScore *= -1;  // if it is human streak
+                            boardScore += rowScore;
+
+                        }
+                    }
+
+                }
+            }
+        }
+
+        System.out.println("board score " + boardScore);
+        return boardScore;
+    }
+
+    private Support checkBottomSupport (char[][] board, boolean[] occurrences, int[] indexes, boolean horizontalScan) {
+        int missingSupports = 0;
+
+        for (int i = 0; i < 4; i++) {
+            if (!occurrences[i]) {
+
+                if (horizontalScan && indexes[0] == 0)
+                {
+                    return new Support(true, missingSupports);
+                }
+                else if (horizontalScan && indexes[0] > 0)
+                {
+                    for (int j = indexes[2*i]-1; j >= 0; j--) {
+                        if (board[j][indexes[2*i+1]] == '_') {
+                            missingSupports++;
+                        } else
+                            continue;
+                    }
+
+                }
+                else if (!horizontalScan && indexes[2*i] > 0)
+                {
+                    for (int j = indexes[2*i]-1; j >= 0; j--) {
+                        if (board[j][indexes[2*i+1]] == '_') {
+                            missingSupports++;
+                        } else
+                            continue;
+                    }
+                }
+                else if (!horizontalScan && indexes[2*i] == 0)
+                {
+                    continue;
+                }
+                else {
+                    System.err.println("Error in support calculation!");
+                    System.exit(-1);
+                }
+
+            }
+        }
+        return new Support(missingSupports == 0 ? true : false, missingSupports);
+    }
+
+    private Row areThereMoreThenTwoInARowAndNotOpposingSeed (char first, char second, char third, char fourth) {
+        boolean[] occurrences = new boolean[]{false, false, false, false};
+        char[] row = {first, second, third, fourth};
+        int os = 0, xs = 0;
+        char dominantSeed;
+
+        for (int i = 0; i < 4; i++) {
+            if (row[i] != '_') {
+                if (row[i] == 'O') {
+                    occurrences[i] = true;
+                    os++;
+                }
+                else if (row[i] == 'X') {
+                    occurrences[i] = true;
+                    xs++;
+                }
+                else {
+                    System.err.println("Board malformed!");
+                    System.exit(-1);
+                }
+            }
+        }
+        if ((xs > 0 && os > 0) || (xs + os == 0) || ((xs > os && xs < 2) || (os > xs && os < 2)))
+            return new Row(false);
+
+
+        if (xs > 0) dominantSeed = 'X';
+        else        dominantSeed = 'O';
+
+        return new Row(true, dominantSeed, occurrences, xs > 0 ? xs : os);
+    }
+
+    public int calculateTurn (char[][] board) {
+        int turn = 0;
+        for (int x = 0; x < 6; x++) {
+            for (int y = 0; y < 7; y++) {
+                if (board[x][y] != '_')     turn++;
+            }
+        }
+        return turn;
+    }
+
+    public double getUtility(char[][] board) {
 
         double draw = 0.0, AIwin = 10.0, AIloss = -10.0;
 
-        int winner = declareWinner(board);
+        int winner = gameOverChecks (board, 0);
 
         if (winner == 0)        return AIwin;
         else if (winner == 1)   return AIloss;
@@ -134,9 +291,10 @@ public class Game {
         }
     }
 
-    public static double evaluateHeuristic (char[][] board) {
+    public double oldGetUtilityHeuristic (char[][] board) {
 
-        int matchpoint = 30000, two = 3, three = 30, four = 3000;
+        int matchpoint = 3000, two = 3, three = 30, four = 30000;
+        char nextPlayer = getPlayer(board);
         int score = 0;
 
         int[][] horizontalSB = new int[6][7];
@@ -151,7 +309,7 @@ public class Game {
         scoreBoards.add(verticalSB);
 
 
-        System.out.println(Engine.printBoard(board, -1, 0));
+        Engine.printBoard(board, -1, "h.e. (" + getPlayer(board) + ")");
 
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
         for (int i = 0; i < 4; i++) {
@@ -270,7 +428,6 @@ public class Game {
             }
         }
 
-
         for (int[][] scoreTable : scoreBoards) {
             for (int x = 0; x < 6; x++) {
                 for (int y = 0; y < 7; y++) {
@@ -278,7 +435,7 @@ public class Game {
                 }
             }
         }
-        System.out.println("score of previous table " + score);
+        System.out.println("score of this table " + score);
         return score;
     }
 
