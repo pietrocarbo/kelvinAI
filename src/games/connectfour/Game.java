@@ -1,10 +1,14 @@
 package games.connectfour;
 
+import org.omg.PortableInterceptor.LOCATION_FORWARD;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Game {
+    private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
     private char seedStarter;
 
     public Game(char seedStarter) {
@@ -49,7 +53,7 @@ public class Game {
     public char[][] getResult (char[][] board, Action move) {
         char[][] newBoard = new char[6][7];
         if (move.getColumn() >= 0 && move.getColumn() <= 6 && board[move.getRow()][move.getColumn()] != '_') {
-            System.err.println("getResult(): it was generated a move for a non-empty square");
+            LOGGER.severe("getResult(): it was generated a move for a non-empty square");
             System.exit(-1);
         } else {
             copyBoard(board, newBoard);
@@ -115,7 +119,7 @@ public class Game {
     public double getUtilityHeuristic (char[][] board) {
 
         char nextPlayer = getPlayer(board);
-        Engine.printBoard(board, calculateTurn(board), "H.E. " + nextPlayer);
+        LOGGER.finer(Engine.boardToString(board, calculateTurn(board), "H.E. " + nextPlayer));
         int boardScore = 0, two = 5, three = 50, matchpoint = 1000, four = 50000;
 
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
@@ -170,7 +174,7 @@ public class Game {
                                     rowScore += four;
                                     break;
                                 default:
-                                    System.err.println("Error in score calculation!");
+                                    LOGGER.severe("Error in score calculation!");
                                     System.exit(-1);
                                     break;
                             }
@@ -185,7 +189,7 @@ public class Game {
             }
         }
 
-        System.out.println("board score " + boardScore);
+        LOGGER.finer("board score " + boardScore);
         return boardScore;
     }
 
@@ -223,7 +227,7 @@ public class Game {
                     continue;
                 }
                 else {
-                    System.err.println("Error in support calculation!");
+                    LOGGER.severe("Error in support calculation!");
                     System.exit(-1);
                 }
 
@@ -249,7 +253,7 @@ public class Game {
                     xs++;
                 }
                 else {
-                    System.err.println("Board malformed!");
+                    LOGGER.severe("Board malformed!");
                     System.exit(-1);
                 }
             }
@@ -285,7 +289,7 @@ public class Game {
         else if (winner == 2)   return draw;
 
         else {
-            System.err.println("getUtility(): called on a non-terminal board");
+            LOGGER.severe("getUtility(): called on a non-terminal board");
             System.exit(-1);
             return 0.0;
         }
@@ -309,7 +313,7 @@ public class Game {
         scoreBoards.add(verticalSB);
 
 
-        Engine.printBoard(board, -1, "h.e. (" + getPlayer(board) + ")");
+        LOGGER.finer(Engine.boardToString(board, calculateTurn(board), "H.E. " + nextPlayer));
 
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
         for (int i = 0; i < 4; i++) {
@@ -435,7 +439,7 @@ public class Game {
                 }
             }
         }
-        System.out.println("score of this table " + score);
+        LOGGER.finer("score of this table " + score);
         return score;
     }
 

@@ -1,11 +1,12 @@
 package games.connectfour;
 
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class Engine {
 
+    private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
     private Scanner scanner;
-
     private char[][] grid = new char[6][7];
     private int turns;
     private int player;
@@ -24,17 +25,17 @@ public class Engine {
     }
 
     public void playHumanVsHuman() {
-        System.out.println("Input your next move (eg. 0-6) after each board");
+        LOGGER.info("Input your next move (eg. 0-6) after each board");
         int gameOverChecks = -1;
 
         while (gameOverChecks < 0) {
 
-            Engine.printBoard(grid, turns, (player == 0 ? "0" : "X"));
+            LOGGER.info(Engine.boardToString(grid, turns, (player == 0 ? "0" : "X")));
             String input = scanner.next();
             int column;
 
             if (!input.matches("^\\d$")) {
-                System.err.println("Wrong input format '" + input + "' repeat please");
+                LOGGER.warning("Wrong input format '" + input + "' repeat please");
                 continue;
 
             } else {
@@ -50,7 +51,7 @@ public class Engine {
                         }
                     }
                 } else {
-                    System.err.println("Wrong input value '" + input + "' repeat please");
+                    LOGGER.warning("Wrong input value '" + input + "' repeat please");
                     continue;
                 }
             }
@@ -58,23 +59,23 @@ public class Engine {
         }
 
 
-        Engine.printBoard(grid, turns, "END BOARD");
+        LOGGER.info(Engine.boardToString(grid, turns, "END BOARD"));
         if (gameOverChecks == 2)
-            System.out.println(winningMessage);
+            LOGGER.info(winningMessage);
         else if (gameOverChecks == 0)
-            System.out.println("Player O won the game");
+            LOGGER.info("Player O won the game");
         else if (gameOverChecks == 1)
-            System.out.println("Player X won the game");
+            LOGGER.info("Player X won the game");
     }
 
     public void playHumanVsAI() {
 
-        System.out.println("Input your next move (eg. 0-6) after each board");
+        LOGGER.info("Input your next move (eg. 0-6) after each board");
         Agent ai = new Agent(player,1);
         int row, column, gameOverChecks = -1;
 
         while (gameOverChecks < 0) {
-            Engine.printBoard(grid, turns, (player == 0 ? "0" : "X"));
+            LOGGER.info(Engine.boardToString(grid, turns, (player == 0 ? "0" : "X")));
 
             if (player == 0) {
                 int[] aiMove = ai.ply(grid);
@@ -86,7 +87,7 @@ public class Engine {
                     player = 1 - player;
                     turns++;
                 } else {
-                    System.err.println("Wrong AI input value '" + aiMove + "' repeat please");
+                    LOGGER.warning("Wrong AI input value '" + aiMove + "' repeat please");
                     continue;
                 }
 
@@ -94,7 +95,7 @@ public class Engine {
                 String input = scanner.next();
 
                 if (!input.matches("^\\d$")) {
-                    System.err.println("Wrong input format '" + input + "' repeat please");
+                    LOGGER.warning("Wrong input format '" + input + "' repeat please");
                     continue;
                 } else {
                     column = Integer.parseInt(input);
@@ -109,7 +110,7 @@ public class Engine {
                             }
                         }
                     } else {
-                        System.err.println("Wrong human input value '" + input + "' repeat please");
+                        LOGGER.warning("Wrong human input value '" + input + "' repeat please");
                         continue;
                     }
                 }
@@ -117,14 +118,13 @@ public class Engine {
             gameOverChecks = Game.gameOverChecks(grid, turns);
         }
 
-
-        Engine.printBoard(grid, turns, "END BOARD");
+        LOGGER.info(Engine.boardToString(grid, turns, "END BOARD"));
         if (gameOverChecks == 2)
-            System.out.println(winningMessage);
+            LOGGER.info(winningMessage);
         else if (gameOverChecks == 0)
-            System.out.println("Player O won the game");
+            LOGGER.info("Player O won the game");
         else if (gameOverChecks == 1)
-            System.out.println("Player X won the game");
+            LOGGER.info("Player X won the game");
     }
 
     public int playAIVsAI(int depthAI1, int depthAI2) {
@@ -135,7 +135,7 @@ public class Engine {
         int row, column, gameOverChecks = -1;
 
         while (gameOverChecks < 0) {
-            Engine.printBoard(grid, turns, (player == 0 ? "0" : "X"));
+            LOGGER.info(Engine.boardToString(grid, turns, (player == 0 ? "0" : "X")));
 
             if (player == 0) {
                 int[] ai1Move = ai1.ply(grid);
@@ -147,7 +147,7 @@ public class Engine {
                     player = 1 - player;
                     turns++;
                 } else {
-                    System.err.println("Wrong AI(1) input value '" + ai1Move + "' repeat please");
+                    LOGGER.severe("Wrong AI(1) input value '" + ai1Move + "' repeat please");
                     continue;
                 }
 
@@ -161,7 +161,7 @@ public class Engine {
                     player = 1 - player;
                     turns++;
                 } else {
-                    System.err.println("Wrong AI(2) input value '" + ai2Move + "' repeat please");
+                    LOGGER.severe("Wrong AI(2) input value '" + ai2Move + "' repeat please");
                     continue;
                 }
             }
@@ -169,13 +169,13 @@ public class Engine {
         }
 
 
-        Engine.printBoard(grid, turns, "END BOARD");
+        LOGGER.info(Engine.boardToString(grid, turns, "END BOARD"));
         if (gameOverChecks == 2)
-            System.out.println(winningMessage);
+            LOGGER.info(winningMessage);
         else if (gameOverChecks == 0)
-            System.out.println("Player O(AI 1) won the game");
+            LOGGER.info("Player O(AI 1) won the game");
         else if (gameOverChecks == 1)
-            System.out.println("Player X(AI 2) won the game");
+            LOGGER.info("Player X(AI 2) won the game");
 
         return gameOverChecks;
     }
@@ -186,7 +186,7 @@ public class Engine {
     }
 
 
-    public static void printBoard (char[][] grid, int turns, String player) {
+    public static String boardToString (char[][] grid, int turns, String player) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n---- turn " + turns + " (next to play " + player + ") ----\n");
 
@@ -204,7 +204,7 @@ public class Engine {
         }
         stringBuilder.append("\n");
 
-        System.out.println(stringBuilder.toString());
+        return stringBuilder.toString();
     }
 }
 
