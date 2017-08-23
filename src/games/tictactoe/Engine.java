@@ -26,7 +26,7 @@ public class Engine {
         }
     }
 
-    public void play() {
+    public void playHumanVsAI() {
         System.out.println("Input your next move (eg. 0,0) after each board");
 
         Agent ai = new Agent(player);

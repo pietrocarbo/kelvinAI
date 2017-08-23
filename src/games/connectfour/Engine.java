@@ -130,8 +130,8 @@ public class Engine {
     public int playAIVsAI(int depthAI1, int depthAI2) {
 
         //System.out.println("Input your next move (eg. 0-6) after each board");
-        Agent ai1 = new Agent(0,depthAI1);
-        Agent ai2 = new Agent(0,depthAI2);
+        Agent ai1 = new Agent(0, depthAI1);
+        Agent ai2 = new Agent(0, depthAI2);
         int row, column, gameOverChecks = -1;
 
         while (gameOverChecks < 0) {
