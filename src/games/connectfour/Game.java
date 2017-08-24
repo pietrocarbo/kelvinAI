@@ -1,7 +1,5 @@
 package games.connectfour;
 
-import org.omg.PortableInterceptor.LOCATION_FORWARD;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,44 +7,44 @@ import java.util.logging.Logger;
 
 public class Game {
     private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
-    private char seedStarter;
+    private int starter;
 
     public Game(char seedStarter) {
-        this.seedStarter = seedStarter;
+        this.starter = (seedStarter == 'O' ? 0 : 1);
     }
 
-    public char getPlayer (char[][] board) {
-        int plyCounter = 0;
+    public int getPlayer (char[][] board) {
+        int xCounter = 0;
 
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
 
-                if(board[i][j] == 'X') { // human
-                    plyCounter++;
-                } else if (board[i][j] == 'O') { // AI
-                    plyCounter--;
+                if(board[i][j] == 'X') { // (player 1)
+                    xCounter++;
+                } else if (board[i][j] == 'O') { // (player 0)
+                    xCounter--;
                 }
             }
         }
 
-        return (plyCounter == 0 ? seedStarter :
-                    plyCounter > 0 ? 'O' : 'X');  // "O" (return 0) is AI turn, "X" (return 1) is human turn, starter return (-1)
+        return (xCounter == 0 ? starter :
+                    xCounter > 0 ? 0 : 1);  // return 0 if it is AI turn, 1 if it is human turn, else the starter
     }
 
     public List<Action> getActions (char[][] board) {
         List<Action> result = new ArrayList<Action>();
-        char nextPlayer = getPlayer(board);
+        int nextPlayer = getPlayer(board);
 
         for (int j = 0; j < 7; j++) { // for each column
             for (int i = 0; i < 6; i++) { // and then for each row upwards
                 if(board[i][j] == '_') { // blank
-                    result.add(new Action(i, j, nextPlayer));
+                    result.add(new Action(i, j, nextPlayer == 0 ? 'O' : 'X'));
                     break;
                 }
             }
         }
 
-         Collections.shuffle(result);  // random moves ordering
+        // Collections.shuffle(result);  // random moves ordering
         return result;
     }
 
@@ -93,33 +91,32 @@ public class Game {
             }
         }
 
-        if (turns < 0) {
-            for (int i = 0; i < 6; i++) {
-                for (int j = 0; j < 7; j++) {
-                    if (board[i][j] != '_') { // not blank square
-                        turns++;
-                    }
-                }
-            }
-        }
-
-        // draw check
-        if (turns == (7*6))             return 2;
+        if (turns == (7*6))             return 2;  // draw check
         return -1; // game is not over
     }
 
     public boolean isTerminal (char[][] board) {
 
-        int winner = gameOverChecks (board, 0);
+        int winner = gameOverChecks (board, calculateTurn(board));
         if (winner == 0 || winner == 1 || winner == 2)  return true;
 
         return false;
     }
 
-    public double getUtilityHeuristic (char[][] board) {
 
-        char nextPlayer = getPlayer(board);
-        LOGGER.finer(Engine.boardToString(board, calculateTurn(board), "H.E. " + nextPlayer));
+    public int calculateTurn (char[][] board) {
+        int turn = 0;
+        for (int x = 0; x < 6; x++) {
+            for (int y = 0; y < 7; y++) {
+                if (board[x][y] != '_')     turn++;
+            }
+        }
+        return turn;
+    }
+
+    public double getUtilityHeuristic (char[][] board, int player) {
+
+        LOGGER.finer(Engine.boardToString(board, calculateTurn(board), player));
         int boardScore = 0, two = 5, three = 50, matchpoint = 1000, four = 50000;
 
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
@@ -165,7 +162,7 @@ public class Game {
                                     rowScore = two - missingSupports;
                                     break;
                                 case 3:
-                                    if (missingSupports == 0 && row.getSeed() == nextPlayer) rowScore += matchpoint;
+                                    if (missingSupports == 0 && row.getSeed() == player) rowScore += matchpoint;
                                     else {
                                         rowScore = three - 5 * missingSupports;
                                     }
@@ -179,7 +176,7 @@ public class Game {
                                     break;
                             }
                             if (rowScore < 0) rowScore = 0;   // too many supports missing
-                            if (row.getSeed() == 'X') rowScore *= -1;  // if it is human streak
+                            if (row.getSeed() != (player == 0 ? 'O' : 'X')) rowScore *= -1;  // if it is human streak
                             boardScore += rowScore;
 
                         }
@@ -268,17 +265,7 @@ public class Game {
         return new Row(true, dominantSeed, occurrences, xs > 0 ? xs : os);
     }
 
-    public int calculateTurn (char[][] board) {
-        int turn = 0;
-        for (int x = 0; x < 6; x++) {
-            for (int y = 0; y < 7; y++) {
-                if (board[x][y] != '_')     turn++;
-            }
-        }
-        return turn;
-    }
-
-    public double getUtility(char[][] board) {
+    private double getUtility(char[][] board) {
 
         double draw = 0.0, AIwin = 10.0, AIloss = -10.0;
 
@@ -298,7 +285,7 @@ public class Game {
     public double oldGetUtilityHeuristic (char[][] board) {
 
         int matchpoint = 3000, two = 3, three = 30, four = 30000;
-        char nextPlayer = getPlayer(board);
+        int nextPlayer = (getPlayer(board) == 'O' ? 0 : 1) + 2;
         int score = 0;
 
         int[][] horizontalSB = new int[6][7];
@@ -313,7 +300,7 @@ public class Game {
         scoreBoards.add(verticalSB);
 
 
-        LOGGER.finer(Engine.boardToString(board, calculateTurn(board), "H.E. " + nextPlayer));
+        LOGGER.finer(Engine.boardToString(board, calculateTurn(board), nextPlayer));
 
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
         for (int i = 0; i < 4; i++) {
