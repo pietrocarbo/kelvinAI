@@ -44,7 +44,7 @@ public class Game {
             }
         }
 
-        // Collections.shuffle(result);  // random moves ordering
+        //Collections.shuffle(result);  // random moves ordering
         return result;
     }
 
@@ -177,9 +177,10 @@ public class Game {
                                     break;
                             }
                             if (rowScore < 0) rowScore = 0;   // too many supports missing
-                            if (row.getSeed() != player) rowScore *= -1;  // if it is human streak
-
-                            boardScore += rowScore;
+                            if (row.getSeed() != player)
+                                boardScore -= rowScore;
+                            else
+                                boardScore += rowScore;
                         }
                     }
 
