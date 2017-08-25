@@ -35,7 +35,7 @@ public class Agent {
             movesCounter++;
             LOGGER.fine("[search] analyzing " + movesCounter + "/" + legalActions.size() + " move " + action.getRow() + ", " + action.getColumn());
 
-            double value = minValue(game.getResult(board, action), player == 'O' ? 'X' : 'O', Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+            double value = minValue(game.getResult(board, action), player == 'O' ? 'O' : 'X', Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
 
             LOGGER.fine("[search] move analyzed. (found:" + value + ", best: " + resultValue + ")");
 

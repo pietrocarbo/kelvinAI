@@ -49,7 +49,7 @@ public class Main {
         games.tictactoe.Engine tictactoe;
         games.briscola.BriscolaEngine briscola;
 
-        globalLoggingConfig(Level.FINE);
+        globalLoggingConfig(Level.FINER);
 
         int gameType = 3;
         switch (gameType) {

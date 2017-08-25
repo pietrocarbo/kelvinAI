@@ -117,7 +117,7 @@ public class Game {
     public double getUtilityHeuristic (char[][] board, char player) {
 
         LOGGER.finer(Engine.boardToString(board, calculateTurn(board), player == 'O' ? 2 : 3));
-        int boardScore = 0, two = 5, three = 50, matchpoint = 1000, four = 50000;
+        int boardScore = 0, two = 5, three = 50, matchpoint = 1000, four = Integer.MAX_VALUE;
 
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
         for (int i = 0; i < 4; i++) {  // for each direction
@@ -157,28 +157,29 @@ public class Game {
                             }
 
                             int rowScore = 0, missingSupports = supportInfo.getTotalSquareMissing();
+
                             switch (totalOccurrences) {
                                 case 2:
                                     rowScore = two - missingSupports;
                                     break;
                                 case 3:
-                                    if (missingSupports == 0 && row.getSeed() == player) rowScore += matchpoint;
+                                    if (missingSupports == 0) rowScore = matchpoint;
                                     else {
                                         rowScore = three - 5 * missingSupports;
                                     }
                                     break;
                                 case 4:
-                                    rowScore += four;
+                                    rowScore = four;
                                     break;
                                 default:
                                     LOGGER.severe("Error in score calculation!");
                                     System.exit(-1);
                                     break;
                             }
-                            if (rowScore < 0)            rowScore = 0;   // too many supports missing
+                            if (rowScore < 0) rowScore = 0;   // too many supports missing
                             if (row.getSeed() != player) rowScore *= -1;  // if it is human streak
-                            boardScore += rowScore;
 
+                            boardScore += rowScore;
                         }
                     }
 
