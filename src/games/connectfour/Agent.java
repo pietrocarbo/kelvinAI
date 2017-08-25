@@ -26,7 +26,7 @@ public class Agent {
         movesCounter = 0;
 
         double resultValue = Double.NEGATIVE_INFINITY; // ai is MAX node, so initialize best move utility with -infinity
-        int player = game.getPlayer(board);  // 'O' is AI, 'X' is Human
+        char player = game.getPlayer(board);  // 'O' is AI, 'X' is Human
         List<Action> legalActions = game.getActions(board);
 
         for (Action action : legalActions) {  // list of Action for bottom empty squares
@@ -35,7 +35,7 @@ public class Agent {
             movesCounter++;
             LOGGER.fine("[search] analyzing " + movesCounter + "/" + legalActions.size() + " move " + action.getRow() + ", " + action.getColumn());
 
-            double value = minValue(game.getResult(board, action), 1 - player, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+            double value = minValue(game.getResult(board, action), player == 'O' ? 'X' : 'O', Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
 
             LOGGER.fine("[search] move analyzed. (found:" + value + ", best: " + resultValue + ")");
 
@@ -50,7 +50,7 @@ public class Agent {
         return new int[]{bestMove.getRow(), bestMove.getColumn()};
     }
 
-    public double minValue(char[][] board, int player, double alpha, double beta) {  // returns an utility value
+    public double minValue(char[][] board, char player, double alpha, double beta) {  // returns an utility value
         double value = Double.POSITIVE_INFINITY;
         nodesVisited++;
         depth++;
@@ -60,7 +60,7 @@ public class Agent {
         }
 
         for (Action action : game.getActions(board)) {
-            value = Math.min(value, maxValue(game.getResult(board, action), 1 - player, alpha, beta));
+            value = Math.min(value, maxValue(game.getResult(board, action), player == 'O' ? 'X' : 'O', alpha, beta));
             if (value <= alpha) {
                 LOGGER.info("Search subtree pruned by alpha (value: " + value + " <= " + alpha + " -> beta)");
                 return value;
@@ -72,7 +72,7 @@ public class Agent {
         return value;
     }
 
-    public double maxValue(char[][] board, int player, double alpha, double beta) { // returns an utility value
+    public double maxValue(char[][] board, char player, double alpha, double beta) { // returns an utility value
         double value = Double.NEGATIVE_INFINITY;
         nodesVisited++;
         depth++;
@@ -83,7 +83,7 @@ public class Agent {
         }
 
         for (Action action : game.getActions(board)) {
-            value = Math.max(value, minValue(game.getResult(board, action), 1 - player, alpha, beta));
+            value = Math.max(value, minValue(game.getResult(board, action), player == 'O' ? 'X' : 'O', alpha, beta));
             if (value >= beta) {
                 LOGGER.info("Search subtree pruned by beta (value: " + value + " >= " + beta + " -> beta)");
                 return value;

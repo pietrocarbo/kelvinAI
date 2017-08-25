@@ -208,7 +208,7 @@ public class Engine {
         else if (player == 3)       label = "--> H.E. (next to play X) ---\n";
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("\n---- turn " + turns + " "+ label);
+        stringBuilder.append("\n---- turn " + turns + " " + label);
 
         for(int i = 5; i >= 0; i--){
             stringBuilder.append("|");

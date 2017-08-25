@@ -49,7 +49,7 @@ public class Main {
         games.tictactoe.Engine tictactoe;
         games.briscola.BriscolaEngine briscola;
 
-        globalLoggingConfig(Level.WARNING);
+        globalLoggingConfig(Level.FINE);
 
         int gameType = 3;
         switch (gameType) {
@@ -62,7 +62,7 @@ public class Main {
                 connect4.playHumanVsAI(0,1);
                 break;
             case 3:
-                int nOfGames = 1000, winAI1 = 0, winAI2 = 0, draws = 0, depthAI1 = 1, depthAI2 = 10;
+                int nOfGames = 1, winAI1 = 0, winAI2 = 0, draws = 0, depthAI1 = 1, depthAI2 = 1;
                 connect4 = new games.connectfour.Engine();
                 TimeWatch timer = TimeWatch.start();
                 for(int i = 0; i < nOfGames; i++) {

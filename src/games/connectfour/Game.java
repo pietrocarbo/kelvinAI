@@ -7,38 +7,38 @@ import java.util.logging.Logger;
 
 public class Game {
     private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
-    private int starter;
+    private char starter;
 
     public Game(char seedStarter) {
-        this.starter = (seedStarter == 'O' ? 0 : 1);
+        this.starter = seedStarter;
     }
 
-    public int getPlayer (char[][] board) {
-        int xCounter = 0;
+    public char getPlayer (char[][] board) {
+        int xPlyCounter = 0;
 
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
 
                 if(board[i][j] == 'X') { // (player 1)
-                    xCounter++;
+                    xPlyCounter++;
                 } else if (board[i][j] == 'O') { // (player 0)
-                    xCounter--;
+                    xPlyCounter--;
                 }
             }
         }
 
-        return (xCounter == 0 ? starter :
-                    xCounter > 0 ? 0 : 1);  // return 0 if it is AI turn, 1 if it is human turn, else the starter
+        return (xPlyCounter == 0 ? starter :
+                xPlyCounter > 0 ? 'O' : 'X');  // return 0 if it is AI turn, 1 if it is human turn, else the starter
     }
 
     public List<Action> getActions (char[][] board) {
         List<Action> result = new ArrayList<Action>();
-        int nextPlayer = getPlayer(board);
+        char nextPlayer = getPlayer(board);
 
         for (int j = 0; j < 7; j++) { // for each column
             for (int i = 0; i < 6; i++) { // and then for each row upwards
                 if(board[i][j] == '_') { // blank
-                    result.add(new Action(i, j, nextPlayer == 0 ? 'O' : 'X'));
+                    result.add(new Action(i, j, nextPlayer));
                     break;
                 }
             }
@@ -114,9 +114,9 @@ public class Game {
         return turn;
     }
 
-    public double getUtilityHeuristic (char[][] board, int player) {
+    public double getUtilityHeuristic (char[][] board, char player) {
 
-        LOGGER.finer(Engine.boardToString(board, calculateTurn(board), player));
+        LOGGER.finer(Engine.boardToString(board, calculateTurn(board), player == 'O' ? 2 : 3));
         int boardScore = 0, two = 5, three = 50, matchpoint = 1000, four = 50000;
 
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
@@ -175,8 +175,8 @@ public class Game {
                                     System.exit(-1);
                                     break;
                             }
-                            if (rowScore < 0) rowScore = 0;   // too many supports missing
-                            if (row.getSeed() != (player == 0 ? 'O' : 'X')) rowScore *= -1;  // if it is human streak
+                            if (rowScore < 0)            rowScore = 0;   // too many supports missing
+                            if (row.getSeed() != player) rowScore *= -1;  // if it is human streak
                             boardScore += rowScore;
 
                         }
