@@ -84,7 +84,7 @@ public class Engine {
         reset(starter);
 
         LOGGER.info("Input your next move (eg. 0-6) after each board");
-        Agent ai = new Agent(player, search_depth);
+        Agent ai = new Agent('O', search_depth);
         int row, column, gameOverChecks = -1;
 
         while (gameOverChecks < 0) {
@@ -140,11 +140,11 @@ public class Engine {
             LOGGER.info("Player X won the game");
     }
 
-    public int playAIVsAI(int starter, int depthAI1, int depthAI2) {
-        reset(starter);
+    public int playAIVsAI(int depthAI1, int depthAI2) {
+        reset(0);
 
-        Agent ai1 = new Agent(starter, depthAI1);
-        Agent ai2 = new Agent(starter, depthAI2);
+        Agent ai1 = new Agent('O', depthAI1);
+        Agent ai2 = new Agent('X', depthAI2);
         int row, column, gameOverChecks = -1;
 
         while (gameOverChecks < 0) {

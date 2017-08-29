@@ -146,7 +146,7 @@ public class Agent {
                 resultValue = value;
             }
         }
-        System.out.println("[debug-ai] ply value " + resultValue);
+        System.out.println("[debug-ai] ply " + bestMove.getRow() + "," + bestMove.getColumn() + " value " + resultValue);
         return new int[]{bestMove.getRow(), bestMove.getColumn(), nodeVisited};
     }
 

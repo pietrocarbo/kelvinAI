@@ -20,6 +20,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Tomcat 9.0.0.M22" level="application_server_libraries" />
-    <orderEntry type="library" name="Jersey-2.2" level="project" />
+    <orderEntry type="library" name="JAX-RS 2.1 bundle" level="project" />
   </component>
 </module>

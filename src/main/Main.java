@@ -45,11 +45,11 @@ public class Main {
         String ANSI_BLUE = "\u001B[34m";
         String ANSI_NO_COLOR = "\u001B[0m";
 
-        games.connectfour.Engine connect4;
+        games.connectfourP.Engine connect4;
         games.tictactoe.Engine tictactoe;
         games.briscola.BriscolaEngine briscola;
 
-        globalLoggingConfig(Level.FINER);
+        globalLoggingConfig(Level.WARNING);
 
         int gameType = 3;
         switch (gameType) {
@@ -58,15 +58,15 @@ public class Main {
                 tictactoe.playHumanVsAI();
                 break;
             case 2:
-                connect4 = new games.connectfour.Engine();
-                connect4.playHumanVsAI(0,1);
+                connect4 = new games.connectfourP.Engine();
+                connect4.playHumanVsAI('O', 'O', 5, 2);
                 break;
             case 3:
-                int nOfGames = 1, winAI1 = 0, winAI2 = 0, draws = 0, depthAI1 = 1, depthAI2 = 1;
-                connect4 = new games.connectfour.Engine();
+                int nOfGames = 100, winAI1 = 0, winAI2 = 0, draws = 0, depthAI1 = 1, depthAI2 = 5;
+                connect4 = new games.connectfourP.Engine();
                 TimeWatch timer = TimeWatch.start();
                 for(int i = 0; i < nOfGames; i++) {
-                    switch (connect4.playAIVsAI(0, depthAI1, depthAI2)){
+                    switch (connect4.playAIVsAI(depthAI1, 1, depthAI2,1)){
                         case 0: winAI1++;   break;
                         case 1: winAI2++;   break;
                         case 2: draws++;    break;
@@ -75,7 +75,7 @@ public class Main {
                 LOGGER.warning("\n" + ANSI_BLUE + "AI 1 (depth " + depthAI1 + ") won " + winAI1 + " games, ratio:  " + (winAI1*100.0)/nOfGames +
                                             "%\nAI 2 (depth " + depthAI2 + ") won " + winAI2 + " games, ratio:  " + (winAI2*100.0)/nOfGames +
                                             "%\nDraws: " + draws + ", ratio: " +  (draws*100.0)/nOfGames + "%" +
-                                            "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds" +  ANSI_NO_COLOR);
+                                            "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds");
                 break;
             case 10:
                 briscola = new games.briscola.BriscolaEngine();

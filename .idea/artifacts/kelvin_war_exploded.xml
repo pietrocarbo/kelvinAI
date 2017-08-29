@@ -7,6 +7,9 @@
         <element id="directory" name="classes">
           <element id="module-output" name="kelvin" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="JAX-RS 2.1 bundle" />
+        </element>
       </element>
     </root>
   </artifact>

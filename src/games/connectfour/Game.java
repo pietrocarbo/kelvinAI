@@ -7,28 +7,28 @@ import java.util.logging.Logger;
 
 public class Game {
     private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
-    private char starter;
+    private char mySeed;
 
-    public Game(char seedStarter) {
-        this.starter = seedStarter;
+    public Game(char mySeed) {
+        this.mySeed = mySeed;
     }
 
     public char getPlayer (char[][] board) {
-        int xPlyCounter = 0;
+        int mySeedsCounter = 0, oppositeSeedsCounter = 0;
 
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
 
-                if(board[i][j] == 'X') { // (player 1)
-                    xPlyCounter++;
-                } else if (board[i][j] == 'O') { // (player 0)
-                    xPlyCounter--;
+                if (board[i][j] == mySeed) {
+                    mySeedsCounter++;
+                } else if (board[i][j] != '_') {
+                    oppositeSeedsCounter++;
                 }
+
             }
         }
 
-        return (xPlyCounter == 0 ? starter :
-                xPlyCounter > 0 ? 'O' : 'X');  // return 0 if it is AI turn, 1 if it is human turn, else the starter
+        return (oppositeSeedsCounter >= mySeedsCounter ? mySeed : (mySeed == 'O' ? 'X' : 'O'));
     }
 
     public List<Action> getActions (char[][] board) {
@@ -44,7 +44,7 @@ public class Game {
             }
         }
 
-        //Collections.shuffle(result);  // random moves ordering
+        Collections.shuffle(result);  // random moves ordering
         return result;
     }
 
