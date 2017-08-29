@@ -9,7 +9,7 @@
 
 # Package Files #
 *.jar
-*.war
+#*.war
 *.ear
 *.zip
 *.tar.gz
