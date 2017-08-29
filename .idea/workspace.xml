@@ -7,6 +7,51 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d5f5be4-3cb7-4032-90bf-874cbd97a982" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/decks/fiftytwo/Card.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/decks/fiftytwo/Deck.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/decks/fiftytwo/Hand.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/decks/fiftytwo/Rank.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/decks/fiftytwo/Suit.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/decks/forty/Card.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/decks/forty/Deck.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/decks/forty/Hand.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/decks/forty/Rank.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/decks/forty/Suit.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/briscola/BriscolaAction.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/briscola/BriscolaAgent.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/briscola/BriscolaEngine.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/briscola/BriscolaGame.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/briscola/BriscolaPlayer.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/briscola/BriscolaState.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfour/Action.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfour/Agent.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfour/Engine.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfour/Game.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfour/Row.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfour/Support.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfourP/AIMoveConnect4Servlet.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfourP/Action.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfourP/Agent.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfourP/Engine.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfourP/Game.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfourP/Row.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfourP/Support.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/connectfourP/WinningCheckConnect4Servlet.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/tictactoe/Action.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/tictactoe/Agent.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/tictactoe/AiMoveTicTacToeServlet.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/tictactoe/Engine.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/tictactoe/Game.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/games/tictactoe/WinningCheckTicTacToeServlet.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/main/Main.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/main/MyLogFormatter.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/classes/main/TimeWatch.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/favicon-32x32.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/WEB-INF/web.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/connect4.jsp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/styleC4.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/styleTTT.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/kelvin_war_exploded/tictactoe.jsp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -66,7 +111,7 @@
       <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1037">
+            <state relative-caret-position="-10">
               <caret line="61" column="0" lean-forward="false" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
               <folding />
             </state>
@@ -444,176 +489,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WEB-INF" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="games" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tictactoe" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="games" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tictactoe" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Agent.java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="games" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="connectfourP" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="games" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="out" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="out" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="artifacts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kelvin_war_exploded" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
@@ -637,6 +512,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Pietro\Desktop\Intelligenza Artificiale\kelvin" />
       <recent name="C:\Users\Pietro\Desktop\Intelligenza Artificiale\kelvin\web" />
       <recent name="C:\Users\Pietro\Desktop\Intelligenza Artificiale\kelvin\src\connectfourP" />
     </key>
@@ -1374,7 +1250,7 @@
       <workItem from="1503828469199" duration="6786000" />
       <workItem from="1503909516698" duration="4055000" />
       <workItem from="1503913631134" duration="21473000" />
-      <workItem from="1503995624413" duration="13338000" />
+      <workItem from="1503995624413" duration="13550000" />
     </task>
     <task id="LOCAL-00001" summary="briscola playing hand logic, printing game status and accepting input">
       <created>1499680771045</created>
@@ -1502,11 +1378,18 @@
       <option name="project" value="LOCAL" />
       <updated>1504037310062</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="/out/ excluded from .gitgnore">
+      <created>1504037406813</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1504037406813</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="282805000" />
+    <option name="totallyTimeSpent" value="283017000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1645,7 +1528,8 @@
     <MESSAGE value="label in board description" />
     <MESSAGE value="four heuristic value is Integer.MAX_VALUE" />
     <MESSAGE value="[ADD] tictactoe and connect4 web interface" />
-    <option name="LAST_COMMIT_MESSAGE" value="[ADD] tictactoe and connect4 web interface" />
+    <MESSAGE value="/out/ excluded from .gitgnore" />
+    <option name="LAST_COMMIT_MESSAGE" value="/out/ excluded from .gitgnore" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1977,7 +1861,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1037">
+        <state relative-caret-position="-10">
           <caret line="61" column="0" lean-forward="false" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
           <folding />
         </state>
