@@ -14,7 +14,7 @@ public class Engine {
 
     public void playNewGame(int mod) {
 
-        Game game = new Game(1, mod);
+        Game game = new Game(0, mod);
 
         boolean isGameOver = false;
 
@@ -25,7 +25,7 @@ public class Engine {
 
             int nextPlayer = game.getNextPlayer();
 
-            if(nextPlayer == 0){
+            if(nextPlayer == -1){
                 isGameOver = true;
             }else {
                 game.doNextTurn();

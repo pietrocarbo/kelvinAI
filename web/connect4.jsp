@@ -33,6 +33,12 @@
     <button id="aiStart" type="button" onclick="startGame('ai')">Parte Kelvin</button>
     <button id="humanStart" type="button" onclick="startGame('human')">Parti tu</button>
 </div>
+<p>Scegli l'abilità di Kelvin</p>
+<select name="depthSelected" id="depthSelected">
+    <option value="2">Facile</option>
+    <option value="6">Medio</option>
+    <option value="12">Difficile</option>
+</select>
 
 <script>
     var player, starter, row, column;
@@ -87,10 +93,11 @@
     }
 
     function getAiMove (starter) {
+        var depth = $('select[name=depthSelected]').val();
         $.ajax({
             url : 'aimC4',
             type: 'GET',
-            data : {depth: 2, starter: starter, gridValues: getBoardValues()},
+            data : {depth: depth, starter: starter, gridValues: getBoardValues()},
             dataType : 'text',
             success: function (data) {
                 console.log("AI chosen move " + data.charAt(0) + "," + data.charAt(1));

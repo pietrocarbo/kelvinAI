@@ -41,6 +41,8 @@ class Player {
         return cards;
     }
 
+    public int getID() { return ID;}
+
     public void newCardFromDeck(Card newCard){
         cards.addOne(newCard);
     }
@@ -67,7 +69,7 @@ class AI extends Player {
 
     @Override
     public Card play(){
-        return firstCardPly();
+        return cards.getHand().get(0);
     }
 
     @Override
@@ -84,15 +86,6 @@ class AI extends Player {
 
     @Override
     public Card play(Hand tavolo, int turns) {
-        return firstCardPly();
-    }
-
-    private Card firstCardPly() {
-        return cards.getHand().get(0);
-    }
-
-    private Card randomCardPly() {
-        Random random = new Random();
         return null;
     }
 
@@ -129,6 +122,7 @@ class Human extends Player {
                 break;
             }
         }
+
         return cardSelected;
     }
 }

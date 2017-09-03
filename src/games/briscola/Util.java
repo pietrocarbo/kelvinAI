@@ -45,14 +45,14 @@ public class Util {
         Suit s2 = c2.getSuit();
         Rank r2 = c2.getRank();
 
-        System.out.println("Choosing winner between cards " + c1 + " and " + c2);
+        System.out.println("Choosing winner between cards " + c1 + "(" + r1.getBriscolaValue() + ") and " + c2 + "(" + r2.getBriscolaValue() + ")");
 
-        if (s1 == semeBriscola && s1 != s2) return 1;
-        if (s2 == semeBriscola && s1 != s2) return 2;
+        if (s1 == semeBriscola && s1 != s2) return 0;
+        if (s2 == semeBriscola && s1 != s2) return 1;
 
-        if (s1 == s2) return r1.getBriscolaValue() > r2.getBriscolaValue() ? 1 : 2;
+        if (s1 == s2) return r1.getBriscolaValue() > r2.getBriscolaValue() ? 0 : 1;
 
-        return 1;  // non c'è briscola e le due carte sono di semi diversi: vince la prima carta
+        return 0;  // non c'è briscola e le due carte sono di semi diversi: vince la prima carta
     }
 
     public static int getGameWinner(List<Player> players){
@@ -99,7 +99,7 @@ public class Util {
             Hand newTable = new Hand(new ArrayList<Card>());
             newTable.addOne(tableCard);
             newTable.addOne(cards.getHand().get(i));
-            if(getHandWinner(newTable, briscola) == 2){
+            if(getHandWinner(newTable, briscola) == 1){
                 winnerCards.add(cards.getHand().get(i));
                 winnerCardsID.add(i);
             }
