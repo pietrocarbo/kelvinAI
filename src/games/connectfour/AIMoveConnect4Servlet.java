@@ -1,4 +1,4 @@
-package games.connectfourP;
+package games.connectfour;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

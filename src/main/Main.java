@@ -1,5 +1,7 @@
 package main;
 
+import games.briscola.Engine;
+
 import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
 
@@ -45,25 +47,25 @@ public class Main {
         String ANSI_BLUE = "\u001B[34m";
         String ANSI_NO_COLOR = "\u001B[0m";
 
-        games.connectfourP.Engine connect4;
+        games.connectfour.Engine connect4;
         games.tictactoe.Engine tictactoe;
-        games.briscola.BriscolaEngine briscola;
+        Engine briscola;
 
         globalLoggingConfig(Level.WARNING);
 
-        int gameType = 3;
+        int gameType = 10;
         switch (gameType) {
             case 1:
                 tictactoe = new games.tictactoe.Engine(1);  // 0 for AI to start, 1 for Human to start
                 tictactoe.playHumanVsAI();
                 break;
             case 2:
-                connect4 = new games.connectfourP.Engine();
+                connect4 = new games.connectfour.Engine();
                 connect4.playHumanVsAI('O', 'O', 5, 2);
                 break;
             case 3:
                 int nOfGames = 100, winAI1 = 0, winAI2 = 0, draws = 0, depthAI1 = 1, depthAI2 = 5;
-                connect4 = new games.connectfourP.Engine();
+                connect4 = new games.connectfour.Engine();
                 TimeWatch timer = TimeWatch.start();
                 for(int i = 0; i < nOfGames; i++) {
                     switch (connect4.playAIVsAI(depthAI1, 1, depthAI2,1)){
@@ -78,8 +80,8 @@ public class Main {
                                             "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds");
                 break;
             case 10:
-                briscola = new games.briscola.BriscolaEngine();
-                briscola.play1vsAI();
+                briscola = new Engine();
+                briscola.playNewGame(2);
                 break;
         }
     }

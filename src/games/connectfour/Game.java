@@ -6,61 +6,81 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class Game {
-    private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
-    private char mySeed;
+    private static final Logger LOGGER = Logger.getLogger(Game.class.getName());
 
-    public Game(char mySeed) {
-        this.mySeed = mySeed;
-    }
-
-    public char getPlayer (char[][] board) {
-        int mySeedsCounter = 0, oppositeSeedsCounter = 0;
+    public static char getPlayer (char[][] board, char startingPlayer) {
+        int xVSoPlyCounter = 0;
 
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
 
-                if (board[i][j] == mySeed) {
-                    mySeedsCounter++;
-                } else if (board[i][j] != '_') {
-                    oppositeSeedsCounter++;
+                if(board[i][j] == 'X') {
+                    xVSoPlyCounter++;
+                } else if (board[i][j] == 'O') {
+                    xVSoPlyCounter--;
                 }
-
             }
         }
 
-        return (oppositeSeedsCounter >= mySeedsCounter ? mySeed : (mySeed == 'O' ? 'X' : 'O'));
+        return (xVSoPlyCounter == 0 ? startingPlayer :
+                xVSoPlyCounter > 0 ? 'O' : 'X');
     }
 
-    public List<Action> getActions (char[][] board) {
+
+    public static List<Action> getActions (char[][] board, char startingPlayer, int order) {
         List<Action> result = new ArrayList<Action>();
-        char nextPlayer = getPlayer(board);
+        char nextPlayer = Game.getPlayer(board, startingPlayer);
 
-        for (int j = 0; j < 7; j++) { // for each column
-            for (int i = 0; i < 6; i++) { // and then for each row upwards
-                if(board[i][j] == '_') { // blank
-                    result.add(new Action(i, j, nextPlayer));
-                    break;
+        switch (order) {
+            case 0:         // left to right
+                for (int j = 0; j < 7; j++) {
+                    for (int i = 0; i < 6; i++) {
+                        if(board[i][j] == '_') {
+                            result.add(new Action(i, j, nextPlayer));
+                            break;
+                        }
+                    }
                 }
-            }
+                break;
+            case 1:         // random ordering
+                for (int j = 0; j < 7; j++) {
+                    for (int i = 0; i < 6; i++) {
+                        if(board[i][j] == '_') {
+                            result.add(new Action(i, j, nextPlayer));
+                            break;
+                        }
+                    }
+                }
+                 Collections.shuffle(result);
+                break;
+            case 2:        // first middle columns
+                int[] middleColumnsFirst = new int[]{3, 2, 4, 1, 5, 0, 6};
+                for (int j = 0; j < 7; j++) {
+                    for (int i = 0; i < 6; i++) {
+                        if(board[i][middleColumnsFirst[j]] == '_') {
+                            result.add(new Action(i, middleColumnsFirst[j], nextPlayer));
+                            break;
+                        }
+                    }
+                }
+                break;
         }
-
-        Collections.shuffle(result);  // random moves ordering
         return result;
     }
 
-    public char[][] getResult (char[][] board, Action move) {
+    public static char[][] getResult (char[][] board, Action move) {
         char[][] newBoard = new char[6][7];
         if (move.getColumn() >= 0 && move.getColumn() <= 6 && board[move.getRow()][move.getColumn()] != '_') {
             LOGGER.severe("getResult(): it was generated a move for a non-empty square");
             System.exit(-1);
         } else {
-            copyBoard(board, newBoard);
+            Game.copyBoard(board, newBoard);
             newBoard[move.getRow()][move.getColumn()] = move.getSeed();
         }
         return newBoard;
     }
 
-    private char[][] copyBoard(char[][] originalBoard, char[][] copiedBoard) {
+    private static char[][] copyBoard(char[][] originalBoard, char[][] copiedBoard) {
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
                 copiedBoard[i][j] = originalBoard[i][j];
@@ -70,7 +90,6 @@ public class Game {
     }
 
     public static int gameOverChecks (char[][] board, int turns) {
-
         // check every directions from each square
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
         for (int[] d : directions) {
@@ -91,20 +110,20 @@ public class Game {
             }
         }
 
-        if (turns == (7*6))             return 2;  // draw check
-        return -1; // game is not over
+        if (turns == (7*6))             return 2;
+        return -1; // game not over
     }
 
-    public boolean isTerminal (char[][] board) {
+    public static boolean isTerminal (char[][] board) {
 
-        int winner = gameOverChecks (board, calculateTurn(board));
+        int winner = Game.gameOverChecks(board, Game.calculateTurn(board));
         if (winner == 0 || winner == 1 || winner == 2)  return true;
 
         return false;
     }
 
 
-    public int calculateTurn (char[][] board) {
+    public static int calculateTurn (char[][] board) {
         int turn = 0;
         for (int x = 0; x < 6; x++) {
             for (int y = 0; y < 7; y++) {
@@ -114,10 +133,9 @@ public class Game {
         return turn;
     }
 
-    public double getUtilityHeuristic (char[][] board, char player) {
-
-        LOGGER.finer(Engine.boardToString(board, calculateTurn(board), player == 'O' ? 2 : 3));
-        int boardScore = 0, two = 5, three = 50, matchpoint = 1000, four = Integer.MAX_VALUE;
+    public static double getUtilityHeuristic (char[][] board, char askingPlayer) {
+        LOGGER.finer(Game.boardToString(board, Game.calculateTurn(board), "H.E. next to play " + askingPlayer));
+        int boardScore = 0, two = 100, three = 1000, matchpoint = 10000, four = 10000000;
 
         int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
         for (int i = 0; i < 4; i++) {  // for each direction
@@ -125,7 +143,7 @@ public class Game {
             int dy = directions[i][1];
 
             for (int x = 0; x < 6; x++) {  // for each square
-                for (int y = 0; y < 7; y++) {
+                for (int y = 0; y < 7; y++) { //
 
                     int idxX2 = x + dx;
                     int idxY2 = y + dy;
@@ -150,7 +168,7 @@ public class Game {
 
                             int totalOccurrences = row.getTotalOccurrences();
                             Support supportInfo;
-                            if (totalOccurrences != 4 && i != 0) { // check support if it is not a victory and direction is not vertical
+                            if (totalOccurrences != 4 && i != 0) {
                                 supportInfo = checkBottomSupport(board, row.getOccurrences(), indexes, i == 3 ? true : false);
                             } else {
                                 supportInfo = new Support(true, 0);
@@ -169,6 +187,7 @@ public class Game {
                                     }
                                     break;
                                 case 4:
+                                    LOGGER.finest("4 in a row found for player " + row.getSeed() + " at (" + x + "," + y + " ->" + idxX4 + "," + idxY4 + ")");
                                     rowScore = four;
                                     break;
                                 default:
@@ -176,11 +195,10 @@ public class Game {
                                     System.exit(-1);
                                     break;
                             }
-                            if (rowScore < 0) rowScore = 0;   // too many supports missing
-                            if (row.getSeed() != player)
-                                boardScore -= rowScore;
-                            else
-                                boardScore += rowScore;
+                            if (row.getSeed() != askingPlayer) {
+                                rowScore = -rowScore;
+                            }
+                            boardScore += rowScore;
                         }
                     }
 
@@ -192,7 +210,37 @@ public class Game {
         return boardScore;
     }
 
-    private Support checkBottomSupport (char[][] board, boolean[] occurrences, int[] indexes, boolean horizontalScan) {
+    /*
+    private int simpleHeuristic(char[][] grid, int rows, int columns, char seed){
+        int value = 0;
+        int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
+        for (int[] d : directions) {
+            int dx = d[0];
+            int dy = d[1];
+            for (int x = 0; x < rows; x++) {
+                for (int y = 0; y < columns; y++) {
+                    int lastx = x + 3*dx;
+                    int lasty = y + 3*dy;
+                    if (0 <= lastx && lastx < rows && 0 <= lasty && lasty < columns) {
+                        char w = grid[x][y];
+                        if (w != '_' && w == grid[x+dx][y+dy] && w == grid[x+2*dx][y+2*dy] && w == grid[lastx][lasty]) {
+                            if(w == seed) {
+                                value = 1000;
+                            }else{
+                                System.out.println("PERDO CAZZO - " + Game.stampGrid(grid, rows,columns));
+                                value = 0;
+                            }
+                            return value;
+                        }
+                    }
+                }
+            }
+        }
+        return -1000;
+    }
+    */
+
+    private static Support checkBottomSupport (char[][] board, boolean[] occurrences, int[] indexes, boolean horizontalScan) {
         int missingSupports = 0;
 
         for (int i = 0; i < 4; i++) {
@@ -235,7 +283,7 @@ public class Game {
         return new Support(missingSupports == 0 ? true : false, missingSupports);
     }
 
-    private Row areThereMoreThenTwoInARowAndNotOpposingSeed (char first, char second, char third, char fourth) {
+    private static Row areThereMoreThenTwoInARowAndNotOpposingSeed (char first, char second, char third, char fourth) {
         boolean[] occurrences = new boolean[]{false, false, false, false};
         char[] row = {first, second, third, fourth};
         int os = 0, xs = 0;
@@ -267,169 +315,25 @@ public class Game {
         return new Row(true, dominantSeed, occurrences, xs > 0 ? xs : os);
     }
 
-    private double getUtility(char[][] board) {
+    public static String boardToString (char[][] grid, int turns, String player) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n---- turn " + turns + " " + player + "\n");
 
-        double draw = 0.0, AIwin = 10.0, AIloss = -10.0;
-
-        int winner = gameOverChecks (board, 0);
-
-        if (winner == 0)        return AIwin;
-        else if (winner == 1)   return AIloss;
-        else if (winner == 2)   return draw;
-
-        else {
-            LOGGER.severe("getUtility(): called on a non-terminal board");
-            System.exit(-1);
-            return 0.0;
-        }
-    }
-
-    public double oldGetUtilityHeuristic (char[][] board) {
-
-        int matchpoint = 3000, two = 3, three = 30, four = 30000;
-        int nextPlayer = (getPlayer(board) == 'O' ? 0 : 1) + 2;
-        int score = 0;
-
-        int[][] horizontalSB = new int[6][7];
-        int[][] verticalSB = new int[6][7];
-        int[][] diagonalSB = new int[6][7];
-        int[][] antidiagonalSB = new int[6][7];
-
-        List<int[][]> scoreBoards = new ArrayList<>();
-        scoreBoards.add(horizontalSB);
-        scoreBoards.add(antidiagonalSB);
-        scoreBoards.add(diagonalSB);
-        scoreBoards.add(verticalSB);
-
-
-        LOGGER.finer(Engine.boardToString(board, calculateTurn(board), nextPlayer));
-
-        int[][] directions = {{1,0}, {1,-1}, {1,1}, {0,1}};
-        for (int i = 0; i < 4; i++) {
-            int dx = directions[i][0];
-            int dy = directions[i][1];
-
-            for (int x = 0; x < 6; x++) {
-                for (int y = 0; y < 7; y++) {
-                    char w = board[x][y];
-
-                    int lastx4 = x + 3 * dx;
-                    int lasty4 = y + 3 * dy;
-
-                    int lastx3 = x + 2 * dx;
-                    int lasty3 = y + 2 * dy;
-
-                    int lastx2 = x + dx;
-                    int lasty2 = y + dy;
-
-
-                    //Dare punti solo se possibile soluzione di 4
-                    if (w != '_' && scoreBoards.get(i)[x][y] == 0 && (0 <= lastx4 && lastx4 < 6 && 0 <= lasty4 && lasty4 < 7)) {
-
-                        char[] next3 = {board[lastx2][lasty2], board[lastx3][lasty3], board[lastx4][lasty4]};
-
-                        if ((next3[0] == '_' || next3[0] == w) && (next3[1] == '_' || next3[1] == w) && (next3[2] == '_' || next3[2] == w)) {
-                            //Conto quante occorrenze di w ci sono
-                            int counterw = 1;
-                            for (char next : next3) {
-                                if (next == w) counterw++;
-                            }
-                            int points = 0;
-                            switch (counterw) {
-                                case 1:
-                                    break;
-                                case 2:
-                                    points = two;
-                                    break;
-                                case 3:
-                                    points = three;
-                                    if(lastx4 == 0){
-                                        points += matchpoint;
-                                    }else if(next3[0] == '_'){
-                                        if(board[lastx2-1][lasty2] != '_'){
-                                            points += matchpoint;
-                                        }
-                                    }else if(next3[1] == '_'){
-                                        if(board[lastx3-1][lasty3] != '_'){
-                                            points += matchpoint;
-                                        }
-                                    }else {
-                                        if(board[lastx4-1][lasty4] != '_'){
-                                            points += matchpoint;
-                                        }
-                                    }
-                                    break;
-                                case 4:
-                                    points = four;
-                                    break;
-                            }
-                            if (w == 'X') points = 0 - points;
-                            scoreBoards.get(i)[x][y] += points;
-                            scoreBoards.get(i)[lastx2][lasty2] += points;
-                            scoreBoards.get(i)[lastx3][lasty3] += points;
-                            scoreBoards.get(i)[lastx4][lasty4] += points;
-
-                            //TODO: Controllare il caso in cui il 'buco' sia il primo elemento(sotto)
-
-
-/*
-
-                            if ((0 <= lastx4 && lastx4 < 6 && 0 <= lasty4 && lasty4 < 7) && (w == board[x + dx][y + dy] && w == board[x + 2 * dx][y + 2 * dy] && w == board[lastx4][lasty4])) {
-                             System.out.println("four in a row");
-                                if (w == 'O') {
-                                    scoreBoards.get(i)[x][y] += four;
-                                    scoreBoards.get(i)[x+dx][y+dy] += four;
-                                    scoreBoards.get(i)[x+2*dx][y+2*dy] += four;
-                                    scoreBoards.get(i)[lastx4][lasty4] += four;
-                                }
-                                else if (w == 'X') {
-                                    scoreBoards.get(i)[x][y] -= four;
-                                    scoreBoards.get(i)[x+dx][y+dy] -= four;
-                                    scoreBoards.get(i)[x+2*dx][y+2*dy] -= four;
-                                    scoreBoards.get(i)[lastx4][lasty4] -= four;
-                                }
-                        } else if ((0 <= lastx3 && lastx3 < 6 && 0 <= lasty3 && lasty3 < 7) && (w == board[x + dx][y + dy] && w == board[lastx3][lasty3])) {
-                             System.out.println("three in a row");
-                                if (w == 'O') {
-                                    scoreBoards.get(i)[x][y] += three;
-                                    scoreBoards.get(i)[x+dx][y+dy] += three;
-                                    scoreBoards.get(i)[lastx3][lasty3] += three;
-                                } else if (w == 'X') {
-                                    scoreBoards.get(i)[x][y] -= three;
-                                    scoreBoards.get(i)[x+dx][y+dy] -= three;
-                                    scoreBoards.get(i)[lastx3][lasty3] -= three;
-                                }
-                        } else if ((0 <= lastx2 && lastx2 < 6 && 0 <= lasty2 && lasty2 < 7) && (w == board[lastx2][lasty2])) {
-                                System.out.println("two in a row");
-                                if (w == 'O') {
-                                    scoreBoards.get(i)[x][y] += two;
-                                    scoreBoards.get(i)[lastx2][lasty2] += two;
-                                } else if (w == 'X')  {
-                                    scoreBoards.get(i)[x][y] -= two;
-                                    scoreBoards.get(i)[lastx2][lasty2] -= two;
-                                }
-                        } else {
-                            //System.out.println("one in a row");
-                            //if (w == '0')           scoreBoards.get(i)[x][y] += one;
-                            //else if (w == 'X')      scoreBoards.get(i)[x][y] -= one;
-
-                        }
-*/
-                        }
-                    }
-                }
+        for(int i = 5; i >= 0; i--){
+            stringBuilder.append("|");
+            for(int j = 0; j <= 6;j++){
+                stringBuilder.append(grid[i][j] + "|");
             }
+            stringBuilder.append("\t\t " + i + ".\n");
         }
 
-        for (int[][] scoreTable : scoreBoards) {
-            for (int x = 0; x < 6; x++) {
-                for (int y = 0; y < 7; y++) {
-                    score += scoreTable[x][y];
-                }
-            }
+        stringBuilder.append("\n.");
+        for (int i = 0; i <= 6; i++){
+            stringBuilder.append(i + ".");
         }
-        LOGGER.finer("score of this table " + score);
-        return score;
+        stringBuilder.append("\n");
+
+        return stringBuilder.toString();
     }
-
 }
+
