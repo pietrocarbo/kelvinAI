@@ -12,35 +12,53 @@ public class Engine {
 
     }
 
-    public void playNewGame(int mod) {
+    public void playNewGame(int mod, int nOfGames) {
+        int k = 0, p1Pts = 0, p2Pts = 0, p1Win = 0, p2Win = 0, draw = 0;
 
-        Game game = new Game(0, mod);
+        while (k < nOfGames) {
+            Game game = new Game(0, mod);
 
-        boolean isGameOver = false;
+            boolean isGameOver = false;
 
-        System.out.println("Game started.\n");
+            System.out.println("Game started.\n");
 
-        do {
-            System.out.println(game);
+            do {
+                //System.out.println(game);
 
-            int nextPlayer = game.getNextPlayer();
+                int nextPlayer = game.getNextPlayer();
 
-            if(nextPlayer == -1){
-                isGameOver = true;
-            }else {
-                game.doNextTurn();
+                if (nextPlayer == -1) {
+                    isGameOver = true;
+                } else {
+                    game.doNextTurn();
+                }
+            } while (!isGameOver);
+
+            System.out.println("End game. ");
+
+            int winner = Util.getGameWinner(game.getPlayers());
+
+            if (winner == -1) {
+                System.out.println("Game ends in draw.");
+                draw++;
+            } else {
+                System.out.println(game.getPlayers().get(winner).getName() + " won the game with " + game.getPlayers().get(winner).getBriscole() + " carte di briscola.");
+                if(winner == 0){
+                    p1Win++;
+                }else{
+                    p2Win++;
+                }
+                p1Pts += Util.calculatePoints(game.getPlayers().get(0).getCardsCollected());
+                p2Pts += Util.calculatePoints(game.getPlayers().get(1).getCardsCollected());
             }
-        } while (!isGameOver);
 
-        System.out.println("End game. ");
-
-        int winner = Util.getGameWinner(game.getPlayers());
-
-        if(winner == -1){
-            System.out.println("Game ends in draw.");
-        }else{
-            System.out.println(game.getPlayers().get(winner).getName() + " won the game.");
+            k++;
         }
+
+        System.out.println("\n\n\n Smith: " + (p1Win * 100)/nOfGames + "% win with " + p1Pts/nOfGames + " AVG.");
+        System.out.println("\n Kelvin: " + (p2Win * 100)/nOfGames + "% win with " + p2Pts/nOfGames + " AVG.");
+        System.out.println("\n Draw: " + (draw * 100)/nOfGames + "% draw.");
+
 
     }
 

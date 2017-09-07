@@ -81,7 +81,7 @@ public class Main {
                 break;
             case 10:
                 briscola = new Engine();
-                briscola.playNewGame(2);
+                briscola.playNewGame(3, 50);
                 break;
         }
     }

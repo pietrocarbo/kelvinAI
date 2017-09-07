@@ -1,6 +1,7 @@
 package decks.forty;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Hand {
@@ -19,6 +20,12 @@ public class Hand {
         return this;
     }
 
+    public Hand shuffle(){
+        Collections.shuffle(hand);
+
+        return this;
+    }
+
     public Hand addAll (List<Card> toAdd) {
         hand.addAll(toAdd);
         return this;
@@ -26,8 +33,16 @@ public class Hand {
 
     public void removeOne (Card toRemove) {
         if (!hand.remove(toRemove)) {
-            System.err.println("Request to remove card '" + toRemove + "' not in the hand");
-            System.exit(-1);
+            try{
+                for (int i = 0; i < hand.size(); i++) {
+                    if (hand.get(i).getRank() == toRemove.getRank() && hand.get(i).getSuit() == toRemove.getSuit()) {
+                        hand.remove(i);
+                    }
+                }
+            }catch (Exception e) {
+                System.err.println("Request to remove card '" + toRemove + "' not in the hand");
+                System.exit(-1);
+            }
         }
     }
 

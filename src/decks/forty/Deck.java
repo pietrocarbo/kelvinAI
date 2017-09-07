@@ -1,20 +1,24 @@
 package decks.forty;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 public class Deck {
 
     private Integer cardsLeft;
-    private List<Card> deck = new ArrayList<>();
+    private List<Card> deck = new ArrayList<Card>();
 
     public Deck () {
         for (Suit suit : Suit.values())
             for (Rank rank : Rank.values())
                 deck.add(new Card(rank, suit));
+        cardsLeft = deck.size();
+    }
+
+    public Deck(Hand oldDeck){
+        for(int i = 0; i < oldDeck.getHand().size(); i++) {
+            deck.add(oldDeck.getHand().get(i));
+        }
         cardsLeft = deck.size();
     }
 
@@ -36,7 +40,7 @@ public class Deck {
     }
 
     public List<Card> deal (Integer nOfCards)  {
-        if (cardsLeft < nOfCards) {
+        if (deck.size() < nOfCards) {
             System.err.println("Request to deal more cards then left in the deck");
             System.exit(-1);
             return deck;

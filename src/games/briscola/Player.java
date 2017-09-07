@@ -11,10 +11,11 @@ import java.util.Scanner;
 
 class Player {
 
+    int ID;
     String name;
     Hand cards;
     Hand cardsCollected;
-    int ID;
+    Hand briscole = new Hand(new ArrayList<Card>());
 
     public Player(String name, Hand initialHand, int ID) {
     }
@@ -25,7 +26,8 @@ class Player {
         return null;
     }
 
-    public Card play(Hand tavolo, Suit briscola){
+    public Card play(Hand tavolo, Card briscola, Hand unKnownCards, int p2Point ,int turn, int oppositeNoOfCard, int nextPlayer){
+
         return null;
     }
 
@@ -41,7 +43,11 @@ class Player {
         return cards;
     }
 
-    public int getID() { return ID;}
+    public void setMinMaxParameter(int depth, boolean pruning, int mazzi){}
+
+    public void addBriscole(Card briscole){ this.briscole.addOne(briscole);}
+
+    public Hand getBriscole(){ return briscole;}
 
     public void newCardFromDeck(Card newCard){
         cards.addOne(newCard);
@@ -60,11 +66,22 @@ class Player {
 
 class AI extends Player {
 
+    int depth;
+    boolean pruning;
+    int mazzi;
+
     public AI(String name, Hand initialHand, int ID){
-        this.name = name;
         this.ID = ID;
+        this.name = name;
         cards = initialHand;
         cardsCollected = new Hand(new ArrayList<Card>());
+    }
+
+    @Override
+    public void setMinMaxParameter(int depth, boolean pruning, int mazzi){
+        this.depth = depth;
+        this.pruning = pruning;
+        this.mazzi = mazzi;
     }
 
     @Override
@@ -73,15 +90,32 @@ class AI extends Player {
     }
 
     @Override
-    public Card play(Hand tavolo, Suit briscola){
+    public Card play(Hand tavolo, Card briscola, Hand unKnownCards, int p2Point, int turn, int oppositeNoOfCard, int nextPlayer){
+
+
+
+        if(tavolo.getHand().size() == 0){
+            //Se sono il primo a giocare (tavolo vuoto) gioco la carta che ha il minor valore nella mia mano
+            return cards.getHand().get(Util.getIDOfLessValueCard(cards, briscola.getSuit()));
+
+        }else{
+            //Se l'avversario ha già giocato gioco con MonteCarlo
+            System.out.print(name + ": ");
+            return Util.monteCarloMethod(ID , depth, pruning, mazzi, new Hand(new ArrayList<Card>(cards.getHand())), briscola, tavolo, unKnownCards, Util.calculatePoints(cardsCollected), p2Point, oppositeNoOfCard, nextPlayer);
+        }
+
+
+
+/*
         if(tavolo.getHand().size() == 0 || tavolo.getHand().get(0).getRank().getBriscolaValue() < 8){
             //Se sono il primo a giocare (tavolo vuoto) gioco la carta che ha il minor valore nella mia mano
-            return cards.getHand().get(Util.getIDOfLessValueCard(cards, briscola));
+            return cards.getHand().get(Util.getIDOfLessValueCard(cards, briscola.getSuit()));
 
         }else{
             //Se l'avversario ha già giocato gioco la prima carta più forte della carta giocata dall'avversario
-            return  cards.getHand().get(Util.getIDOfFirstBestCard(cards, briscola, tavolo.getHand().get(0)));
+            return  cards.getHand().get(Util.getIDOfFirstBestCard(cards, briscola.getSuit(), tavolo.getHand().get(0)));
         }
+        */
     }
 
     @Override
@@ -89,17 +123,12 @@ class AI extends Player {
         return null;
     }
 
-    private Card minmaxPly() {
-        // TODO (using 'game' object)
-        return null;
-    }
 }
 
 class Human extends Player {
 
-    public Human(String name, Hand initialHand, int ID){
+    public Human(String name, Hand initialHand){
         this.name = name;
-        this.ID = ID;
         cards = initialHand;
         cardsCollected = new Hand(new ArrayList<Card>());
     }

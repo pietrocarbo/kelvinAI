@@ -23,20 +23,26 @@ public class Game {
 
         switch (mod){
             case 1:
-                players.add(new Human("Mirco", new Hand(mazzo.deal(3)), 0));
-                players.add(new Human("Pietro", new Hand(mazzo.deal(3)), 1));
+                players.add(new Human("Mirco", new Hand(mazzo.deal(3))));
+                players.add(new Human("Pietro", new Hand(mazzo.deal(3))));
                 break;
             case 2:
-                players.add(new Human("Mirco", new Hand(mazzo.deal(3)), 0));
-                players.add(new AI("John", new Hand(mazzo.deal(3)), 1));
+                players.add(new Human("Mirco", new Hand(mazzo.deal(3))));
+                players.add(new AI("Kelvin", new Hand(mazzo.deal(3)), 1));
+                players.get(1).setMinMaxParameter( 8, true , 50);
+
                 break;
             case 3:
                 players.add(new AI("Smith", new Hand(mazzo.deal(3)), 0));
-                players.add(new AI("John", new Hand(mazzo.deal(3)), 1));
+                players.get(0).setMinMaxParameter( 3, true , 50);
+
+                players.add(new AI("Kelvin", new Hand(mazzo.deal(3)), 1));
+                players.get(1).setMinMaxParameter( 3, true , 50);
+
                 break;
             default:
-                players.add(new Human("Mirco", new Hand(mazzo.deal(3)), 0));
-                players.add(new Human("Pietro", new Hand(mazzo.deal(3)), 1));
+                players.add(new Human("Mirco", new Hand(mazzo.deal(3))));
+                players.add(new Human("Pietro", new Hand(mazzo.deal(3))));
                 break;
         }
 
@@ -54,12 +60,20 @@ public class Game {
 
         Card nextCard;
 
-        System.out.println("Next to play is Player " + nextPlayer + " - " + players.get(nextPlayer).getName() + ": ");
+        //System.out.println("Next to play is Player " + nextPlayer + " - " + players.get(nextPlayer).getName() + ": ");
 
         if(players.get(nextPlayer) instanceof AI){
-            nextCard = players.get(nextPlayer).play(tavolo, briscola.getSuit());
+
+            Hand unKnownCards = new Hand(new ArrayList<Card>(mazzo.getDeck()));
+            unKnownCards.addAll(players.get(nextPlayer == 0 ? 1 : 0).getCards().getHand());
+            unKnownCards.removeOne(briscola);
+            nextCard = players.get(nextPlayer).play(new Hand(new ArrayList<Card>(tavolo.getHand())), briscola, unKnownCards, Util.calculatePoints(players.get(nextPlayer == 0 ? 1 : 0).getCardsCollected()),turns, players.get(nextPlayer == 0 ? 1 : 0).getCards().getHand().size(), nextPlayer);
         }else{
             nextCard = players.get(nextPlayer).play();
+        }
+
+        if(nextCard.getSuit() == briscola.getSuit()){
+            players.get(nextPlayer).addBriscole(nextCard);
         }
 
         players.get(nextPlayer).removeCard(nextCard);
@@ -72,17 +86,15 @@ public class Game {
     public void collectAndDeal() {
 
         if (tavolo.getHand().size() == 2) {
-            System.out.println("***\nCollecting from the (" + tavolo.getHand().size() + " elements) the board " + tavolo.getHand());
+            //System.out.println("***\nCollecting from the (" + tavolo.getHand().size() + " elements) the board " + tavolo.getHand());
 
             int handWinner = Util.getHandWinner(tavolo, briscola.getSuit());
-
-            //nextPlayer = Util.getHandWinner(tavolo, briscola.getSuit());
 
             if(handWinner == 0){
                 nextPlayer = nextPlayer == 0 ? 1 : 0;
             }
 
-            System.out.println("Player " + nextPlayer + " won this ply\n***\n");
+            //System.out.println("Player " + nextPlayer + " won this ply\n***\n");
 
             players.get(nextPlayer).collectCards(tavolo);
 
@@ -112,7 +124,7 @@ public class Game {
                 "board " + tavolo.getHand() + "   " +
                 "(plyes left " + (20 - turns) + " , nextPlayer " + nextPlayer + ", briscola " + briscola + ")\t\t\t" +
                 "\n\n" +
-                players.get(1).getName() + " (" + Util.calculatePoints(players.get(1).getCardsCollected()) + " pts)" + players.get(1).getCards() +
+                players.get(1).getName() + " (" + Util.calculatePoints(players.get(1).getCardsCollected()) + " pts) " + players.get(1).getCards() +
                 "\n-------------------------------------------------------------------------------------------------------------------------------------------------\n";
     }
 }

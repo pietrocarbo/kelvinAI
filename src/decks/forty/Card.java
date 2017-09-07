@@ -15,6 +15,11 @@ public class Card {
         suit = null;
     }
 
+    public Card(Card oldCard){
+        rank = oldCard.getRank();
+        suit = oldCard.getSuit();
+    }
+
     public Rank getRank() {
         return rank;
     }
