@@ -35,9 +35,9 @@
 </div>
 <p>Scegli l'abilità di Kelvin</p>
 <select name="depthSelected" id="depthSelected">
-    <option value="2">Facile</option>
-    <option value="6">Medio</option>
-    <option value="12">Difficile</option>
+    <option value="2">Principiante</option>
+    <option value="6">Moderata</option>
+    <option value="10">Professionista</option>
 </select>
 
 <script>
@@ -111,7 +111,7 @@
                 alert("Errore del server. Ricaricare la pagina.");
             },
             complete: function (data, status) {
-                console.log("AJAX aimTTT request completed, status " + status);
+                console.log("AJAX aimTTT request completed, depth " + depth + ", status " + status);
             }
         });
     }
