@@ -38,7 +38,7 @@ public class WinningCheckConnect4Servlet extends HttpServlet {
 
         PrintWriter out = response.getWriter();
 
-        int checkResult = Game.gameOverChecks(boardElements, Game.calculateTurn(boardElements));
+        int checkResult = Util.gameOverChecks(boardElements, Util.calculateTurn(boardElements), 'O', 'X');
 
         String strToReturn = "N";
         if (checkResult == 0) {

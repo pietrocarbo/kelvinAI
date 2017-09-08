@@ -77,7 +77,7 @@
     function startGame (startingPlayer) {
         console.log(startingPlayer + " is starting a new game");
 
-        $('#starterSelect').html("<p id='newGameInfo' style='width: 40%;'>Per iniziare una nuova partita aggiorna la pagina</p>");
+        $('#starterSelect').html("<p><input type=\"button\" value=\"CLICCA QUI PER COMINCIARE UNA NUOVA PARTITA\" onClick=\"window.location.reload()\"><\p>");
 
         if (startingPlayer == 'ai') {
             starter = "O";

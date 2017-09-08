@@ -51,9 +51,9 @@ public class Main {
         games.tictactoe.Engine tictactoe;
         Engine briscola;
 
-        globalLoggingConfig(Level.WARNING);
+        globalLoggingConfig(Level.FINE);
 
-        int gameType = 10;
+        int gameType = 3;
         switch (gameType) {
             case 1:
                 tictactoe = new games.tictactoe.Engine(1);  // 0 for AI to start, 1 for Human to start
@@ -61,14 +61,19 @@ public class Main {
                 break;
             case 2:
                 connect4 = new games.connectfour.Engine();
-                connect4.playHumanVsAI('O', 'O', 5, 2);
+                connect4.playNewGame(0, 2);
                 break;
             case 3:
-                int nOfGames = 100, winAI1 = 0, winAI2 = 0, draws = 0, depthAI1 = 1, depthAI2 = 5;
-                connect4 = new games.connectfour.Engine();
+                int nOfGames = 50, winAI1 = 0, winAI2 = 0, draws = 0, depthAI1 = 1, depthAI2 = 5;
                 TimeWatch timer = TimeWatch.start();
                 for(int i = 0; i < nOfGames; i++) {
-                    switch (connect4.playAIVsAI(depthAI1, 1, depthAI2,1)){
+                    connect4 = new games.connectfour.Engine();
+                    connect4.setDepth1(depthAI1);
+                    connect4.setDepth2(depthAI2);
+
+                    connect4.playNewGame(0, 3);
+
+                    switch (connect4.getGameOverChecks()) {
                         case 0: winAI1++;   break;
                         case 1: winAI2++;   break;
                         case 2: draws++;    break;

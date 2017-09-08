@@ -41,7 +41,7 @@ public class AIMoveConnect4Servlet extends HttpServlet {
         }
 
 
-        int[] aiMove = new Agent('O', starter).heuristicMinMax(boardElements, depth, 2);
+        int[] aiMove = Util.heuristicMinMax(boardElements, depth, starter, 'O', 2);
 
         String strToReturn = aiMove[0] + "" + aiMove[1];
         response.setContentType("text/plain");
