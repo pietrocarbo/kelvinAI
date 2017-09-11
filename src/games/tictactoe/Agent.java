@@ -39,7 +39,7 @@ public class Agent {
         else                SEED_STARTER = SEED_HUMAN;
     }
 
-    // getPlayer(board) -> current player
+    // getFirstPlayer(board) -> current player
     public int getPlayer (int[][] board) {
         int aiPly = 0, humanPly = 0;
 

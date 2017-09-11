@@ -4,9 +4,11 @@ import decks.forty.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Game {
 
+    private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
     private Card briscola;
     private Deck mazzo;
     private int turns;
@@ -14,14 +16,15 @@ public class Game {
     private Integer nextPlayer;
     private Hand tavolo;
 
-    public Game(int starter, int mod) {
+    public Game(int starter, int gameType) {
 
         mazzo = new Deck();
         briscola = mazzo.shuffle().peekLast();
         turns = 0;
         nextPlayer = starter;
 
-        switch (mod){
+        switch (gameType){
+            default:
             case 1:
                 players.add(new Human("Mirco", new Hand(mazzo.deal(3))));
                 players.add(new Human("Pietro", new Hand(mazzo.deal(3))));
@@ -38,11 +41,6 @@ public class Game {
 
                 players.add(new AI("Kelvin", new Hand(mazzo.deal(3)), 1));
                 players.get(1).setMinMaxParameter( 3, true , 50);
-
-                break;
-            default:
-                players.add(new Human("Mirco", new Hand(mazzo.deal(3))));
-                players.add(new Human("Pietro", new Hand(mazzo.deal(3))));
                 break;
         }
 
@@ -60,23 +58,30 @@ public class Game {
 
         Card nextCard;
 
-        //System.out.println("Next to play is Player " + nextPlayer + " - " + players.get(nextPlayer).getName() + ": ");
+        LOGGER.fine("Next player is " + nextPlayer + " - " + players.get(nextPlayer).getName() + ": ");
 
-        if(players.get(nextPlayer) instanceof AI){
+        if (players.get(nextPlayer) instanceof AI) {
 
-            Hand unKnownCards = new Hand(new ArrayList<Card>(mazzo.getDeck()));
-            unKnownCards.addAll(players.get(nextPlayer == 0 ? 1 : 0).getCards().getHand());
-            unKnownCards.removeOne(briscola);
-            nextCard = players.get(nextPlayer).play(new Hand(new ArrayList<Card>(tavolo.getHand())), briscola, unKnownCards, Util.calculatePoints(players.get(nextPlayer == 0 ? 1 : 0).getCardsCollected()),turns, players.get(nextPlayer == 0 ? 1 : 0).getCards().getHand().size(), nextPlayer);
-        }else{
+            Hand unseenCards = new Hand(new ArrayList<Card>(mazzo.getCards()));
+            unseenCards.addAll(players.get(nextPlayer == 0 ? 1 : 0).getCards().getHand());
+            unseenCards.removeOne(briscola);
+            nextCard = players.get(nextPlayer).play(
+                    new Hand(new ArrayList<Card>(tavolo.getHand())),
+                    briscola,
+                    unseenCards,
+                    Util.calculatePoints(players.get(nextPlayer == 0 ? 1 : 0).getCardsCollected()),
+                    turns,
+                    players.get(nextPlayer == 0 ? 1 : 0).getCards().getHand().size(),
+                    nextPlayer);
+        } else {
             nextCard = players.get(nextPlayer).play();
         }
 
-        if(nextCard.getSuit() == briscola.getSuit()){
-            players.get(nextPlayer).addBriscole(nextCard);
+        if (nextCard.getSuit() == briscola.getSuit()) {
+            players.get(nextPlayer).addBriscola(nextCard);
         }
 
-        players.get(nextPlayer).removeCard(nextCard);
+        players.get(nextPlayer).removeCardFromHand(nextCard);
 
         tavolo.addOne(nextCard);
 
@@ -86,43 +91,39 @@ public class Game {
     public void collectAndDeal() {
 
         if (tavolo.getHand().size() == 2) {
-            //System.out.println("***\nCollecting from the (" + tavolo.getHand().size() + " elements) the board " + tavolo.getHand());
+            LOGGER.finest("Collecting from " + tavolo.getHand().size() + " elements on the board " + tavolo.getHand());
 
             int handWinner = Util.getHandWinner(tavolo, briscola.getSuit());
 
-            if(handWinner == 0){
+            if (handWinner == 0) {
                 nextPlayer = nextPlayer == 0 ? 1 : 0;
             }
 
-            //System.out.println("Player " + nextPlayer + " won this ply\n***\n");
+            LOGGER.finest("Player " + nextPlayer + " won this turn");
 
             players.get(nextPlayer).collectCards(tavolo);
 
             tavolo.getHand().clear();
 
-            if((20 - turns) > 3){
-                players.get(nextPlayer).newCardFromDeck(mazzo.deal(1).get(0));
-                if(nextPlayer == 0){
-                    players.get(1).newCardFromDeck(mazzo.deal(1).get(0));
-                }else{
-                    players.get(0).newCardFromDeck(mazzo.deal(1).get(0));
-                }
+            if ((20 - turns) > 3) {
+                players.get(nextPlayer).addNewCardToHand(mazzo.deal(1).get(0));
+                players.get(1 - nextPlayer).addNewCardToHand(mazzo.deal(1).get(0));
             }
-
             turns++;
-        }else{
+
+        } else {
             nextPlayer = nextPlayer == 0 ? 1 : 0;
         }
     }
 
-    public List<Player> getPlayers(){ return players;}
+    public List<Player> getPlayers() { return players; }
 
     @Override
     public String toString() {
         return players.get(0).getName() + " (" + Util.calculatePoints(players.get(0).getCardsCollected()) + " pts)" + players.get(0).getCards() + "\n" +
                 "\n" +
                 "board " + tavolo.getHand() + "   " +
-                "(plyes left " + (20 - turns) + " , nextPlayer " + nextPlayer + ", briscola " + briscola + ")\t\t\t" +
+                "(turns left " + (20 - turns) + " , nextPlayer " + nextPlayer + ", briscola " + briscola + ")\t\t\t" +
                 "\n\n" +
                 players.get(1).getName() + " (" + Util.calculatePoints(players.get(1).getCardsCollected()) + " pts) " + players.get(1).getCards() +
                 "\n-------------------------------------------------------------------------------------------------------------------------------------------------\n";

@@ -6,24 +6,26 @@ import java.util.*;
 public class Deck {
 
     private Integer cardsLeft;
-    private List<Card> deck = new ArrayList<Card>();
+    private List<Card> cards = new ArrayList<Card>();
 
     public Deck () {
-        for (Suit suit : Suit.values())
-            for (Rank rank : Rank.values())
-                deck.add(new Card(rank, suit));
-        cardsLeft = deck.size();
-    }
-
-    public Deck(Hand oldDeck){
-        for(int i = 0; i < oldDeck.getHand().size(); i++) {
-            deck.add(oldDeck.getHand().get(i));
+        for (Suit suit : Suit.values()) {
+            for (Rank rank : Rank.values()) {
+                cards.add(new Card(rank, suit));
+            }
         }
-        cardsLeft = deck.size();
+        cardsLeft = cards.size();
     }
 
-    public List<Card> getDeck() {
-        return deck;
+    public Deck (Hand oldDeck) {
+        for (int i = 0; i < oldDeck.getHand().size(); i++) {
+            cards.add(oldDeck.getHand().get(i));
+        }
+        cardsLeft = cards.size();
+    }
+
+    public List<Card> getCards() {
+        return cards;
     }
 
     public Integer getCardsLeft() {
@@ -31,25 +33,25 @@ public class Deck {
     }
 
     public Deck shuffle () {
-        Collections.shuffle(deck);
+        Collections.shuffle(cards);
         return this;
     }
 
     public Card peekLast () {
-        return new Card(deck.get(deck.size()-1).getRank(), deck.get(deck.size()-1).getSuit());
+        return new Card(cards.get(cards.size()-1).getRank(), cards.get(cards.size()-1).getSuit());
     }
 
     public List<Card> deal (Integer nOfCards)  {
-        if (deck.size() < nOfCards) {
-            System.err.println("Request to deal more cards then left in the deck");
+        if (cards.size() < nOfCards) {
+            System.err.println("Request to deal more cards then left in the cards");
             System.exit(-1);
-            return deck;
+            return cards;
         }
         else {
-            List<Card> headSublist = deck.subList(0, nOfCards);
+            List<Card> headSublist = cards.subList(0, nOfCards);
             List<Card> ret = new ArrayList<Card>(headSublist);
             headSublist.clear();
-            cardsLeft = deck.size();
+            cardsLeft = cards.size();
             return ret;
         }
     }
@@ -58,7 +60,7 @@ public class Deck {
     public String toString () {
         StringBuilder strBuilder = new StringBuilder();
         int i = 1;
-        for (Card card : deck) {
+        for (Card card : cards) {
             strBuilder.append(i++ + ". " + card + "\n");
         }
         return strBuilder.toString();
