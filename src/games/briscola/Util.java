@@ -137,7 +137,7 @@ public class Util {
                                          Hand cards, Card briscola, Hand tavolo, Hand unkownCards,
                                          int p1Point, int p2Point, int oppositeNoOfCard, int nextPlayer) {
 
-        System.out.println("I'm thinking...");
+        LOGGER.info("Monte Carlo approximation based on minmax started...");
 
         int[] cardValues = new int[cards.getHand().size()];
 

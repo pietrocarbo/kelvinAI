@@ -97,7 +97,6 @@ class AI extends Player {
 
         } else {
             //Se l'avversario ha già giocato, gioco con MonteCarlo
-            System.out.print(name + ": ");
             return Util.monteCarloMethod(ID , depth, pruning, numberOfRandomDeals,
                     new Hand(new ArrayList<Card>(cards.getHand())), briscola, tavolo,
                     unKnownCards, Util.calculatePoints(cardsCollected), p2Point, oppositeNoOfCard, nextPlayer);
