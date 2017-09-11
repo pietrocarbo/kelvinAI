@@ -119,7 +119,7 @@ public class MonteCarloGame {
 
             } else {
                 // TODO: completamento con la giocata dell'avversario
-                // (Pietro: bisogna considerare una Action come una giocata, non due, cambiare play1Turn di conseguenza e iniziare il minMax con maximize=false)
+                // (Pietro: bisogna considerare una Action come una giocata, non due, quindi cambiando play1Turn() di conseguenza e poi iniziare il minMax con maximize=false)
 
             }
         }
