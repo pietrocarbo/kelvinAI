@@ -54,7 +54,7 @@ public class Main {
         games.tictactoe.Engine tictactoe;
         Engine briscola;
 
-        globalLoggingConfig(Level.SEVERE);
+        globalLoggingConfig(Level.INFO);
 
         int gameToPlay = 3;
         switch (gameToPlay) {
@@ -67,11 +67,11 @@ public class Main {
                 connect4.playNewGame(0, 2, Arrays.asList(5));
                 break;
             case 3:
-                int nOfGames = 10, winAI0 = 0, winAI1 = 0, draws = 0, depthAI0 = 350, depthAI1 = 3;
+                int nOfGames = 100, winAI0 = 0, winAI1 = 0, draws = 0, depthAI0 = 500, depthAI1 = 3;
+                connect4 = new games.connectfour.Engine();
                 TimeWatch timer = TimeWatch.start();
-                for(int i = 0; i < nOfGames; i++) {
-                    connect4 = new games.connectfour.Engine();
 
+                for(int i = 0; i < nOfGames; i++) {
                     connect4.playNewGame(0, 4, Arrays.asList(depthAI0, depthAI1));
 
                     switch (connect4.getGameOverChecks()) {

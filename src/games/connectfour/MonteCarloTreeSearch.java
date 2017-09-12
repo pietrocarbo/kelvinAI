@@ -133,8 +133,10 @@ public class MonteCarloTreeSearch {
                         current = child;
                     }
                 }
-
+                // TODO sometimes here loops forever
             }
+
+            LOGGER.info("selection completed, current -> visit " + current.getNumberOfVisit() + " score " + current.getTotalReward());
 
             // Expand
             if (!current.isExpanded() && !current.isTerminalNode()) {
@@ -146,8 +148,12 @@ public class MonteCarloTreeSearch {
                 current = currentChildrens.get(0);
             }
 
+            LOGGER.info("expansion completed, current -> visit " + current.getNumberOfVisit() + " score " + current.getTotalReward());
+
             // Simulate (randomly)
             double reward = simulatePlayout(current.getGameState(), current.getNextSeed());
+
+            LOGGER.info("simulation completed, current -> reward " + reward);
 
             // Backpropagate
             while(current.getParent() != null) {
@@ -157,6 +163,8 @@ public class MonteCarloTreeSearch {
             }
             current.setNumberOfVisit(current.getNumberOfVisit() + 1);
             current.setTotalReward(current.getTotalReward() + reward);
+
+            LOGGER.info("backpropagation completed");
 
         }
 

@@ -8,12 +8,8 @@ public class Engine {
 
     private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
     private int nextToPlay;
-    private String winningMessage = "It's draw, there is no winner";
-    private int gameOverChecks = -1;
-
-
-    public Engine() {
-    }
+    private String winningMessage;
+    private int gameOverChecks;
 
     public int getGameOverChecks() {
         return gameOverChecks;
@@ -21,6 +17,8 @@ public class Engine {
 
     public void playNewGame(int starter, int mod, List<Integer> depthsOfSearch) {
 
+        gameOverChecks = -1;
+        winningMessage = "It's draw, there is no winner";
         nextToPlay = starter;
 
         Game game = new Game(starter, mod, depthsOfSearch);
@@ -34,7 +32,11 @@ public class Engine {
 
         LOGGER.warning(Util.boardToString(game.getGrid(), game.getTurns(), "*** GAME OVER ***"));
 
-        if (gameOverChecks == 2) LOGGER.info(winningMessage);
-        else LOGGER.info("Player " + game.getPlayers().get(gameOverChecks).getMySeed() + " won the game");
+        if (gameOverChecks == 2) {
+            LOGGER.info(winningMessage);
+        }
+        else {
+            LOGGER.info("Player " + game.getPlayers().get(gameOverChecks).getMySeed() + " won the game");
+        }
     }
 }
