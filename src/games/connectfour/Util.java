@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class Util {
-    static final Logger LOGGER = Logger.getLogger("Util");
+    private static final Logger LOGGER = Logger.getLogger(Util.class.getName());
     static int depthCounter;
     static int movesCounter;
     static int nodesCounter;
@@ -167,6 +167,26 @@ public class Util {
             }
         }
         return turn;
+    }
+
+    public static String boardToString(char[][] grid) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 5; i >= 0; i--) {
+            stringBuilder.append("|");
+            for (int j = 0; j <= 6; j++) {
+                stringBuilder.append(grid[i][j] + "|");
+            }
+            stringBuilder.append("\t\t " + i + ".\n");
+        }
+
+        stringBuilder.append("\n.");
+        for (int i = 0; i <= 6; i++) {
+            stringBuilder.append(i + ".");
+        }
+        stringBuilder.append("\n");
+
+        return stringBuilder.toString();
     }
 
     public static String boardToString(char[][] grid, int turns, String player) {

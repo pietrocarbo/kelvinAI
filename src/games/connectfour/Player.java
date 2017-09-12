@@ -35,6 +35,10 @@ class AI extends Player {
         this.movesOrdering = movesOrdering;
     }
 
+    public void setDepth(int depth) {
+        this.depth = depth;
+    }
+
     @Override
     public Action play(char[][] grid) {
         Action nextMove;
@@ -54,9 +58,37 @@ class AI extends Player {
 
         return nextMove;
     }
+}
 
-    public void setDepth(int depth) {
-        this.depth = depth;
+class AIMCTS extends Player {
+
+    private int iterations;
+    private int movesOrdering;
+
+    public AIMCTS(char mySeed, int iterations, int movesOrdering) {
+        this.mySeed = mySeed;
+        this.iterations = iterations;
+        this.movesOrdering = movesOrdering;
+    }
+
+    @Override
+    public Action play(char[][] grid) {
+        Action nextMove;
+
+        while (true) {
+            int[] aiMove = MonteCarloTreeSearch.mcts(grid, 'O', iterations);
+            int row = aiMove[0];
+            int column = aiMove[1];
+
+            if (Util.isLegalMove(grid, column, row)) {
+                nextMove = new Action(row, column, mySeed);
+                break;
+            }
+
+            LOGGER.warning("Wrong AI input value '" + aiMove + "' repeat please");
+        }
+
+        return nextMove;
     }
 }
 
