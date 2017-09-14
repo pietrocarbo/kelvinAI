@@ -1,8 +1,6 @@
 package games.connectfour;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Logger;
 
 class Node {
@@ -115,6 +113,7 @@ public class MonteCarloTreeSearch {
 
         // Create root node
         Node root = new Node(0, 0, null, initialBoard, false, aiSeed, -1, -1);
+        root.produceChildrens();
 
         for (int i = 0; i < iterations; i++) {
 
@@ -123,23 +122,27 @@ public class MonteCarloTreeSearch {
 
             // Select
             while (current.isExpanded() && !current.isTerminalNode()) {
-                double maxUCB = -1;
+                double maxUCT = -1;
                 int currentVisits = current.getNumberOfVisit();
+                // LOGGER.info("inside selection: current visits " + current.getNumberOfVisit());
 
                 for (Node child : current.getChildrens()) {
-                    double childUCB = UCT(currentVisits, child.getTotalReward(), child.getNumberOfVisit());
-                    if (childUCB > maxUCB) {
-                        maxUCB = childUCB;
+                    double childUCT = UCT(currentVisits, child.getTotalReward(), child.getNumberOfVisit());
+                    // LOGGER.info("inside selection: current child UCT " + childUCT + " (best " + maxUCT + ")");
+
+                    if (childUCT >= maxUCT) {
+                        // LOGGER.info("inside selection: found better UCT (old " + maxUCT + ", new " + childUCT + ")");
+                        maxUCT = childUCT;
                         current = child;
                     }
                 }
-                // TODO sometimes here loops forever
+
             }
 
             LOGGER.info("selection completed, current -> visit " + current.getNumberOfVisit() + " score " + current.getTotalReward());
 
             // Expand
-            if (!current.isExpanded() && !current.isTerminalNode()) {
+            if (current.getNumberOfVisit() > 0 && !current.isExpanded() && !current.isTerminalNode()) {
                 List<Node> currentChildrens = current.produceChildrens();
                 if (currentChildrens.size() == 0) {
                     LOGGER.severe("attempt to expand terminal node (flag " + current.isTerminalNode() + ") w/ board\n" + Util.boardToString(current.getGameState()));
@@ -183,7 +186,7 @@ public class MonteCarloTreeSearch {
         if (nodeVisits == 0) {
             return Double.MAX_VALUE;
         }
-        return ((double) nodeScore / (double) nodeVisits) + 1.0 * Math.sqrt(Math.log(parentVisits) / (double) nodeVisits);
+        return ((double) nodeScore / (double) nodeVisits) + 1.41 * Math.sqrt(Math.log(parentVisits) / (double) nodeVisits);
     }
 
     public static double simulatePlayout(char[][] board, char nextSeed) {

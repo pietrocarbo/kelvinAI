@@ -4,9 +4,10 @@
 <html>
 <head>
     <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
-    <link rel="stylesheet" type="text/css" href="styleC4.css">
+    <link rel="stylesheet" type="text/css" href="connectFour.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connect 4</title>
 </head>
 <body>
@@ -30,8 +31,8 @@
 
 <div id="starterSelect">
     <p>Scegli il primo giocatore</p>
-    <button id="aiStart" type="button" onclick="startGame('ai')">Parte Kelvin</button>
-    <button id="humanStart" type="button" onclick="startGame('human')">Parti tu</button>
+    <button id="aiStart" type="button" onclick="startGame('ai')">Kelvin</button>
+    <button id="humanStart" type="button" onclick="startGame('human')">Io</button>
 </div>
 <p>Scegli l'abilità di Kelvin</p>
 <select name="depthSelected" id="depthSelected">
@@ -77,7 +78,7 @@
     function startGame (startingPlayer) {
         console.log(startingPlayer + " is starting a new game");
 
-        $('#starterSelect').html("<p><input type=\"button\" value=\"CLICCA QUI PER COMINCIARE UNA NUOVA PARTITA\" onClick=\"window.location.reload()\"><\p>");
+        $('#starterSelect').html("<p><input type=\"button\" value=\"Nuova partita\" onClick=\"window.location.reload()\"><\p>");
 
         if (startingPlayer == 'ai') {
             starter = "O";

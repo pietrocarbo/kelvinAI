@@ -36,7 +36,7 @@ public class Util {
         return counter;
     }
 
-    public static Integer getHandWinner (Hand tavolo, Suit semeBriscola) {
+    public static Integer getHandWinner (Hand tavolo, Suit semeBriscola) { //TODO controllare tutti gli utilizzi e vericare se l'indice della carta vincente ritornato venga usato per trovare il player vincente!
         Card c1 = tavolo.getHand().get(0);
         Suit s1 = c1.getSuit();
         Rank r1 = c1.getRank();

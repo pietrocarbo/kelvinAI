@@ -4,9 +4,10 @@
 <html>
 <head>
     <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
-    <link rel="stylesheet" type="text/css" href="styleTTT.css">
+    <link rel="stylesheet" type="text/css" href="tictactoe.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic Tac Toe</title>
 </head>
 <body>
@@ -33,8 +34,8 @@
 
 <div id="starterSelect">
     <p>Scegli il primo giocatore</p>
-    <button id="aiStart" type="button" onclick="startGame('ai')">Parte Kelvin</button>
-    <button id="humanStart" type="button" onclick="startGame('human')">Parti tu</button>
+    <button id="aiStart" type="button" onclick="startGame('ai')">Kelvin</button>
+    <button id="humanStart" type="button" onclick="startGame('human')">Io</button>
 </div>
 
 <script>
@@ -44,7 +45,7 @@
     function startGame (startingPlayer) {
         console.log(startingPlayer + " is starting a new game");
 
-        $('#starterSelect').html("<p id='newGameInfo' style='width: 50%;'>Per iniziare una nuova partita aggiorna la pagina</p>");
+        $('#starterSelect').html("<p><input type=\"button\" value=\"Nuova partita\" onClick=\"window.location.reload()\"><\p>");
 
         if (startingPlayer == 'ai') {
             starter = 0;
