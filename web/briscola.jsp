@@ -130,10 +130,10 @@
                 return 1;
                 break;
             case 2:
-                return 2;
+                return 9;
                 break;
             case 3:
-                return 9;
+                return 2;
                 break;
             case 4:
                 return 3;
@@ -263,24 +263,26 @@
             }  else if (turns >= 4) {
                 // deal
 
-                for (var i = 0; i < humanCardsID.length; i++) {
-                    if ($('#' + nextPlayer == 0 ? kelvinCardsID[i] : humanCardsID[i]).attr('filled') == false) {
+                for (var i = 0; i < 3; i++) {
+
+                    console.log("checking " + $('#img' + nextPlayer == 0 ? "K" : "H" + "" + i).attr("filled"));
+                    if ($('#' + nextPlayer == 0 ? kelvinCardsID[i] : humanCardsID[i]).attr("filled") == "false") {
                         if (nextPlayer == 0) {
-                            handKelvin.push(deck[deck.length-1]);
+                            handKelvin.push(deck[0]);
                         } else {
-                            handHuman.push(deck[deck.length-1]);
+                            handHuman.push(deck[0]);
                         }
-                        updateCardDisplay(nextPlayer == 0 ? kelvinCardsID[i] : humanCardsID[i], deck.pop());
+                        updateCardDisplay(nextPlayer == 0 ? kelvinCardsID[i] : humanCardsID[i], deck.shift());
                     }
                 }
-                for (var i = 0; i < kelvinCardsID.length; i++) {
-                    if ($('#' + nextPlayer == 0 ? humanCardsID[i] : kelvinCardsID[i]).attr('filled') == false) {
+                for (var i = 0; i < 3; i++) {
+                    if ($('#' + nextPlayer == 0 ? humanCardsID[i] : kelvinCardsID[i]).attr('filled') == 'false') {
                         if (nextPlayer == 0) {
-                            handHuman.push(deck[deck.length-1]);
+                            handHuman.push(deck[0]);
                         } else {
-                            handKelvin.push(deck[deck.length-1]);
+                            handKelvin.push(deck[0]);
                         }
-                        updateCardDisplay(nextPlayer == 0 ? humanCardsID[i] : kelvinCardsID[i], deck.pop());
+                        updateCardDisplay(nextPlayer == 0 ? humanCardsID[i] : kelvinCardsID[i], deck.shift());
                     }
                 }
 
@@ -344,19 +346,19 @@
 
         if(Array.isArray(ids)) {
             for (var i = 0; i < ids.length; i++) {
-                if(cards[i] instanceof Card) {
+                if(cards != undefined && cards[i] instanceof Card) {
                     var cardPath = cards[i].name + 'di' + cards[i].suit + '.jpg';
-                } else if (cards[i] === undefined) {
+                } else if (cards === undefined) {
                     var cardPath = 'noCard.png';
                 }
                 $('#' + ids[i]).attr('src', 'cards/' + cardPath);
 
             }
         } else {
-            if(cards instanceof Card) {
-                var cardPath = cards.name + 'di' + cards.suit + '.jpg';
-            } else if (cards === undefined) {
+            if (cards === undefined) {
                 var cardPath = 'noCard.png';
+            } else if(cards instanceof Card) {
+                var cardPath = cards.name + 'di' + cards.suit + '.jpg';
             }
             $('#' + ids).attr('src', 'cards/' + cardPath);
         }
