@@ -81,7 +81,7 @@
     var nextPlayer, deck, briscola, board = [], handKelvin = [], handHuman = [], collectedKelvin = [], collectedHuman = [], turns = 20;
     var humanCardsID = ['imgH0', 'imgH1', 'imgH2'], kelvinCardsID = ['imgK0', 'imgK1', 'imgK2'], gameOver = false, firstHandPlayerCardIndex;
 
-//    $.ajaxSetup({async: false});
+    $.ajaxSetup({async: false});
 
     function startGame(startingPlayer) {
         $('#starterSelect').html('<p><input type="button" value="Nuova partita" onClick="window.location.reload()"><\p>');
@@ -90,7 +90,7 @@
             nextPlayer = 0;
             $('#kelvinTurn').css('display', 'block');
             setupGame();
-            getAiMove();
+            move('kelvin', getAiMove());
 
         } else {
             nextPlayer = 1;
@@ -207,6 +207,8 @@
         var cardToRemoveID =  'img' + (player == 'human' ? 'H' : 'K') + cardIndex;
         var boardPositionID = board.length == 0 ? 'imgT0' : 'imgT1';
 
+        console.log("move() called: carte sul tavolo " + board.length + " cardIndex " + cardIndex + " cardToRemoveID " + cardToRemoveID + " boardPositionID " + boardPositionID);
+
         if (player == 'kelvin') {
             updateCardDisplay(boardPositionID, handKelvin[cardIndex]);
             board.push(handKelvin[cardIndex]);
@@ -222,7 +224,7 @@
         }
         $('#' + cardToRemoveID).attr('filled', 'false');
 
-        setTimeout(function () {
+         setTimeout(function () {
 
             if (board.length == 2) {
                 // collect, change color, and deal new cards if NOT game over (empty board, fill collected) else SHOW winner
@@ -230,7 +232,7 @@
                 nextPlayer = chooseWinner(board[0], board[1], nextPlayer);
                 $('#tdT' + (secondHandPlayer == nextPlayer ? 1 : 0)).css('background-color', '#27A319');
 
-                setTimeout(function () {
+                // setTimeout(function () {
 
                     updateCardDisplay(['imgT0', 'imgT1']);
                     if(nextPlayer == 0) {
@@ -262,14 +264,11 @@
                         // deal
 
                         for (var i = 0; i < 3; i++) {
-
-                            // cardIndex per il secondo di mano
-                            // first.. per il primo di mano
-
                             if ($('#' + (nextPlayer == 0 ? kelvinCardsID[i] : humanCardsID[i])).attr("filled") == "false") { // scorro carte del vincitore della mano
                                 if (nextPlayer == 0) {
+                                    updateCardDisplay(kelvinCardsID[i], deck[0]);
+                                    // updateCardDisplay(kelvinCardsID[i], 'RetroCarteNapoletaneNormale.jpg'); // TO RESTORE
                                     handKelvin[(secondHandPlayer == nextPlayer ? cardIndex : firstHandPlayerCardIndex)] = deck.shift();
-                                    updateCardDisplay(kelvinCardsID[i], 'RetroCarteNapoletaneNormale.jpg');
                                 } else {
                                     handHuman[(secondHandPlayer == nextPlayer ? cardIndex : firstHandPlayerCardIndex)] = deck[0];
                                     updateCardDisplay(humanCardsID[i], deck.shift());
@@ -284,8 +283,9 @@
                                     handHuman[(secondHandPlayer == nextPlayer ? cardIndex : firstHandPlayerCardIndex)] = deck[0];
                                     updateCardDisplay(humanCardsID[i], deck.shift());
                                 } else {
+                                    updateCardDisplay(kelvinCardsID[i], deck[0]);
+//                                    updateCardDisplay(kelvinCardsID[i], 'RetroCarteNapoletaneNormale.jpg');  // TO RESTORE
                                     handKelvin[(secondHandPlayer == nextPlayer ? cardIndex : firstHandPlayerCardIndex)] = deck.shift();
-                                    updateCardDisplay(kelvinCardsID[i], 'RetroCarteNapoletaneNormale.jpg');
                                 }
                                 $('#' + (nextPlayer == 0 ? humanCardsID[i] : kelvinCardsID[i])).attr('filled', 'true');
                                 break;
@@ -304,7 +304,7 @@
                     $('#turnsLeft').text('Mani rimanenti ' + turns);
                     $('#tdT' + (secondHandPlayer == nextPlayer ? 1 : 0)).css('background-color', '#fdf7da');
 
-                }, 1500); // let the user see the winning card of the board
+//                }, 1500); // let the user see the winning card of the board
 
             } else {
                 firstHandPlayerCardIndex = cardIndex;
@@ -318,10 +318,10 @@
             } else {
                 $('#kelvinTurn').css('display', 'block');
                 $('#humanTurn').css('display', 'none');
-                getAiMove();
+                move('kelvin', getAiMove());
             }
 
-        }, 1500); // let the user see the card moved into the board
+         }, 1500); // let the user see the card moved into the board
     }
 
     function chooseWinner(card0, card1, lastPlayer) {
@@ -350,6 +350,7 @@
         briscola = deck[deck.length - 1];
 
         updateCardDisplay(humanCardsID.concat('briscola'), handHuman.concat(briscola));
+        updateCardDisplay(kelvinCardsID, handKelvin);  // TO REMOVE
         $('#turnsLeft').text('Mani rimanenti ' + turns);
     }
 
@@ -384,26 +385,26 @@
     function getAiMove () {
         console.log("entered getAiMove(): turns " + turns + " board length " + board.length + " deck length " + deck.length);
         var unknownCards = deck.slice(0, deck.length-1).concat(handHuman);
+        var returnedCardIndex;
         $.ajax({
             url : 'aimBRI',
             type: 'GET',
+            dataType : 'text',
             data: {nOppCards: handHuman.length, nMyCards: handKelvin.length, nBoardCards: board.length, nUnknownCards: unknownCards.length,
                    turns: (20 - turns), myCards: handKelvin, briscola: briscola, board: board, unknownCards: unknownCards},
-            dataType : 'text',
             success: function (data) {
                 console.log("Kelvin chosen move " + data);
-                var indexCardToPlay, found = false;
+                var found = false;
                 var chosenCardData = data.split("di");
                 for (var i = 0; i < handKelvin.length; i++) {
                     if (chosenCardData[0] == handKelvin[i].name && chosenCardData[1] == handKelvin[i].suit) {
                         found = true;
-                        indexCardToPlay = i;
+                        returnedCardIndex = i;
                     }
                 }
                 if (!found) {
                     console.log("ERRORE il server ha ritornato una carta non esistente: " + data);
                 }
-                move('kelvin', indexCardToPlay);
             },
             error: function(jqxhr,textStatus,errorThrown)
             {
@@ -416,6 +417,7 @@
                 console.log("AJAX aimBRI request completed");
             }
         });
+        return returnedCardIndex;
     }
 
 </script>
