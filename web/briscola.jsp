@@ -79,7 +79,7 @@
 
 <script>
     var nextPlayer, deck, briscola, board = [], handKelvin = [], handHuman = [], collectedKelvin = [], collectedHuman = [], turns = 20;
-    var humanCardsID = ['imgH0', 'imgH1', 'imgH2'], kelvinCardsID = ['imgK0', 'imgK1', 'imgK2'], gameOver = false;
+    var humanCardsID = ['imgH0', 'imgH1', 'imgH2'], kelvinCardsID = ['imgK0', 'imgK1', 'imgK2'], gameOver = false, firstHandPlayerCardIndex;
 
 //    $.ajaxSetup({async: false});
 
@@ -211,104 +211,117 @@
             updateCardDisplay(boardPositionID, handKelvin[cardIndex]);
             board.push(handKelvin[cardIndex]);
             updateCardDisplay(cardToRemoveID);
-            handKelvin.splice(cardIndex, 1);
+//            handKelvin.splice(cardIndex, 1);
 
         } else {
             updateCardDisplay(boardPositionID, handHuman[cardIndex]);
             board.push(handHuman[cardIndex]);
             updateCardDisplay(cardToRemoveID);
-            handHuman.splice(cardIndex, 1);
+//            handHuman.splice(cardIndex, 1);
             humanButtonsDisabled(true);
         }
         $('#' + cardToRemoveID).attr('filled', 'false');
 
-        setTimeout(function (){
-            // let the user see the card moved into the board
-        }, 500);
+        setTimeout(function () {
 
-        if (board.length == 2) {
-            // collect, change color, and deal new cards if NOT game over (empty board, fill collected) else SHOW winner
-            nextPlayer = chooseWinner(board[0], board[1], nextPlayer);
-            $('#tdT' + nextPlayer).css('background-color', '#27A319');
-            setTimeout(function (){
-                // let the user see the winning card of the board
-            }, 500);
+            if (board.length == 2) {
+                // collect, change color, and deal new cards if NOT game over (empty board, fill collected) else SHOW winner
+                var secondHandPlayer = nextPlayer;
+                nextPlayer = chooseWinner(board[0], board[1], nextPlayer);
+                $('#tdT' + (secondHandPlayer == nextPlayer ? 1 : 0)).css('background-color', '#27A319');
 
-            updateCardDisplay(['imgT0', 'imgT1']);
-            if(nextPlayer == 0) {
-                collectedKelvin.push(board.pop());
-                collectedKelvin.push(board.pop());
+                setTimeout(function () {
+
+                    updateCardDisplay(['imgT0', 'imgT1']);
+                    if(nextPlayer == 0) {
+                        collectedKelvin.push(board.pop());
+                        collectedKelvin.push(board.pop());
+                    } else {
+                        collectedHuman.push(board.pop());
+                        collectedHuman.push(board.pop());
+                    }
+
+
+                    if(turns == 0) {
+                        // calcolare vincitore e mostrarlo nello spazio vuoto
+                        var pointKelvin = 0, pointHuman = 0;
+                        for (var i = 0; i < collectedKelvin.length; i++) {
+                            pointKelvin += briscolaPoints(collectedKelvin[i].name);
+                        }
+                        for (var i = 0; i < collectedHuman.length; i++) {
+                            pointHuman += briscolaPoints(collectedHuman[i].name);
+                        }
+
+                        var winningMessage = pointKelvin > pointHuman ? "Kelvin ha vinto con " + pointKelvin + " punti" :
+                            pointKelvin < pointHuman ? "Hai ha vinto con " + pointHuman + " punti" :
+                                "Pareggio a " + pointHuman + " punti";
+                        $('#winner').append("<p>" + winningMessage + "</p>");
+                        gameOver = true;
+
+                    }  else if (turns >= 4) {
+                        // deal
+
+                        for (var i = 0; i < 3; i++) {
+
+                            // cardIndex per il secondo di mano
+                            // first.. per il primo di mano
+
+                            if ($('#' + (nextPlayer == 0 ? kelvinCardsID[i] : humanCardsID[i])).attr("filled") == "false") { // scorro carte del vincitore della mano
+                                if (nextPlayer == 0) {
+                                    handKelvin[(secondHandPlayer == nextPlayer ? cardIndex : firstHandPlayerCardIndex)] = deck.shift();
+                                    updateCardDisplay(kelvinCardsID[i], 'RetroCarteNapoletaneNormale.jpg');
+                                } else {
+                                    handHuman[(secondHandPlayer == nextPlayer ? cardIndex : firstHandPlayerCardIndex)] = deck[0];
+                                    updateCardDisplay(humanCardsID[i], deck.shift());
+                                }
+                                $('#' + (nextPlayer == 0 ? kelvinCardsID[i] : humanCardsID[i])).attr("filled", "true");
+                                break;
+                            }
+                        }
+                        for (var i = 0; i < 3; i++) {
+                            if ($('#' + (nextPlayer == 0 ? humanCardsID[i] : kelvinCardsID[i])).attr('filled') == 'false') {
+                                if (nextPlayer == 0) {
+                                    handHuman[(secondHandPlayer == nextPlayer ? cardIndex : firstHandPlayerCardIndex)] = deck[0];
+                                    updateCardDisplay(humanCardsID[i], deck.shift());
+                                } else {
+                                    handKelvin[(secondHandPlayer == nextPlayer ? cardIndex : firstHandPlayerCardIndex)] = deck.shift();
+                                    updateCardDisplay(kelvinCardsID[i], 'RetroCarteNapoletaneNormale.jpg');
+                                }
+                                $('#' + (nextPlayer == 0 ? humanCardsID[i] : kelvinCardsID[i])).attr('filled', 'true');
+                                break;
+                            }
+                        }
+
+                        if (turns == 4) {
+                            // scrivere seme di briscola e cancellare il mazzo
+                            updateCardDisplay('#mazzo').attr('src', 'cards/noCards.png');
+                            $('#briscola').replaceWith('<p>' + briscola.suit + '</p>');
+                        }
+
+                    }
+
+                    turns--;
+                    $('#turnsLeft').text('Mani rimanenti ' + turns);
+                    $('#tdT' + (secondHandPlayer == nextPlayer ? 1 : 0)).css('background-color', '#fdf7da');
+
+                }, 1500); // let the user see the winning card of the board
+
             } else {
-                collectedHuman.push(board.pop());
-                collectedHuman.push(board.pop());
+                firstHandPlayerCardIndex = cardIndex;
+                nextPlayer = 1 - nextPlayer;
             }
 
-
-            if(turns == 0) {
-                // calcolare vincitore e mostrarlo nello spazio vuoto
-                var pointKelvin = 0, pointHuman = 0;
-                for (var i = 0; i < collectedKelvin.length; i++) {
-                    pointKelvin += briscolaPoints(collectedKelvin[i].name);
-                }
-                for (var i = 0; i < collectedHuman.length; i++) {
-                    pointHuman += briscolaPoints(collectedHuman[i].name);
-                }
-
-                var winningMessage = pointKelvin > pointHuman ? "Kelvin ha vinto con " + pointKelvin + " punti" :
-                                     pointKelvin < pointHuman ? "Hai ha vinto con " + pointHuman + " punti" :
-                                                                "Pareggio a " + pointHuman + " punti";
-                $('#winner').append("<p>" + winningMessage + "</p>");
-                gameOver = true;
-
-            }  else if (turns >= 4) {
-                // deal
-
-                for (var i = 0; i < 3; i++) {
-
-                    console.log("checking " + $('#img' + nextPlayer == 0 ? "K" : "H" + "" + i).attr("filled"));
-                    if ($('#' + nextPlayer == 0 ? kelvinCardsID[i] : humanCardsID[i]).attr("filled") == "false") {
-                        if (nextPlayer == 0) {
-                            handKelvin.push(deck[0]);
-                        } else {
-                            handHuman.push(deck[0]);
-                        }
-                        updateCardDisplay(nextPlayer == 0 ? kelvinCardsID[i] : humanCardsID[i], deck.shift());
-                    }
-                }
-                for (var i = 0; i < 3; i++) {
-                    if ($('#' + nextPlayer == 0 ? humanCardsID[i] : kelvinCardsID[i]).attr('filled') == 'false') {
-                        if (nextPlayer == 0) {
-                            handHuman.push(deck[0]);
-                        } else {
-                            handKelvin.push(deck[0]);
-                        }
-                        updateCardDisplay(nextPlayer == 0 ? humanCardsID[i] : kelvinCardsID[i], deck.shift());
-                    }
-                }
-
-                if (turns == 4) {
-                    // scrivere seme di briscola e cancellare il mazzo
-                    updateCardDisplay('#mazzo').attr('src', 'cards/noCards.png');
-                    $('#briscola').replaceWith('<p>' + briscola.suit + '</p>');
-                }
-
+            if (nextPlayer == 1) {  // il prossimo e' l'utente
+                $('#humanTurn').css('display', 'block');
+                $('#kelvinTurn').css('display', 'none');
+                humanButtonsDisabled(false);  // se è il suo turno, infine riattivo i bottoni all'utente
+            } else {
+                $('#kelvinTurn').css('display', 'block');
+                $('#humanTurn').css('display', 'none');
+                getAiMove();
             }
 
-        }
-
-        turns--;
-        nextPlayer = 1 - nextPlayer;
-        $('#turnsLeft').text('Mani rimanenti ' + turns);
-        $('#tdT' + nextPlayer).css('background-color', '#fdf7da');
-        if (nextPlayer == 1) {  // il prossimo e' l'utente
-            $('#humanTurn').css('display', 'block');
-            $('#kelvinTurn').css('display', 'none');
-            humanButtonsDisabled(false);  // se è il suo turno, infine riattivo i bottoni all'utente
-        } else {
-            $('#kelvinTurn').css('display', 'block');
-            $('#humanTurn').css('display', 'none');
-            getAiMove();
-        }
+        }, 1500); // let the user see the card moved into the board
     }
 
     function chooseWinner(card0, card1, lastPlayer) {
@@ -350,6 +363,8 @@
                     var cardPath = cards[i].name + 'di' + cards[i].suit + '.jpg';
                 } else if (cards === undefined) {
                     var cardPath = 'noCard.png';
+                } else if (cards[i] = 'RetroCarteNapoletaneNormale.jpg') {
+                    var cardPath = 'RetroCarteNapoletaneNormale.jpg';
                 }
                 $('#' + ids[i]).attr('src', 'cards/' + cardPath);
 
@@ -359,19 +374,21 @@
                 var cardPath = 'noCard.png';
             } else if(cards instanceof Card) {
                 var cardPath = cards.name + 'di' + cards.suit + '.jpg';
+            } else if (cards = 'RetroCarteNapoletaneNormale.jpg') {
+                var cardPath = 'RetroCarteNapoletaneNormale.jpg';
             }
             $('#' + ids).attr('src', 'cards/' + cardPath);
         }
     }
 
-
     function getAiMove () {
+        console.log("entered getAiMove(): turns " + turns + " board length " + board.length + " deck length " + deck.length);
         var unknownCards = deck.slice(0, deck.length-1).concat(handHuman);
         $.ajax({
             url : 'aimBRI',
             type: 'GET',
             data: {nOppCards: handHuman.length, nMyCards: handKelvin.length, nBoardCards: board.length, nUnknownCards: unknownCards.length,
-                   myCards: handKelvin, briscola: briscola, board: board, unknownCards: unknownCards},
+                   turns: (20 - turns), myCards: handKelvin, briscola: briscola, board: board, unknownCards: unknownCards},
             dataType : 'text',
             success: function (data) {
                 console.log("Kelvin chosen move " + data);

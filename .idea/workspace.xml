@@ -8,6 +8,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3d5f5be4-3cb7-4032-90bf-874cbd97a982" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/games/briscola/AIMoveBriscolaServlet.java" afterPath="$PROJECT_DIR$/src/games/briscola/AIMoveBriscolaServlet.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/briscola.jsp" afterPath="$PROJECT_DIR$/web/briscola.jsp" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -41,11 +42,19 @@
       <file leaf-file-name="briscola.jsp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/web/briscola.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="267" column="108" lean-forward="false" selection-start-line="267" selection-start-column="108" selection-end-line="267" selection-end-column="108" />
+            <state relative-caret-position="-30">
+              <caret line="58" column="70" lean-forward="false" selection-start-line="58" selection-start-column="65" selection-end-line="58" selection-end-column="70" />
               <folding>
-                <element signature="e#5817#6693#0#HTML" expanded="false" />
-                <element signature="e#6733#7451#0#HTML" expanded="false" />
+                <element signature="e#4605#5138#0#HTML" expanded="false" />
+                <element signature="e#5185#5302#0#HTML" expanded="false" />
+                <element signature="e#5324#5798#0#HTML" expanded="false" />
+                <element signature="e#5843#6719#0#HTML" expanded="false" />
+                <element signature="e#6759#7477#0#HTML" expanded="false" />
+                <element signature="e#7507#7906#0#HTML" expanded="false" />
+                <element signature="e#14070#14529#0#HTML" expanded="false" />
+                <element signature="e#14576#14761#0#HTML" expanded="false" />
+                <element signature="e#14788#15093#0#HTML" expanded="false" />
+                <element signature="e#15138#16251#0#HTML" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -86,8 +95,8 @@
       <file leaf-file-name="Player.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/games/briscola/Player.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="148">
-              <caret line="95" column="22" lean-forward="false" selection-start-line="95" selection-start-column="22" selection-end-line="95" selection-end-column="22" />
+            <state relative-caret-position="403">
+              <caret line="75" column="41" lean-forward="true" selection-start-line="75" selection-start-column="41" selection-end-line="75" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -96,8 +105,8 @@
       <file leaf-file-name="AIMoveBriscolaServlet.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/games/briscola/AIMoveBriscolaServlet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="335">
-              <caret line="51" column="0" lean-forward="true" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
+            <state relative-caret-position="165">
+              <caret line="51" column="116" lean-forward="false" selection-start-line="51" selection-start-column="116" selection-end-line="51" selection-end-column="116" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -108,8 +117,8 @@
       <file leaf-file-name="Util.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/games/briscola/Util.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-714">
-              <caret line="137" column="52" lean-forward="false" selection-start-line="137" selection-start-column="45" selection-end-line="137" selection-end-column="52" />
+            <state relative-caret-position="1190">
+              <caret line="199" column="39" lean-forward="true" selection-start-line="199" selection-start-column="39" selection-end-line="199" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -229,7 +238,6 @@
         <option value="$PROJECT_DIR$/src/games/briscola/Game.java" />
         <option value="$PROJECT_DIR$/src/decks/forty/Deck.java" />
         <option value="$PROJECT_DIR$/src/games/briscola/Action.java" />
-        <option value="$PROJECT_DIR$/src/games/briscola/Player.java" />
         <option value="$PROJECT_DIR$/src/games/briscola/MonteCarloGame.java" />
         <option value="$PROJECT_DIR$/src/games/connectfour/Util.java" />
         <option value="$PROJECT_DIR$/src/games/connectfour/Game.java" />
@@ -251,6 +259,7 @@
         <option value="$PROJECT_DIR$/src/decks/forty/Suit.java" />
         <option value="$PROJECT_DIR$/src/main/Main.java" />
         <option value="$PROJECT_DIR$/src/games/briscola/Engine.java" />
+        <option value="$PROJECT_DIR$/src/games/briscola/Player.java" />
         <option value="$PROJECT_DIR$/src/games/briscola/AIMoveBriscolaServlet.java" />
         <option value="$PROJECT_DIR$/web/briscola.jsp" />
       </list>
@@ -1344,7 +1353,7 @@
       <workItem from="1505293301607" duration="11175000" />
       <workItem from="1505370449548" duration="35010000" />
       <workItem from="1505423110559" duration="141000" />
-      <workItem from="1505465592378" duration="12592000" />
+      <workItem from="1505465592378" duration="19526000" />
     </task>
     <task id="LOCAL-00001" summary="briscola playing hand logic, printing game status and accepting input">
       <created>1499680771045</created>
@@ -1584,11 +1593,18 @@
       <option name="project" value="LOCAL" />
       <updated>1505475904508</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="[ADD] some other">
+      <created>1505478800460</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1505478800460</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="405970000" />
+    <option name="totallyTimeSpent" value="412904000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1626,7 +1642,7 @@
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2658092" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2636656" sideWeight="0.4936034" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24866024" sideWeight="0.4936034" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290461" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16151386" sideWeight="0.89067525" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
@@ -1714,7 +1730,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="update" />
     <MESSAGE value="fixed winning control (before draw control) in engine" />
     <MESSAGE value="fixed getPlayer(), tictactoe UNBEATABLE" />
     <MESSAGE value="[ADD ai playing with minmax (NOT WORKING: Stack Overflow)" />
@@ -1739,14 +1754,15 @@
     <MESSAGE value="[ADD] basic briscola web interface" />
     <MESSAGE value="[ADD] cards folder" />
     <MESSAGE value="[ADD] briscola web logic" />
-    <option name="LAST_COMMIT_MESSAGE" value="[ADD] briscola web logic" />
+    <MESSAGE value="[ADD] some other" />
+    <option name="LAST_COMMIT_MESSAGE" value="[ADD] some other" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="65" />
+      <option name="time" value="66" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1755,16 +1771,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="0">
-            <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/web/TicTacToeCheckWinningServlet.java" />
     <entry file="file://$PROJECT_DIR$/src/games/tictactoe/TicTacToeCheckWinningServlet.java" />
     <entry file="file://$PROJECT_DIR$/web/WEB-INF/web.xml">
@@ -2062,14 +2068,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/games/briscola/Player.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="95" column="22" lean-forward="false" selection-start-line="95" selection-start-column="22" selection-end-line="95" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/games/briscola/MonteCarloGame.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2453">
@@ -2078,18 +2076,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/web/cards/RetroCarteNapoletaneNormale.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/games/briscola/Util.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-714">
-          <caret line="137" column="52" lean-forward="false" selection-start-line="137" selection-start-column="45" selection-end-line="137" selection-end-column="52" />
+        <state relative-caret-position="1190">
+          <caret line="199" column="39" lean-forward="true" selection-start-line="199" selection-start-column="39" selection-end-line="199" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/games/briscola/Player.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="75" column="41" lean-forward="true" selection-start-line="75" selection-start-column="41" selection-end-line="75" selection-end-column="41" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/games/briscola/AIMoveBriscolaServlet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="51" column="0" lean-forward="true" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
+        <state relative-caret-position="165">
+          <caret line="51" column="116" lean-forward="false" selection-start-line="51" selection-start-column="116" selection-end-line="51" selection-end-column="116" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -2098,11 +2109,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/web/briscola.jsp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="267" column="108" lean-forward="false" selection-start-line="267" selection-start-column="108" selection-end-line="267" selection-end-column="108" />
+        <state relative-caret-position="-30">
+          <caret line="58" column="70" lean-forward="false" selection-start-line="58" selection-start-column="65" selection-end-line="58" selection-end-column="70" />
           <folding>
-            <element signature="e#5817#6693#0#HTML" expanded="false" />
-            <element signature="e#6733#7451#0#HTML" expanded="false" />
+            <element signature="e#4605#5138#0#HTML" expanded="false" />
+            <element signature="e#5185#5302#0#HTML" expanded="false" />
+            <element signature="e#5324#5798#0#HTML" expanded="false" />
+            <element signature="e#5843#6719#0#HTML" expanded="false" />
+            <element signature="e#6759#7477#0#HTML" expanded="false" />
+            <element signature="e#7507#7906#0#HTML" expanded="false" />
+            <element signature="e#14070#14529#0#HTML" expanded="false" />
+            <element signature="e#14576#14761#0#HTML" expanded="false" />
+            <element signature="e#14788#15093#0#HTML" expanded="false" />
+            <element signature="e#15138#16251#0#HTML" expanded="false" />
           </folding>
         </state>
       </provider>

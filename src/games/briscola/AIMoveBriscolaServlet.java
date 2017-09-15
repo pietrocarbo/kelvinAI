@@ -47,8 +47,9 @@ public class AIMoveBriscolaServlet extends HttpServlet {
             unknownCards.addOne(new Card(Rank.stringToRank(request.getParameter("unknownCards[" + i + "][name]")), Suit.stringToSuit(request.getParameter("unknownCards[" + i + "][suit]"))));
         }
 
-
-        Card cardToPlay = new AI("Kelvin", myHand, 0).play(board, briscola, unknownCards, 0, 0, Integer.parseInt(request.getParameter("nOppCards")), 0);
+        Player kelvin = new AI("Kelvin", myHand, 0);
+        kelvin.setMinMaxParameter(4, true, 50);
+        Card cardToPlay = kelvin.play(board, briscola, unknownCards, 0, Integer.parseInt(request.getParameter("turns")), Integer.parseInt(request.getParameter("nOppCards")), 0);
 
 //        Util.monteCarloMethod(
 //                0,
