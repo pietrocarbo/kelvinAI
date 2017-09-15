@@ -18,7 +18,7 @@
     <table style="width: 50%; height: 50%;">
 
         <tr>
-            <td><p id="kelvinTurn" style="display: none">È il turno dell'avversario</p></td>
+            <td><p id="kelvinTurn" style="display: none">È il turno dell'avversario (sta pensando...)</p></td>
             <td> <button id="btnK0" type="button">
                 <img id="imgK0" src="cards/RetroCarteNapoletaneNormale.jpg" filled="true" width="180" height="250" title="gioca" style="border:2px solid #FC695F" vspace="5" alt="carta" align="middle">
             </button> </td>
@@ -81,25 +81,24 @@
     var nextPlayer, deck, briscola, board = [], handKelvin = [], handHuman = [], collectedKelvin = [], collectedHuman = [], turns = 20;
     var humanCardsID = ['imgH0', 'imgH1', 'imgH2'], kelvinCardsID = ['imgK0', 'imgK1', 'imgK2'], gameOver = false;
 
-    $.ajaxSetup({async: false});
+//    $.ajaxSetup({async: false});
 
     function startGame(startingPlayer) {
-        console.log(startingPlayer + " is starting a new game");
-
         $('#starterSelect').html('<p><input type="button" value="Nuova partita" onClick="window.location.reload()"><\p>');
 
         if (startingPlayer == 'ai') {
             nextPlayer = 0;
-            setupGame();
             $('#kelvinTurn').css('display', 'block');
+            setupGame();
             getAiMove();
 
         } else {
             nextPlayer = 1;
             $('#humanTurn').css('display', 'block');
             setupGame();
-            
+
         }
+        console.log(startingPlayer + " is starting a new game (nextPlayer " + nextPlayer + ")");
     }
 
     function Card(value, points, name, suit) {
@@ -229,7 +228,7 @@
 
         if (board.length == 2) {
             // collect, change color, and deal new cards if NOT game over (empty board, fill collected) else SHOW winner
-            var nextPlayer = chooseWinner(board[0], board[1], nextPlayer);
+            nextPlayer = chooseWinner(board[0], board[1], nextPlayer);
             $('#tdT' + nextPlayer).css('background-color', '#27A319');
             setTimeout(function (){
                 // let the user see the winning card of the board
@@ -299,11 +298,13 @@
         nextPlayer = 1 - nextPlayer;
         $('#turnsLeft').text('Mani rimanenti ' + turns);
         $('#tdT' + nextPlayer).css('background-color', '#fdf7da');
-        if (nextPlayer == 'human') {
+        if (nextPlayer == 1) {  // il prossimo e' l'utente
             $('#humanTurn').css('display', 'block');
+            $('#kelvinTurn').css('display', 'none');
             humanButtonsDisabled(false);  // se è il suo turno, infine riattivo i bottoni all'utente
         } else {
             $('#kelvinTurn').css('display', 'block');
+            $('#humanTurn').css('display', 'none');
             getAiMove();
         }
     }
@@ -329,9 +330,9 @@
     function setupGame() {
         deck = shuffle(Deck());
 
-        handKelvin = deck.splice(-3);
-        handHuman = deck.splice(-3);
-        briscola = deck[0];
+        handKelvin = deck.splice(0,3);
+        handHuman = deck.splice(0,3);
+        briscola = deck[deck.length - 1];
 
         updateCardDisplay(humanCardsID.concat('briscola'), handHuman.concat(briscola));
         $('#turnsLeft').text('Mani rimanenti ' + turns);
@@ -343,9 +344,9 @@
 
         if(Array.isArray(ids)) {
             for (var i = 0; i < ids.length; i++) {
-                if(cards instanceof Card) {
-                    var cardPath = cards.name + 'di' + cards.suit + '.jpg';
-                } else if (cards === undefined) {
+                if(cards[i] instanceof Card) {
+                    var cardPath = cards[i].name + 'di' + cards[i].suit + '.jpg';
+                } else if (cards[i] === undefined) {
                     var cardPath = 'noCard.png';
                 }
                 $('#' + ids[i]).attr('src', 'cards/' + cardPath);
@@ -361,16 +362,29 @@
         }
     }
 
+
     function getAiMove () {
-         var numberHumanCards = handHuman.length;
+        var unknownCards = deck.slice(0, deck.length-1).concat(handHuman);
         $.ajax({
             url : 'aimBRI',
             type: 'GET',
-            data: {nOppCards: numberHumanCards, myCards: handKelvin, briscola: briscola, tavolo: board, unknownCards: deck.concat(handHuman)},
+            data: {nOppCards: handHuman.length, nMyCards: handKelvin.length, nBoardCards: board.length, nUnknownCards: unknownCards.length,
+                   myCards: handKelvin, briscola: briscola, board: board, unknownCards: unknownCards},
             dataType : 'text',
             success: function (data) {
-                console.log("AI chosen move " + data);
-                move('kelvin', data);
+                console.log("Kelvin chosen move " + data);
+                var indexCardToPlay, found = false;
+                var chosenCardData = data.split("di");
+                for (var i = 0; i < handKelvin.length; i++) {
+                    if (chosenCardData[0] == handKelvin[i].name && chosenCardData[1] == handKelvin[i].suit) {
+                        found = true;
+                        indexCardToPlay = i;
+                    }
+                }
+                if (!found) {
+                    console.log("ERRORE il server ha ritornato una carta non esistente: " + data);
+                }
+                move('kelvin', indexCardToPlay);
             },
             error: function(jqxhr,textStatus,errorThrown)
             {

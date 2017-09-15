@@ -1,10 +1,6 @@
 package main;
 
-import games.briscola.Engine;
-
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
 
@@ -52,11 +48,11 @@ public class Main {
 
         games.connectfour.Engine connect4;
         games.tictactoe.Engine tictactoe;
-        Engine briscola;
+        games.briscola.Engine briscola;
 
         globalLoggingConfig(Level.WARNING);
 
-        int gameToPlay = 3;
+        int gameToPlay = 10;
         switch (gameToPlay) {
             case 1:
                 tictactoe = new games.tictactoe.Engine(1);  // 0 for AI to start, 1 for Human to start
@@ -86,7 +82,7 @@ public class Main {
                                             "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds");
                 break;
             case 10:
-                briscola = new Engine();
+                briscola = new games.briscola.Engine();
                 briscola.playNewGame(3, 50);
                 break;
         }

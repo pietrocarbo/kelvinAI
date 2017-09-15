@@ -7,9 +7,9 @@ public class Engine {
     private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
 
     public void playNewGame(int gameType, int gamesToPlay) {
-        int p1Pts = 0, p2Pts = 0, p1Win = 0, p2Win = 0, draw = 0;
+        int p1Pts = 0, p2Pts = 0, p1Win = 0, p2Win = 0, draw = 0, gamesLeft = gamesToPlay;
 
-        while (gamesToPlay > 0) {
+        while (gamesLeft > 0) {
 
             boolean isGameOver = false;
             Game game = new Game(0, gameType);
@@ -17,7 +17,7 @@ public class Engine {
             LOGGER.info("New game started");
 
             do {
-                // LOGGER.info(game);
+                LOGGER.finer(game.toString());
                 int nextPlayer = game.getNextPlayer();
 
                 if (nextPlayer == -1) {
@@ -47,12 +47,12 @@ public class Engine {
                 p1Pts += tmpP1pts;
                 p2Pts += tmpP2pts;
             }
-            gamesToPlay--;
+            gamesLeft--;
         }
 
-        LOGGER.warning("\n\n\nP1 winnned " + (p1Win * 100)/gamesToPlay + "% of the games with " + p1Pts/gamesToPlay + " points on average");
-        LOGGER.warning("P2 - Kelvin winned" + (p2Win * 100)/gamesToPlay + "% of the games with " + p2Pts/gamesToPlay + " points on average");
-        LOGGER.warning("Draw rate" + (draw * 100)/gamesToPlay + "%");
+        LOGGER.warning("P1 winnned " + (p1Win * 100)/gamesToPlay + "% of the games with " + p1Pts/gamesToPlay + " points on average");
+        LOGGER.warning("P2 - Kelvin winned " + (p2Win * 100)/gamesToPlay + "% of the games with " + p2Pts/gamesToPlay + " points on average");
+        LOGGER.warning("Draw rate " + (draw * 100)/gamesToPlay + "%");
 
 
     }
