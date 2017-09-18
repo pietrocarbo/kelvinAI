@@ -15,18 +15,18 @@
 
 <div id="board-container">
 
-    <table style="width: 50%; height: 50%;">
+    <table style="width: 40%; height: 40%;">
 
         <tr>
             <td><p id="kelvinTurn" style="display: none">È il turno dell'avversario (sta pensando...)</p></td>
             <td> <button id="btnK0" type="button">
-                    <img id="imgK0" src="cards/RetroCarteNapoletaneNormale.jpg" width="180" height="250" style="border:2px solid #FC695F" vspace="5" alt="missing image" align="middle">
+                    <img id="imgK0" src="cards/RetroCarteNapoletaneNormale.jpg" width="180" height="250" style="border:2px solid #00C6FF" vspace="5" alt="missing image" align="middle">
             </button> </td>
             <td> <button id="btnK1" type="button">
-                    <img id="imgK1" src="cards/RetroCarteNapoletaneNormale.jpg" width="180" height="250" style="border:2px solid #FC695F" vspace="5" alt="missing image" align="middle">
+                    <img id="imgK1" src="cards/RetroCarteNapoletaneNormale.jpg" width="180" height="250" style="border:2px solid #00C6FF" vspace="5" alt="missing image" align="middle">
             </button> </td>
             <td> <button id="btnK2" type="button">
-                    <img id="imgK2" src="cards/RetroCarteNapoletaneNormale.jpg" width="180" height="250" style="border:2px solid #FC695F" vspace="5" alt="missing image" align="middle">
+                    <img id="imgK2" src="cards/RetroCarteNapoletaneNormale.jpg" width="180" height="250" style="border:2px solid #00C6FF" vspace="5" alt="missing image" align="middle">
             </button> </td>
         </tr>
 
@@ -46,24 +46,30 @@
             </td>
 
             <td id="winner"></td>
-            <td id="tdT0"> <button type="button" style="background-color: white; border: 0px;"> 1º di mano
-                <img id="imgT0" src="cards/noCard.png" width="180" height="250"  style="border:2px solid white" title="prima carta giocata" alt="missing image" >
-            </button> </td>
-            <td id="tdT1"> <button type="button" style="background-color: white; border: 0px;"> 2º di mano
-                <img id="imgT1" src="cards/noCard.png" width="180" height="250" style="border:2px solid white" title="seconda carta giocata" alt="missing image" >
-            </button> </td>
+            <td id="tdT0">
+                    1º di mano
+                    <button type="button" style="width:180px; height: 250px">
+                        <img id="imgT0" src="cards/noCard.png" width="160px" height="230px"  style="border:2px solid white" title="prima carta giocata" alt="missing image">
+                    </button>
+            </td>
+            <td id="tdT1">
+                2º di mano
+                <button type="button" style="width:180px; height: 250px">
+                    <img id="imgT1" src="cards/noCard.png" width="160px" height="230px" style="border:2px solid white" title="seconda carta giocata" alt="missing image" >
+                </button>
+            </td>
         </tr>
 
         <tr>
             <td><p id="humanTurn" style="display: none">È il tuo turno</p></td>
             <td> <button id="btnH0" type="button">
-                    <img id="imgH0" src="cards/noCard.png" class="myCards" width="180" height="250" title="gioca prima carta" style="border:2px solid #00C6FF" vspace="5" alt="missing image" align="middle">
+                    <img id="imgH0" src="cards/noCard.png" class="myCards" width="180" height="250" title="gioca prima carta" style="border:2px solid #FC695F" vspace="5" alt="missing image" align="middle">
             </button> </td>
             <td> <button id="btnH1" type="button">
-                    <img id="imgH1" src="cards/noCard.png" class="myCards" width="180" height="250" title="gioca seconda carta" style="border:2px solid #00C6FF" vspace="5" alt="missing image" align="middle">
+                    <img id="imgH1" src="cards/noCard.png" class="myCards" width="180" height="250" title="gioca seconda carta" style="border:2px solid #FC695F" vspace="5" alt="missing image" align="middle">
             </button> </td>
             <td> <button id="btnH2" type="button">
-                    <img id="imgH2" src="cards/noCard.png" class="myCards" width="180" height="250" title="gioca terza carta" style="border:2px solid #00C6FF" vspace="5" alt="missing image" align="middle">
+                    <img id="imgH2" src="cards/noCard.png" class="myCards" width="180" height="250" title="gioca terza carta" style="border:2px solid #FC695F" vspace="5" alt="missing image" align="middle">
             </button> </td>
         </tr>
 
@@ -333,16 +339,19 @@
         console.log("move() called by " + caller + ": n. carte sul tavolo " + board.length + " indice carta giocata " + cardIndex + " cardToRemoveID " + cardToRemoveID + " boardPositionID " + boardPositionID);
 
         if (caller == 'ai') {
+            $(boardPositionID).css({"border-width": "2px", "border-style": "solid", "border-color": "#00C6FF"});
             updateCardDisplay(boardPositionID, handKelvin[cardIndex]);
             board.push(handKelvin[cardIndex]);
         } else {
+            $(boardPositionID).css({"border-width": "2px", "border-style": "solid", "border-color": "#FC695F"});
             updateCardDisplay(boardPositionID, handHuman[cardIndex]);
             board.push(handHuman[cardIndex]);
         }
         humanButtonsDisabled(true);
         updateCardDisplay(cardToRemoveID);
+        $(cardToRemoveID).css("border-width", "0px");
 
-//         setTimeout(function () {
+         setTimeout(function () {
 
             if (board.length == 2) {
 
@@ -355,7 +364,7 @@
 
                 $('#tdT' + (nextPlayer == firstHandPlayer ? 0 : 1)).css('background-color', '#27A319');
 
-                // setTimeout(function () {
+                 setTimeout(function () {
 
                     // collecting
                     updateCardDisplay(['#imgT0', '#imgT1']);
@@ -421,6 +430,11 @@
 
                     updateCardDisplay(humanCardsID, handHuman);
                     updateCardDisplay(kelvinCardsID, handKelvin);  // TO REMOVE
+                    for(var i = 0; i < 3; i++) {
+                        $(humanCardsID[i]).css({"border-width": "2px", "border-style": "solid", "border-color": "#FC695F"});
+                        $(kelvinCardsID[i]).css({"border-width": "2px", "border-style": "solid", "border-color": "#00C6FF"});
+                    }
+
 
                 } else if (turnsLeft <= 2) {
                     // put 'noCard.png' in played cards and remove their IDs from hand arrays, splice handHuman and HandKelvin in respective index
@@ -445,11 +459,13 @@
 
                 }  // end collecting
 
+                    $("#imgT0").css("border-width", "0px");
+                    $("#imgT1").css("border-width", "0px");
                     $('#tdT' + (nextPlayer == firstHandPlayer ? 0 : 1)).css('background-color', '#fdf7da');
                     firstHandPlayer = null;
                     firstHandPlayerCardIndex = null;
 
-//                }, 1500); // let the user see the winning card of the board
+                }, 1500); // let the user see the winning card of the board
 
             } else {
                 firstHandPlayer = caller;
@@ -472,7 +488,7 @@
                 console.log("ERROR wrong nextPlayer " + nextPlayer);
             }
 
-//         }, 1500); // let the user see the card moved into the board
+         }, 1500); // let the user see the card moved into the board
     }
 
     function updateCardDisplay(ids, cards) {
