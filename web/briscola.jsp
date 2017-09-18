@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32"/>
     <link rel="stylesheet" type="text/css" href="briscola.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -19,58 +19,81 @@
 
         <tr>
             <td><p id="kelvinTurn" style="display: none">È il turno dell'avversario (sta pensando...)</p></td>
-            <td> <button id="btnK0" type="button">
-                    <img id="imgK0" src="cards/RetroCarteNapoletaneNormale.jpg" width="180" height="250" style="border:2px solid #00C6FF" vspace="5" alt="missing image" align="middle">
-            </button> </td>
-            <td> <button id="btnK1" type="button">
-                    <img id="imgK1" src="cards/RetroCarteNapoletaneNormale.jpg" width="180" height="250" style="border:2px solid #00C6FF" vspace="5" alt="missing image" align="middle">
-            </button> </td>
-            <td> <button id="btnK2" type="button">
-                    <img id="imgK2" src="cards/RetroCarteNapoletaneNormale.jpg" width="180" height="250" style="border:2px solid #00C6FF" vspace="5" alt="missing image" align="middle">
-            </button> </td>
+            <td>
+                <button id="btnK0" type="button">
+                    <img id="imgK0" src="cards/RetroCarteNapoletaneNormale.jpg" width="180" height="250"
+                         style="border:2px solid #00C6FF" vspace="5" alt="missing image" align="middle">
+                </button>
+            </td>
+            <td>
+                <button id="btnK1" type="button">
+                    <img id="imgK1" src="cards/RetroCarteNapoletaneNormale.jpg" width="180" height="250"
+                         style="border:2px solid #00C6FF" vspace="5" alt="missing image" align="middle">
+                </button>
+            </td>
+            <td>
+                <button id="btnK2" type="button">
+                    <img id="imgK2" src="cards/RetroCarteNapoletaneNormale.jpg" width="180" height="250"
+                         style="border:2px solid #00C6FF" vspace="5" alt="missing image" align="middle">
+                </button>
+            </td>
         </tr>
 
         <tr>
             <td>
                 <div style="position: relative;">
                     <a href="#" style="text-decoration: none; color: black; pointer-events: none; cursor: default;">
-                            <img id="briscola" src="cards/noCard.png" width="90" height="125" />
-                            <div>Briscola</div>
+                        <img id="briscola" src="cards/noCard.png" width="90" height="125"/>
+                        <div>Briscola</div>
                     </a>
 
                     <a href="#" style="text-decoration: none; color: black; pointer-events: none; cursor: default;">
-                            <img id="mazzo" src="cards/RetroCarteNapoletane.jpg" width="150" height="125" />
-                            <div id="turnsLeft"></div>
+                        <img id="mazzo" src="cards/RetroCarteNapoletane.jpg" width="150" height="125"/>
+                        <div id="turnsLeft"></div>
                     </a>
                 </div>
             </td>
 
             <td id="winner"></td>
             <td id="tdT0">
-                    1º di mano
-                    <button type="button" style="width:180px; height: 250px">
-                        <img id="imgT0" src="cards/noCard.png" width="160px" height="230px"  style="border:2px solid white" title="prima carta giocata" alt="missing image">
-                    </button>
+                1º di mano
+                <button type="button" style="width:180px; height: 250px">
+                    <img id="imgT0" src="cards/noCard.png" width="160px" height="230px" style="border:2px solid white"
+                         title="prima carta giocata" alt="missing image">
+                </button>
             </td>
             <td id="tdT1">
                 2º di mano
                 <button type="button" style="width:180px; height: 250px">
-                    <img id="imgT1" src="cards/noCard.png" width="160px" height="230px" style="border:2px solid white" title="seconda carta giocata" alt="missing image" >
+                    <img id="imgT1" src="cards/noCard.png" width="160px" height="230px" style="border:2px solid white"
+                         title="seconda carta giocata" alt="missing image">
                 </button>
             </td>
         </tr>
 
         <tr>
             <td><p id="humanTurn" style="display: none">È il tuo turno</p></td>
-            <td> <button id="btnH0" type="button">
-                    <img id="imgH0" src="cards/noCard.png" class="myCards" width="180" height="250" title="gioca prima carta" style="border:2px solid #FC695F" vspace="5" alt="missing image" align="middle">
-            </button> </td>
-            <td> <button id="btnH1" type="button">
-                    <img id="imgH1" src="cards/noCard.png" class="myCards" width="180" height="250" title="gioca seconda carta" style="border:2px solid #FC695F" vspace="5" alt="missing image" align="middle">
-            </button> </td>
-            <td> <button id="btnH2" type="button">
-                    <img id="imgH2" src="cards/noCard.png" class="myCards" width="180" height="250" title="gioca terza carta" style="border:2px solid #FC695F" vspace="5" alt="missing image" align="middle">
-            </button> </td>
+            <td>
+                <button id="btnH0" type="button">
+                    <img id="imgH0" src="cards/noCard.png" class="myCards" width="180" height="250"
+                         title="gioca prima carta" style="border:2px solid #FC695F" vspace="5" alt="missing image"
+                         align="middle">
+                </button>
+            </td>
+            <td>
+                <button id="btnH1" type="button">
+                    <img id="imgH1" src="cards/noCard.png" class="myCards" width="180" height="250"
+                         title="gioca seconda carta" style="border:2px solid #FC695F" vspace="5" alt="missing image"
+                         align="middle">
+                </button>
+            </td>
+            <td>
+                <button id="btnH2" type="button">
+                    <img id="imgH2" src="cards/noCard.png" class="myCards" width="180" height="250"
+                         title="gioca terza carta" style="border:2px solid #FC695F" vspace="5" alt="missing image"
+                         align="middle">
+                </button>
+            </td>
         </tr>
 
     </table>
@@ -84,12 +107,14 @@
 </div>
 
 <script>
-    var deck, briscola, board = [], handKelvin = [], handHuman = [], collectedKelvin = [], collectedHuman = [], turnsLeft = 20, gameOver = false;
-    var briscolaID = '#briscola', humanCardsID = ['#imgH0', '#imgH1', '#imgH2'], kelvinCardsID = ['#imgK0', '#imgK1', '#imgK2'], humanButtonIDs = ["#btnH0", "#btnH1", "#btnH2"];
+    var deck, briscola, board = [], handKelvin = [], handHuman = [], collectedKelvin = [], collectedHuman = [],
+        turnsLeft = 20, gameOver = false;
+    var briscolaID = '#briscola', humanCardsID = ['#imgH0', '#imgH1', '#imgH2'],
+        kelvinCardsID = ['#imgK0', '#imgK1', '#imgK2'], humanButtonIDs = ["#btnH0", "#btnH1", "#btnH2"];
     var returnedAiMoveCard, firstHandPlayer, firstHandPlayerCardIndex, secondHandPlayer, secondHandPlayerCardIndex;
 
     $.ajaxSetup({async: false});
-    $(document).ready(function() {
+    $(document).ready(function () {
         for (var i = 0; i < 3; i++) {
             $(humanButtonIDs[i]).click(humanClick(i));
         }
@@ -100,7 +125,7 @@
             var cardImage = $(humanCardsID[index]).attr('src').split("di");
             cardImage[0] = cardImage[0].substring(6);
             cardImage[1] = cardImage[1].substring(0, cardImage[1].indexOf(".jpg"));
-            move('human',  new Card(briscolaValue(briscolaNamesToNumericalValue(cardImage[0])), briscolaPoints(cardImage[0]), cardImage[0], cardImage[1]));
+            move('human', new Card(briscolaValue(briscolaNamesToNumericalValue(cardImage[0])), briscolaPoints(cardImage[0]), cardImage[0], cardImage[1]));
         }
 
     }
@@ -122,10 +147,10 @@
         console.log(startingPlayer + " is starting a new game");
     }
 
-    function setupGame () {
+    function setupGame() {
         deck = shuffle(Deck());
-        handKelvin = deck.splice(0,3);
-        handHuman = deck.splice(0,3);
+        handKelvin = deck.splice(0, 3);
+        handHuman = deck.splice(0, 3);
         briscola = deck[deck.length - 1];
 
         updateCardDisplay(briscolaID, briscola);
@@ -143,7 +168,7 @@
 
     function Deck() {
         this.names = ['ASSO', 'DUE', 'TRE', 'QUATTRO', 'CINQUE', 'SEI', 'SETTE', 'FANTE', 'CAVALLO', 'RE'];
-        this.suits = ['DENARI','SPADE','COPPE','BASTONI'];
+        this.suits = ['DENARI', 'SPADE', 'COPPE', 'BASTONI'];
         var cards = [];
 
         for (var s = 0; s < this.suits.length; s++) {
@@ -187,7 +212,7 @@
                 return 9;
                 break;
             default:
-                console.log('ERROR in briscola name ' + name+ ' in numerical conversion');
+                console.log('ERROR in briscola name ' + name + ' in numerical conversion');
                 break;
         }
     }
@@ -273,7 +298,7 @@
         return array;
     }
 
-    function humanButtonsDisabled (disabled) {
+    function humanButtonsDisabled(disabled) {
         for (var i = 0; i < humanButtonIDs.length; i++) {
             $(humanButtonIDs[i]).prop('disabled', disabled);
         }
@@ -282,10 +307,10 @@
     function chooseWinner(card0, card1) {
         var briscolaSuit = briscola.suit;
 
-        if(card0.suit == briscolaSuit && card0.suit != card1.suit)     return 0; // ha vinto il primo di mano
-        if(card1.suit == briscolaSuit && card0.suit != card1.suit)     return 1;  // ha vinto il secondo di mano
+        if (card0.suit == briscolaSuit && card0.suit != card1.suit) return 0; // ha vinto il primo di mano
+        if (card1.suit == briscolaSuit && card0.suit != card1.suit) return 1;  // ha vinto il secondo di mano
 
-        if(card0.suit == card1.suit)    return card0.value > card1.value ? 0 : 1;
+        if (card0.suit == card1.suit) return card0.value > card1.value ? 0 : 1;
 
         return 0;  // vince il primo di mano
     }
@@ -293,9 +318,11 @@
     function mapCardToHandArray(caller, cardChosen) {
         var handArray;
 
-        if (caller == 'ai')             handArray = handKelvin;
-        else if (caller == 'human')     handArray = handHuman;
-        else    {   console.log("ERROR in mapping card of unknown player " + caller);  }
+        if (caller == 'ai') handArray = handKelvin;
+        else if (caller == 'human') handArray = handHuman;
+        else {
+            console.log("ERROR in mapping card of unknown player " + caller);
+        }
 
         for (var i = 0; i < handArray.length; i++) {
             if (cardChosen.name == handArray[i].name && cardChosen.suit == handArray[i].suit) {
@@ -309,9 +336,11 @@
     function mapCardToImage(caller, cardChosen) {
         var imageCardsID;
 
-        if (caller == 'ai')             imageCardsID = kelvinCardsID;
-        else if (caller == 'human')     imageCardsID = humanCardsID;
-        else    {   console.log("ERROR in mapping card of unknown player " + caller);  }
+        if (caller == 'ai') imageCardsID = kelvinCardsID;
+        else if (caller == 'human') imageCardsID = humanCardsID;
+        else {
+            console.log("ERROR in mapping card of unknown player " + caller);
+        }
 
         for (var i = 0; i < imageCardsID.length; i++) {
 
@@ -330,7 +359,7 @@
 
     function move(caller, card) {
 
-        var cardToRemoveID =  mapCardToImage(caller, card);
+        var cardToRemoveID = mapCardToImage(caller, card);
         var cardIndex = mapCardToHandArray(caller, card);
 
         var nextPlayer = (caller == "ai" ? "human" : "ai");
@@ -351,113 +380,125 @@
         updateCardDisplay(cardToRemoveID);
         $(cardToRemoveID).css("border-width", "0px");
 
-         setTimeout(function () {
+        setTimeout(function () {
 
             if (board.length == 2) {
-
-                // choosing winner
-                secondHandPlayer = caller;
-                secondHandPlayerCardIndex = cardIndex;
-
                 nextPlayer = (chooseWinner(board[0], board[1]) == 0 ? firstHandPlayer : secondHandPlayer);
-                console.log("collecting phase: player " + nextPlayer + " won this turn");
 
                 $('#tdT' + (nextPlayer == firstHandPlayer ? 0 : 1)).css('background-color', '#27A319');
+            }
 
-                 setTimeout(function () {
+            setTimeout(function () {
+
+                if (board.length == 2) {
+
+                    // choosing winner
+                    secondHandPlayer = caller;
+                    secondHandPlayerCardIndex = cardIndex;
+
+                    nextPlayer = (chooseWinner(board[0], board[1]) == 0 ? firstHandPlayer : secondHandPlayer);
+                    console.log("collecting phase: player " + nextPlayer + " won this turn");
 
                     // collecting
                     updateCardDisplay(['#imgT0', '#imgT1']);
-                    if(nextPlayer == 'ai') {
+                    if (nextPlayer == 'ai') {
                         collectedKelvin.push(board.pop());
                         collectedKelvin.push(board.pop());
-                    } else if(nextPlayer == 'human') {
+                    } else if (nextPlayer == 'human') {
                         collectedHuman.push(board.pop());
                         collectedHuman.push(board.pop());
                     } else {
                         console.log("ERROR wrong nextPlayer found during collecting: " + nextPlayer);
                     }
 
-                // dealing
-                turnsLeft--;
-                $('#turnsLeft').text('Mani rimanenti ' + turnsLeft);
-                console.log("entering dealing phase (turn " + turnsLeft + ")");
+                    // dealing
+                    turnsLeft--;
+                    $('#turnsLeft').text('Mani rimanenti ' + turnsLeft);
+                    console.log("entering dealing phase (turn " + turnsLeft + ")");
 
-                if(turnsLeft == 0) {
-                    gameOver = true;
-                    var pointKelvin = 0, pointHuman = 0;
-                    for (var i = 0; i < collectedKelvin.length; i++) {
+                    if (turnsLeft == 0) {
+                        gameOver = true;
+                        var pointKelvin = 0, pointHuman = 0;
+                        for (var i = 0; i < collectedKelvin.length; i++) {
                             pointKelvin += collectedKelvin[i].points;
                         }
-                    for (var i = 0; i < collectedHuman.length; i++) {
+                        for (var i = 0; i < collectedHuman.length; i++) {
                             pointHuman += collectedHuman[i].points;
                         }
 
-                    var winningMessage = pointKelvin > pointHuman ? "Kelvin ha vinto con " + pointKelvin + " punti" :
-                                             pointKelvin < pointHuman ? "Hai ha vinto con " + pointHuman + " punti" :
-                                                                        "Pareggio a " + pointHuman + " punti";
+                        var winningMessage = pointKelvin > pointHuman ? "Kelvin ha vinto con " + pointKelvin + " punti" :
+                            pointKelvin < pointHuman ? "Hai ha vinto con " + pointHuman + " punti" :
+                                "Pareggio a " + pointHuman + " punti";
                         $('#winner').append('<p>' + winningMessage + '</p>');
 
-                }  else if (turnsLeft >= 3) {
-                    // deal new cards in the respective handKelvin/handHuman positions removing them from the top the deck
-                    var indexToDeal = -1;
+                    } else if (turnsLeft >= 3) {
+                        // deal new cards in the respective handKelvin/handHuman positions removing them from the top the deck
+                        var indexToDeal = -1;
 
-                    if (nextPlayer == 'ai') {
+                        if (nextPlayer == 'ai') {
 
-                        indexToDeal = (firstHandPlayer == 'ai' ? firstHandPlayerCardIndex : secondHandPlayerCardIndex);
-                        handKelvin[indexToDeal] = deck.shift();
+                            indexToDeal = (firstHandPlayer == 'ai' ? firstHandPlayerCardIndex : secondHandPlayerCardIndex);
+                            handKelvin[indexToDeal] = deck.shift();
 
-                        indexToDeal = (indexToDeal == firstHandPlayerCardIndex ? secondHandPlayerCardIndex : firstHandPlayerCardIndex);
-                        handHuman[indexToDeal] = deck.shift();
+                            indexToDeal = (indexToDeal == firstHandPlayerCardIndex ? secondHandPlayerCardIndex : firstHandPlayerCardIndex);
+                            handHuman[indexToDeal] = deck.shift();
 
-                    } else if (nextPlayer == 'human') {
+                        } else if (nextPlayer == 'human') {
 
-                        indexToDeal = (firstHandPlayer == 'human' ? firstHandPlayerCardIndex : secondHandPlayerCardIndex);
-                        handHuman[indexToDeal] = deck.shift();
+                            indexToDeal = (firstHandPlayer == 'human' ? firstHandPlayerCardIndex : secondHandPlayerCardIndex);
+                            handHuman[indexToDeal] = deck.shift();
 
-                        indexToDeal = (indexToDeal == firstHandPlayerCardIndex ? secondHandPlayerCardIndex : firstHandPlayerCardIndex);
-                        handKelvin[indexToDeal] = deck.shift();
+                            indexToDeal = (indexToDeal == firstHandPlayerCardIndex ? secondHandPlayerCardIndex : firstHandPlayerCardIndex);
+                            handKelvin[indexToDeal] = deck.shift();
 
-                    } else {
-                        console.log("ERROR wrong winner(i.e. nextPlayer) found " + nextPlayer);
-                    }
+                        } else {
+                            console.log("ERROR wrong winner(i.e. nextPlayer) found " + nextPlayer);
+                        }
 
-                    if (turnsLeft == 3) { // "cancellare" graficamente il mazzo e la briscola
-                        console.log("dealing at turn 4, erasing deck of length " + deck.length);
-                        updateCardDisplay(['#mazzo']);
-                        $(briscolaID).replaceWith('<p>' + briscola.suit + '</p>');
-                    }
+                        if (turnsLeft == 3) { // "cancellare" graficamente il mazzo e la briscola
+                            console.log("dealing at turn 4, erasing deck of length " + deck.length);
+                            updateCardDisplay(['#mazzo']);
+                            $(briscolaID).replaceWith('<p>' + briscola.suit + '</p>');
+                        }
 
-                    updateCardDisplay(humanCardsID, handHuman);
-                    updateCardDisplay(kelvinCardsID, handKelvin);  // TO REMOVE
-                    for(var i = 0; i < 3; i++) {
-                        $(humanCardsID[i]).css({"border-width": "2px", "border-style": "solid", "border-color": "#FC695F"});
-                        $(kelvinCardsID[i]).css({"border-width": "2px", "border-style": "solid", "border-color": "#00C6FF"});
-                    }
+                        updateCardDisplay(humanCardsID, handHuman);
+                        updateCardDisplay(kelvinCardsID, handKelvin);  // TO REMOVE
+                        for (var i = 0; i < 3; i++) {
+                            $(humanCardsID[i]).css({
+                                "border-width": "2px",
+                                "border-style": "solid",
+                                "border-color": "#FC695F"
+                            });
+                            $(kelvinCardsID[i]).css({
+                                "border-width": "2px",
+                                "border-style": "solid",
+                                "border-color": "#00C6FF"
+                            });
+                        }
 
 
-                } else if (turnsLeft <= 2) {
-                    // put 'noCard.png' in played cards and remove their IDs from hand arrays, splice handHuman and HandKelvin in respective index
+                    } else if (turnsLeft <= 2) {
+                        // put 'noCard.png' in played cards and remove their IDs from hand arrays, splice handHuman and HandKelvin in respective index
 
-                    var indexToRemove = firstHandPlayerCardIndex;
-                    if (firstHandPlayer == 'ai') {
-                        handKelvin.splice(indexToRemove, 1);
-                    } else {
-                        handHuman.splice(indexToRemove, 1);
-                        $(humanButtonIDs[firstHandPlayerCardIndex]).prop('disabled', true);
-                        humanButtonIDs.splice(firstHandPlayerCardIndex, 1);
-                    }
+                        var indexToRemove = firstHandPlayerCardIndex;
+                        if (firstHandPlayer == 'ai') {
+                            handKelvin.splice(indexToRemove, 1);
+                        } else {
+                            handHuman.splice(indexToRemove, 1);
+                            $(humanButtonIDs[firstHandPlayerCardIndex]).prop('disabled', true);
+                            humanButtonIDs.splice(firstHandPlayerCardIndex, 1);
+                        }
 
-                    indexToRemove = secondHandPlayerCardIndex;
-                    if (secondHandPlayer == 'ai') {
-                        handKelvin.splice(indexToRemove, 1);
-                    } else {
-                        handHuman.splice(indexToRemove, 1);
-                        $(humanButtonIDs[secondHandPlayerCardIndex]).prop('disabled', true);
-                        humanButtonIDs.splice(secondHandPlayerCardIndex, 1);
-                    }
+                        indexToRemove = secondHandPlayerCardIndex;
+                        if (secondHandPlayer == 'ai') {
+                            handKelvin.splice(indexToRemove, 1);
+                        } else {
+                            handHuman.splice(indexToRemove, 1);
+                            $(humanButtonIDs[secondHandPlayerCardIndex]).prop('disabled', true);
+                            humanButtonIDs.splice(secondHandPlayerCardIndex, 1);
+                        }
 
-                }  // end collecting
+                    }  // end collecting
 
                     $("#imgT0").css("border-width", "0px");
                     $("#imgT1").css("border-width", "0px");
@@ -465,41 +506,41 @@
                     firstHandPlayer = null;
                     firstHandPlayerCardIndex = null;
 
-                }, 1500); // let the user see the winning card of the board
 
-            } else {
-                firstHandPlayer = caller;
-                firstHandPlayerCardIndex = cardIndex;
-            }
+                } else {
+                    firstHandPlayer = caller;
+                    firstHandPlayerCardIndex = cardIndex;
+                }
 
-            if (gameOver) {
-                $('#kelvinTurn').css('display', 'none');
-                $('#humanTurn').css('display', 'none');
-                console.log("game over");
-            } else if (nextPlayer == 'human') {
-                $('#humanTurn').css('display', 'block');
-                $('#kelvinTurn').css('display', 'none');
-                humanButtonsDisabled(false);
-            } else if (nextPlayer == 'ai') {
-                $('#kelvinTurn').css('display', 'block');
-                $('#humanTurn').css('display', 'none');
-                move('ai', getAiMove());
-            } else {
-                console.log("ERROR wrong nextPlayer " + nextPlayer);
-            }
+                if (gameOver) {
+                    $('#kelvinTurn').css('display', 'none');
+                    $('#humanTurn').css('display', 'none');
+                    console.log("game over");
+                } else if (nextPlayer == 'human') {
+                    $('#humanTurn').css('display', 'block');
+                    $('#kelvinTurn').css('display', 'none');
+                    humanButtonsDisabled(false);
+                } else if (nextPlayer == 'ai') {
+                    $('#kelvinTurn').css('display', 'block');
+                    $('#humanTurn').css('display', 'none');
+                    move('ai', getAiMove());
+                } else {
+                    console.log("ERROR wrong nextPlayer " + nextPlayer);
+                }
+            }, 1500); // let the user see the winning card of the board
 
-         }, 1500); // let the user see the card moved into the board
+        }, 1500); // let the user see the card moved into the board
     }
 
     function updateCardDisplay(ids, cards) {
         console.log('updateCardDisplay entered: ids -> ' + ids + ' cards... ');
         console.log(cards);
 
-        if(Array.isArray(ids)) {
+        if (Array.isArray(ids)) {
             for (var i = 0; i < ids.length; i++) {
                 if (cards === undefined) {
                     var cardPath = 'noCard.png';
-                } else if(cards[i] instanceof Card) {
+                } else if (cards[i] instanceof Card) {
                     var cardPath = cards[i].name + 'di' + cards[i].suit + '.jpg';
                 } else if (cards[i] = 'RetroCarteNapoletaneNormale.jpg') {
                     var cardPath = cards[i];
@@ -510,7 +551,7 @@
         } else {
             if (cards === undefined) {
                 var cardPath = 'noCard.png';
-            } else if(cards instanceof Card) {
+            } else if (cards instanceof Card) {
                 var cardPath = cards.name + 'di' + cards.suit + '.jpg';
             } else if (cards = 'RetroCarteNapoletaneNormale.jpg') {
                 var cardPath = cards;
@@ -519,15 +560,24 @@
         }
     }
 
-    function getAiMove () {
+    function getAiMove() {
         console.log("entered getAiMove(): turnsLeft " + turnsLeft + " board length " + board.length + " deck length " + deck.length);
-        var unknownCards = deck.slice(0, deck.length-1).concat(handHuman);
+        var unknownCards = deck.slice(0, deck.length - 1).concat(handHuman);
         $.ajax({
-            url : 'aimBRI',
+            url: 'aimBRI',
             type: 'GET',
-            dataType : 'text',
-            data: {nOppCards: handHuman.length, nMyCards: handKelvin.length, nBoardCards: board.length, nUnknownCards: unknownCards.length,
-                   turns: (20 - turnsLeft), myCards: handKelvin, briscola: briscola, board: board, unknownCards: unknownCards},
+            dataType: 'text',
+            data: {
+                nOppCards: handHuman.length,
+                nMyCards: handKelvin.length,
+                nBoardCards: board.length,
+                nUnknownCards: unknownCards.length,
+                turns: (20 - turnsLeft),
+                myCards: handKelvin,
+                briscola: briscola,
+                board: board,
+                unknownCards: unknownCards
+            },
             success: function (data) {
                 console.log("Kelvin chosen move " + data);
                 var found = false;
@@ -543,8 +593,7 @@
                     console.log("ERRORE il server ha ritornato una carta non esistente: " + data);
                 }
             },
-            error: function(jqxhr,textStatus,errorThrown)
-            {
+            error: function (jqxhr, textStatus, errorThrown) {
                 console.log(jqxhr);
                 console.log(textStatus);
                 console.log(errorThrown);
