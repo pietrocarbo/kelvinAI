@@ -64,8 +64,8 @@
         $.ajax({
             url : 'aimTTT',
             type: 'GET',
-            data : {starter: starter, gridValues: getBoardValues()},
             dataType : 'text',
+            data : {gridValues: getBoardValues()},
             success: function (data) {
                 console.log("AI chosen move " + data.charAt(0) + "," + data.charAt(1));
                 move(data.charAt(0) + "" + data.charAt(1));

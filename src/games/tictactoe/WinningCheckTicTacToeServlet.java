@@ -8,36 +8,35 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @WebServlet(name = "WinningCheckTicTacToeServlet", urlPatterns = {"/winTTT"})
 public class WinningCheckTicTacToeServlet extends HttpServlet {
 
+    private static final Logger LOGGER = Logger.getLogger(WinningCheckTicTacToeServlet.class.getName());
     private String winningMessage;
-    private static final long serialVersionUID = 1L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Map<String, String[]> requestData = request.getParameterMap();
-        String[] boardElements = new String[9];
         int i = 0;
-        for (String key : requestData.keySet()) {
-            for (String s : requestData.get(key)) {
+        String[] boardElements = new String[9];
+        for (String key : request.getParameterMap().keySet()) {
+            for (String s : request.getParameterMap().get(key)) {
                 boardElements[i++] = s;
             }
         }
-        PrintWriter out = response.getWriter();
 
         String[] checkResult = checkAndDeclare(boardElements);
+        String strToReturn = checkResult[0] + "" + checkResult[1];
 
-        String strToReturn = checkResult[0] + "" + checkResult[1] + "";
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(strToReturn);
 
-        out.write(strToReturn.toString());
-        System.out.println("servlet sent " + strToReturn);
+        LOGGER.info("Game over controls tictactoe servlet sent " + strToReturn);
     }
 
     public String[] checkAndDeclare (String[] board) {

@@ -82,7 +82,7 @@ public class Main {
                 LOGGER.severe("\n" + ANSI_BLUE + "AI 0 (depth " + depthAI0 + ") won " + winAI0 + " games, ratio:  " + (winAI0*100.0)/nOfGames +
                                             "%\nAI 1 (depth " + depthAI1 + ") won " + winAI1 + " games, ratio:  " + (winAI1*100.0)/nOfGames +
                                             "%\nDraws: " + draws + ", ratio: " +  (draws*100.0)/nOfGames + "%" +
-                                            "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds");
+                                            "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds" + ANSI_NO_COLOR);
                 break;
 
             case 10:

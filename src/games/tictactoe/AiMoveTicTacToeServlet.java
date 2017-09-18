@@ -8,40 +8,38 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @WebServlet(name = "AiMoveTicTacToeServlet", urlPatterns = {"/aimTTT"})
 public class AiMoveTicTacToeServlet extends HttpServlet {
+
+    private static final Logger LOGGER = Logger.getLogger(AiMoveTicTacToeServlet.class.getName());
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Map<String, String[]> requestData = request.getParameterMap();
-
-        String[] board = new String[9];
         int i = 0;
-        for (String s : requestData.get("gridValues[]")) {
-//            System.out.print("*" + s + "*\t");
+        String[] board = new String[9];
+        for (String s : request.getParameterMap().get("gridValues[]")) {
              board[i++] = s;
         }
 
-        int starter = Integer.parseInt(requestData.get("starter")[0]);
-        char[][] grid = {{board[0].replace('-', ' ').toCharArray()[0], board[1].replace('-', ' ').toCharArray()[0], board[2].replace('-', ' ').toCharArray()[0]},
+        char[][] grid =
+            {
+                {board[0].replace('-', ' ').toCharArray()[0], board[1].replace('-', ' ').toCharArray()[0], board[2].replace('-', ' ').toCharArray()[0]},
                 {board[3].replace('-', ' ').toCharArray()[0], board[4].replace('-', ' ').toCharArray()[0], board[5].replace('-', ' ').toCharArray()[0]},
-                {board[6].replace('-', ' ').toCharArray()[0], board[7].replace('-', ' ').toCharArray()[0], board[8].replace('-', ' ').toCharArray()[0]}};
-
+                {board[6].replace('-', ' ').toCharArray()[0], board[7].replace('-', ' ').toCharArray()[0], board[8].replace('-', ' ').toCharArray()[0]}
+            };
 
         Action nextMove = Util.minMaxAlgorithm(grid, 'O', 'X', true);
 
-        int[] aiMove = {nextMove.getRow(), nextMove.getColumn()};
+        String strToReturn = nextMove.getRow() + "" + nextMove.getColumn();
 
-        String strToReturn = aiMove[0] + "" + aiMove[1];
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
-
-        PrintWriter out = response.getWriter();
-        out.write(strToReturn);
-        System.out.println("aimTTT servlet sent " + strToReturn);
+        response.getWriter().write(strToReturn);
+        LOGGER.info("AI move tictactoe servlet sent " + strToReturn);
     }
 }
