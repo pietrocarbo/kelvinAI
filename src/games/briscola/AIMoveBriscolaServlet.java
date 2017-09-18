@@ -65,13 +65,13 @@ public class AIMoveBriscolaServlet extends HttpServlet {
 //                Integer.parseInt(request.getParameter("nOppCards")),
 //                0);
 
-        System.out.println("aiBRI chose to play " + cardToPlay);
+        // System.out.println("aiBRI chose to play " + cardToPlay);
 
         String strToReturn = cardToPlay.getRank() + "di" + cardToPlay.getSuit();
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
 
         response.getWriter().write(strToReturn);
-        System.out.println("aimBRI servlet sent " + strToReturn);
+        System.out.println("aimBRI servlet sent: " + strToReturn);
     }
 }
