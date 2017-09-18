@@ -109,19 +109,11 @@ public class MonteCarloGame {
     }
 
     public void playUntilEnd (int depth, boolean pruning) {
-        boolean itsComplete = false;
+        if (tavolo.getHand().size() == 2) {
 
-        while (!itsComplete) {
-            if (tavolo.getHand().size() == 2) {
+            collectAndDeal();
 
-                collectAndDeal();
-                itsComplete = true;
 
-            } else {
-                // TODO: completamento con la giocata dell'avversario
-                // (Pietro: bisogna considerare una Action come una giocata, non due, quindi cambiando play1Turn() di conseguenza e poi iniziare il minMax con maximize=false)
-
-            }
         }
 
         if (nextPlayer == whoIam) {
@@ -139,6 +131,7 @@ public class MonteCarloGame {
 
             }
         }
+
     }
 
     private static int minMaxCalc (MonteCarloGame game, boolean maximize, int depth, int alpha, int beta) {

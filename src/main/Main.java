@@ -50,13 +50,13 @@ public class Main {
         games.tictactoe.Engine tictactoe;
         games.briscola.Engine briscola;
 
-        globalLoggingConfig(Level.WARNING);
+        globalLoggingConfig(Level.FINE);
 
         int gameToPlay = 10;
         switch (gameToPlay) {
             case 1:
-                tictactoe = new games.tictactoe.Engine(1);  // 0 for AI to start, 1 for Human to start
-                tictactoe.playHumanVsAI();
+                tictactoe = new games.tictactoe.Engine();  // 0 for AI to start, 1 for Human to start
+                tictactoe.playNewGame(0, 2);
                 break;
             case 2:
                 connect4 = new games.connectfour.Engine();

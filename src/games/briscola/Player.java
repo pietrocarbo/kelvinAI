@@ -89,31 +89,23 @@ class AI extends Player {
     @Override
     public Card play (Hand tavolo, Card briscola, Hand unKnownCards, int p2Point, int turn, int oppositeNoOfCard, int nextPlayer) {
 
-
-
         if (tavolo.getHand().size() == 0) {
             //Se sono il primo a giocare (tavolo vuoto) gioco la carta che ha il minor valore nella mia mano
-            return cards.getHand().get(Util.getIndexOfLessValueCard(cards, briscola.getSuit()));
-
+            if (true) {
+                return cards.getHand().get(Util.getIndexOfLessValueCard(cards, briscola.getSuit()));
+            } else {
+                return Util.monteCarloMethod(ID, depth, pruning, numberOfRandomDeals,
+                        new Hand(new ArrayList<Card>(cards.getHand())), briscola, tavolo,
+                        unKnownCards, Util.calculatePoints(cardsCollected), p2Point, oppositeNoOfCard, nextPlayer);
+            }
         } else {
             //Se l'avversario ha già giocato, gioco con MonteCarlo
-            return Util.monteCarloMethod(ID , depth, pruning, numberOfRandomDeals,
-                    new Hand(new ArrayList<Card>(cards.getHand())), briscola, tavolo,
-                    unKnownCards, Util.calculatePoints(cardsCollected), p2Point, oppositeNoOfCard, nextPlayer);
+            //if(turn < 16){ return cards.getHand().get(Util.getIndexOfLessValueWinningCardOtherwiseLessValue(cards,briscola.getSuit(), tavolo.getHand().get(0))); }
+            //else {
+            return Util.monteCarloMethod(ID, depth, pruning, numberOfRandomDeals, new Hand(new ArrayList<Card>(cards.getHand())), briscola, tavolo, unKnownCards, Util.calculatePoints(cardsCollected), p2Point, oppositeNoOfCard, nextPlayer);
+            //}
         }
-
-/*
-        if (tavolo.getHand().size() == 0 || tavolo.getHand().get(0).getRank().getBriscolaValue() < 8) {
-            //Se sono il primo a giocare (tavolo vuoto) gioco la carta che ha il minor valore nella mia mano
-            return cards.getHand().get(Util.getIndexOfLessValueCard(cards, briscola.getSuit()));
-
-        } else {
-            //Se l'avversario ha già giocato gioco la prima carta più forte della carta giocata dall'avversario
-            return  cards.getHand().get(Util.getIndexOfLessValueWinningCardOtherwiseLessValue(cards, briscola.getSuit(), tavolo.getHand().get(0)));
-        }
-        */
     }
-
 }
 
 class Human extends Player {

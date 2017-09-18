@@ -27,11 +27,15 @@ public class AiMoveTicTacToeServlet extends HttpServlet {
         }
 
         int starter = Integer.parseInt(requestData.get("starter")[0]);
-        String[][] grid = {     {board[0], board[1], board[2]},
-                                {board[3], board[4], board[5]},
-                                {board[6], board[7], board[8]} };
+        char[][] grid = {{board[0].replace('-', ' ').toCharArray()[0], board[1].replace('-', ' ').toCharArray()[0], board[2].replace('-', ' ').toCharArray()[0]},
+                {board[3].replace('-', ' ').toCharArray()[0], board[4].replace('-', ' ').toCharArray()[0], board[5].replace('-', ' ').toCharArray()[0]},
+                {board[6].replace('-', ' ').toCharArray()[0], board[7].replace('-', ' ').toCharArray()[0], board[8].replace('-', ' ').toCharArray()[0]}};
 
-        int[] aiMove = new Agent(starter).ply(grid);
+        Util.setSeeds('O', 'X');
+
+        Action nextMove = Util.minMaxAlg(grid, 'O', 'X', starter == 0 ? 'O' : 'X');
+
+        int[] aiMove = {nextMove.getRow(), nextMove.getColumn()};
 
         String strToReturn = aiMove[0] + "" + aiMove[1];
         response.setContentType("text/plain");

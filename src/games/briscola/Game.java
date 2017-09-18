@@ -37,10 +37,10 @@ public class Game {
                 break;
             case 3:
                 players.add(new AI("Smith", new Hand(mazzo.deal(3)), 0));
-                players.get(0).setMinMaxParameter( 3, true , 50);
+                players.get(0).setMinMaxParameter(3, true, 100);
 
                 players.add(new AI("Kelvin", new Hand(mazzo.deal(3)), 1));
-                players.get(1).setMinMaxParameter( 3, true , 50);
+                players.get(1).setMinMaxParameter(3, true, 100);
                 break;
         }
 

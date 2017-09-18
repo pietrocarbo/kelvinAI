@@ -164,35 +164,72 @@ public class Util {
 
             randomDeck.getCards().add(briscola);
 
-            for (int i = 0; i < cards.getHand().size(); i++) {
+            if (tavolo.getHand().size() == 1) {
+                //Se sono il secondo a giocare
+                for (int i = 0; i < cards.getHand().size(); i++) {
 
-                Hand myCards = new Hand(new ArrayList<Card>(cards.getHand()));
+                    Hand myCards = new Hand(new ArrayList<Card>(cards.getHand()));
 
-                //Aggiorno il tavolo con la corrente carta giocata sul tavolo
-                tavolo.addOne(cards.getHand().get(i));
+                    //Aggiorno il tavolo con la corrente carta giocata sul tavolo
+                    tavolo.addOne(cards.getHand().get(i));
 
-                myCards.removeOne(cards.getHand().get(i));
+                    myCards.removeOne(cards.getHand().get(i));
 
-                //Creo la mano dell'avversario con 3 carte ipotetiche
-                Hand oppositeHandCard = new Hand(new ArrayList<Card>(randomDeck.deal(oppositeNoOfCard)));
+                    //Creo la mano dell'avversario con 3 carte ipotetiche
+                    Hand oppositeHandCard = new Hand(new ArrayList<Card>(randomDeck.deal(oppositeNoOfCard)));
 
-                //Creo il gioco
-                MonteCarloGame game = new MonteCarloGame(new Deck(new Hand(new ArrayList<>(randomDeck.getCards()))), briscola, myCards,
-                                        oppositeHandCard, p1Point, p2Point, new Hand(new ArrayList<Card>(tavolo.getHand())), nextPlayer);
-                game.setWhoIam(myID);
+                    //Creo il gioco
+                    MonteCarloGame game = new MonteCarloGame(new Deck(new Hand(new ArrayList<>(randomDeck.getCards()))), briscola, myCards,
+                            oppositeHandCard, p1Point, p2Point, new Hand(new ArrayList<Card>(tavolo.getHand())), nextPlayer);
+                    game.setWhoIam(myID);
 
-                randomDeck.getCards().addAll(oppositeHandCard.getHand());
+                    randomDeck.getCards().addAll(oppositeHandCard.getHand());
 
-                tavolo.removeOne(cards.getHand().get(i));
+                    tavolo.removeOne(cards.getHand().get(i));
 
-                //Lo faccio giocare con il metodo minmax fino alla fine
-                game.playUntilEnd(depth, pruning);
+                    //Lo faccio giocare con il metodo minmax fino alla fine
+                    game.playUntilEnd(depth, pruning);
 
-                //Prendo i punti finali del mio giocatore (i player hanno giocato con minmax algorithm)
-                cardValues[i] += game.getGameVal();
-                nodes += MonteCarloGame.nodes;
+                    //Prendo i punti finali del mio giocatore (i player hanno giocato con minmax algorithm)
+                    cardValues[i] += game.getGameVal();
+                    nodes += MonteCarloGame.nodes;
+                }
+                k++;
+            } else {
+                //Se sono il primo a giocare
+                for (int i = 0; i < cards.getHand().size(); i++) {
+                    int tmp = 0;
+                    for (int j = 0; j < oppositeNoOfCard; j++) {
+                        Hand oppositeHandCard = new Hand(new ArrayList<Card>(randomDeck.deal(oppositeNoOfCard)));
+                        Hand myCards = new Hand(new ArrayList<Card>(cards.getHand()));
+
+                        Action nextAction = new Action(nextPlayer);
+
+                        tavolo.addOne(myCards.getHand().get(i));
+                        tavolo.addOne(oppositeHandCard.getHand().get(j));
+
+                        myCards.removeOne(myCards.getHand().get(i));
+                        oppositeHandCard.removeOne(oppositeHandCard.getHand().get(j));
+
+                        MonteCarloGame game = new MonteCarloGame(new Deck(new Hand(new ArrayList<>(randomDeck.getCards()))), briscola, myCards,
+                                oppositeHandCard, p1Point, p2Point, new Hand(new ArrayList<Card>(tavolo.getHand())), nextPlayer);
+                        game.setWhoIam(myID);
+
+                        game.playUntilEnd(depth - 1, pruning);
+
+                        randomDeck.getCards().addAll(oppositeHandCard.getHand());
+                        randomDeck.getCards().add(tavolo.getHand().get(1));
+                        tavolo.removeOne(tavolo.getHand().get(0));
+                        tavolo.removeOne(tavolo.getHand().get(0));
+
+                        tmp += game.getGameVal();
+                        nodes += MonteCarloGame.nodes;
+                    }
+
+                    cardValues[i] += tmp;
+                }
+                k++;
             }
-            k++;
         }
 
         int maxIndex = 0;
