@@ -28,13 +28,11 @@ public class Action {
 
     public static List<Action> getActions(char[][] board, char seed) {
         ArrayList<Action> movesAvailible = new ArrayList<>();
-
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (board[i][j] == ' ') movesAvailible.add(new Action(i, j, seed));
             }
         }
-
         return movesAvailible;
     }
 

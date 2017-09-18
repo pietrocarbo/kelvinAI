@@ -1,67 +1,64 @@
 package games.tictactoe;
 
+import main.GameType;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Game {
 
+    private static final Logger LOGGER = Logger.getLogger(Game.class.getName());
+
     private List<Player> players = new ArrayList<>();
-    private int starter;
     private char[][] grid = new char[3][3];
     private int turns = 0;
     private int nextToPlay;
-
-    public List<Player> getPlayers() {
-        return players;
-    }
 
     public char[][] getGrid() {
         return grid;
     }
 
-    public Game(int starter, int mod) {
+    public Game(int starter, GameType mod) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 this.grid[i][j] = ' ';
             }
         }
 
-        this.starter = starter;
-        nextToPlay = starter;
-
-        switch (mod) {
-            case 1:
-                players.add(new Human(0, 'X'));
-                players.add(new Human(1, 'O'));
-                break;
-            case 2:
-                players.add(new Human(0, 'X'));
-                players.add(new AI(1, 'O', starter == 1 ? 'O' : 'X'));
-                break;
-            case 3:
-                players.add(new AI(0, 'X', starter == 1 ? 'O' : 'X'));
-                players.add(new AI(1, 'O', starter == 1 ? 'O' : 'X'));
-                break;
+        if (starter != 0 && starter != 1) {
+            LOGGER.severe("ERROR unexpected starter player identifier");
         }
 
-        Util.setSeeds('O', 'X');
+        this.nextToPlay = starter;
+
+        switch (mod) {
+            case HUMAN_VS_HUMAN:
+                this.players.add(new Human('O'));
+                this.players.add(new Human('X'));
+                break;
+            case HUMAN_VS_AI:
+                this.players.add(new AI('O', true));
+                this.players.add(new Human('X'));
+                break;
+            case AI_VS_AI:
+                this.players.add(new AI('O', true));
+                this.players.add(new AI('X', false));
+                break;
+        }
 
     }
 
     public void doNextTurn() {
 
-        System.out.println("Next to play is player " + nextToPlay);
+        LOGGER.fine("Next to play is player " + nextToPlay);
 
-        Action nextMove;
-        if (players.get(nextToPlay) instanceof AI) {
-            nextMove = players.get(nextToPlay).play(grid, players.get(1 - nextToPlay).getSeed());
-        } else {
-            nextMove = players.get(nextToPlay).play(grid);
-        }
+        Action nextMove = players.get(nextToPlay).play(grid);
 
         grid[nextMove.getRow()][nextMove.getColumn()] = nextMove.getSeed();
 
         nextToPlay = 1 - nextToPlay;
+
         turns++;
     }
 

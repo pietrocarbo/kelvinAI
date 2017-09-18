@@ -7,14 +7,14 @@ import java.util.logging.*;
 public class Main {
 
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
-//    Levels of logging importance (descending order)
+//    Levels of logging importance in descending order
 //    SEVERE
 //    WARNING
 //    INFO
 //    CONFIG
 //    FINE
 //    FINER
-//    FINEST
+//    FINEST  (ALL)
 
     private static void globalLoggingConfig (Level logLevel) {
         Logger rootLogger = LogManager.getLogManager().getLogger("");
@@ -52,16 +52,19 @@ public class Main {
 
         globalLoggingConfig(Level.FINE);
 
-        int gameToPlay = 10;
+        int gameToPlay = 1;
         switch (gameToPlay) {
+
             case 1:
                 tictactoe = new games.tictactoe.Engine();  // 0 for AI to start, 1 for Human to start
-                tictactoe.playNewGame(0, 2);
+                tictactoe.playNewGame(0, GameType.HUMAN_VS_AI);
                 break;
+
             case 2:
                 connect4 = new games.connectfour.Engine();
                 connect4.playNewGame(0, 2, Arrays.asList(5));
                 break;
+
             case 3:
                 int nOfGames = 50, winAI0 = 0, winAI1 = 0, draws = 0, depthAI0 = 500, depthAI1 = 3;
                 connect4 = new games.connectfour.Engine();
@@ -81,6 +84,7 @@ public class Main {
                                             "%\nDraws: " + draws + ", ratio: " +  (draws*100.0)/nOfGames + "%" +
                                             "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds");
                 break;
+
             case 10:
                 briscola = new games.briscola.Engine();
                 briscola.playNewGame(3, 50);

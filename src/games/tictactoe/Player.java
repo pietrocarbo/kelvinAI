@@ -1,53 +1,39 @@
 package games.tictactoe;
 
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 abstract class Player {
-
-    int ID;
     char seed;
 
-    public Player(int ID, char seed) {
-        this.ID = ID;
+    public Player(char seed) {
         this.seed = seed;
     }
 
-    public Action play(char[][] grid) {
-        return null;
-    }
-
-    public Action play(char[][] grid, char oppositeSeed) {
-        return null;
-    }
-
-    public int getID() {
-        return ID;
-    }
-
-    public char getSeed() {
-        return seed;
-    }
+    abstract public Action play(char[][] grid);
 }
 
 class AI extends Player {
 
-    private char starter;
+    private static final Logger LOGGER = Logger.getLogger(AI.class.getName());
+    private boolean maximize;
 
-    public AI(int ID, char seed, char starter) {
-        super(ID, seed);
-        this.starter = starter;
+    public AI(char seed, boolean maximize) {
+        super(seed);
+        this.maximize = maximize;
     }
 
-    public Action play(char[][] grid, char oppositeSeed) {
-
-        return Util.minMaxAlg(grid, seed, oppositeSeed, starter);
+    public Action play(char[][] grid) {
+        return Util.minMaxAlgorithm(grid, seed, seed == 'O' ? 'X' : 'O', maximize);
     }
 }
 
 class Human extends Player {
 
-    public Human(int ID, char seed) {
-        super(ID, seed);
+    private static final Logger LOGGER = Logger.getLogger(Human.class.getName());
+
+    public Human(char seed) {
+        super(seed);
     }
 
     @Override
@@ -58,8 +44,9 @@ class Human extends Player {
 
         while (true) {
             String input = scanner.next();
+
             if (!input.matches("^\\d,\\d$")) {
-                System.err.println("Wrong input format '" + input + "' repeat please");
+                LOGGER.severe("Wrong input format '" + input + "' repeat please");
                 continue;
             } else {
                 row = Integer.parseInt(input.substring(0, 1));
@@ -69,7 +56,7 @@ class Human extends Player {
             if (Util.isLegalMove(grid, row, column)) {
                 break;
             } else {
-                System.err.println("Wrong input value '" + input + "' repeat please");
+                LOGGER.severe("Wrong input value '" + input + "' repeat please");
                 continue;
             }
         }

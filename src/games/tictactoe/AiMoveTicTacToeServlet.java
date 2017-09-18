@@ -31,9 +31,8 @@ public class AiMoveTicTacToeServlet extends HttpServlet {
                 {board[3].replace('-', ' ').toCharArray()[0], board[4].replace('-', ' ').toCharArray()[0], board[5].replace('-', ' ').toCharArray()[0]},
                 {board[6].replace('-', ' ').toCharArray()[0], board[7].replace('-', ' ').toCharArray()[0], board[8].replace('-', ' ').toCharArray()[0]}};
 
-        Util.setSeeds('O', 'X');
 
-        Action nextMove = Util.minMaxAlg(grid, 'O', 'X', starter == 0 ? 'O' : 'X');
+        Action nextMove = Util.minMaxAlgorithm(grid, 'O', 'X', true);
 
         int[] aiMove = {nextMove.getRow(), nextMove.getColumn()};
 
