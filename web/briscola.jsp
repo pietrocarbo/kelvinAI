@@ -383,15 +383,12 @@
         setTimeout(function () {
 
             if (board.length == 2) {
-                nextPlayer = (chooseWinner(board[0], board[1]) == 0 ? firstHandPlayer : secondHandPlayer);
-
-                $('#tdT' + (nextPlayer == firstHandPlayer ? 0 : 1)).css('background-color', '#27A319');
+                $('#tdT' + (chooseWinner(board[0], board[1]) == 0 ? 0 : 1)).css('background-color', '#27A319');
             }
 
             setTimeout(function () {
 
                 if (board.length == 2) {
-
                     // choosing winner
                     secondHandPlayer = caller;
                     secondHandPlayerCardIndex = cardIndex;
@@ -502,12 +499,15 @@
 
                     $("#imgT0").css("border-width", "0px");
                     $("#imgT1").css("border-width", "0px");
-                    $('#tdT' + (nextPlayer == firstHandPlayer ? 0 : 1)).css('background-color', '#fdf7da');
+                    $('#tdT0').css('background-color', '#fdf7da');
+                    $('#tdT1').css('background-color', '#fdf7da');
                     firstHandPlayer = null;
                     firstHandPlayerCardIndex = null;
 
 
                 } else {
+                    $('#tdT0').css('background-color', '#fdf7da');
+                    $('#tdT1').css('background-color', '#fdf7da');
                     firstHandPlayer = caller;
                     firstHandPlayerCardIndex = cardIndex;
                 }
@@ -527,8 +527,8 @@
                 } else {
                     console.log("ERROR wrong nextPlayer " + nextPlayer);
                 }
-            }, 1500); // let the user see the winning card of the board
 
+            }, 1500); // let the user see the winning card of the board
         }, 1500); // let the user see the card moved into the board
     }
 
