@@ -58,9 +58,10 @@ public class Main {
 
         globalLoggingConfig(Level.FINE);
 
-        int gameToPlay = 1;
+        int gameToPlay = 4;
         switch (gameToPlay) {
 
+            /*  ---------- Tic Tac Toe ---------- */
             case 0:
                 tictactoe.playNewGame(0, GameType.HUMAN_VS_HUMAN);
                 break;
@@ -73,6 +74,8 @@ public class Main {
                 tictactoe.playNewGame(0, GameType.AI_VS_AI);
                 break;
 
+
+            /*  ---------- Connect 4 ---------- */
             case 3:
                 connect4.playNewGame(0, GameType.HUMAN_VS_HUMAN, depthsOfSearch, movesOrderings);
                 break;
@@ -102,6 +105,8 @@ public class Main {
                 connect4.playNewGame(0, GameType.MCTS_VS_AI, depthsOfSearch, movesOrderings);
                 break;
 
+
+                /*  ---------- Briscola ---------- */
 //            case 7:
 //                int nOfGames = 50, winAI0 = 0, winAI1 = 0, draws = 0, depthAI0 = 500, depthAI1 = 3;
 //                TimeWatch timer = TimeWatch.start();
@@ -120,10 +125,10 @@ public class Main {
 //                                            "%\nDraws: " + draws + ", ratio: " +  (draws*100.0)/nOfGames + "%" +
 //                                            "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds" + ANSI_NO_COLOR);
 //                break;
-
-            case 8:
-                briscola.playNewGame(3, 50);
-                break;
+//
+//            case 8:
+//                briscola.playNewGame(3, 50);
+//                break;
         }
     }
 

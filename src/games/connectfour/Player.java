@@ -9,11 +9,9 @@ import java.util.logging.Logger;
 abstract class Player {
 
     char mySeed;
-    char starterSeed;
 
-    public Player(char mySeed, char starterSeed) {
+    public Player(char mySeed) {
         this.mySeed = mySeed;
-        this.starterSeed = starterSeed;
     }
 
     public char getMySeed() {
@@ -27,13 +25,11 @@ class AI extends Player {
 
     private static final Logger LOGGER = Logger.getLogger(AI.class.getName());
 
-    private boolean maximize;
     private int depth;
     private MovesOrdering movesOrdering;
 
-    public AI(char mySeed, char starterSeed, boolean maximize, int depth, MovesOrdering movesOrdering) {
-        super(mySeed, starterSeed);
-        this.maximize = maximize;
+    public AI(char mySeed, int depth, MovesOrdering movesOrdering) {
+        super(mySeed);
         this.depth = depth;
         this.movesOrdering = movesOrdering;
     }
@@ -58,8 +54,8 @@ class AIMCTS extends Player {
     private int iterations;
     private MovesOrdering movesOrdering;
 
-    public AIMCTS(char mySeed, char starterSeed, int iterations, MovesOrdering movesOrdering) {
-        super(mySeed, starterSeed);
+    public AIMCTS(char mySeed, int iterations, MovesOrdering movesOrdering) {
+        super(mySeed);
         this.iterations = iterations;
         this.movesOrdering = movesOrdering;
     }
@@ -80,8 +76,8 @@ class Human extends Player {
 
     private static final Logger LOGGER = Logger.getLogger(Human.class.getName());
 
-    public Human(char mySeed, char starterSeed) {
-        super(mySeed, starterSeed);
+    public Human(char mySeed) {
+        super(mySeed);
     }
 
     @Override

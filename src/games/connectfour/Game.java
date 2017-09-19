@@ -30,36 +30,35 @@ public class Game {
 
     public Game(int starter, GameType mod, List<Integer> depthsOfSearch, List<MovesOrdering> movesOrdering) {
 
-        this.nextToPlay = starter;
-        this.turns = 0;
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
                 this.grid[i][j] = '_';
             }
         }
 
-        char starterSeed = (starter == 0 ? 'O' : 'X');
+        this.turns = 0;
+        this.nextToPlay = (starter == 0 ? 0 : 1);
 
         switch (mod) {
             default:
             case HUMAN_VS_HUMAN:
-                players.add(new Human('O', starterSeed));
-                players.add(new Human('X', starterSeed));
+                players.add(new Human('O'));
+                players.add(new Human('X'));
                 break;
 
                 case HUMAN_VS_AI:
-                    players.add(new AI('O', starterSeed, true, depthsOfSearch.get(0), movesOrdering.get(0)));
-                    players.add(new Human('O', starterSeed));
+                    players.add(new AI('O', depthsOfSearch.get(0), movesOrdering.get(0)));
+                    players.add(new Human('X'));
                 break;
 
             case AI_VS_AI:
-                players.add(new AI('O', starterSeed, true, depthsOfSearch.get(0), movesOrdering.get(0)));
-                players.add(new AI('X', starterSeed, false, depthsOfSearch.get(1), movesOrdering.get(1)));
+                players.add(new AI('O', depthsOfSearch.get(0), movesOrdering.get(0)));
+                players.add(new AI('X', depthsOfSearch.get(1), movesOrdering.get(1)));
                 break;
 
             case MCTS_VS_AI:
-                players.add(new AIMCTS('O', starterSeed, depthsOfSearch.get(0), movesOrdering.get(0)));
-                players.add(new AI('X', starterSeed, false, depthsOfSearch.get(1), movesOrdering.get(1)));
+                players.add(new AIMCTS('O', depthsOfSearch.get(0), movesOrdering.get(0)));
+                players.add(new AI('X', depthsOfSearch.get(1), movesOrdering.get(1)));
                 break;
         }
     }

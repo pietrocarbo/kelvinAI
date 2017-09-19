@@ -1,2 +1,2 @@
-# kelvin
-Another artificial intelligence agent playing card games.
+# Kelvin AI
+Artificial intelligence agent playing three card games (tictactoe, connect4 and briscola).
