@@ -30,20 +30,21 @@ public class Game {
             LOGGER.severe("ERROR unexpected starter player identifier");
         }
 
-        this.nextToPlay = starter;
+        this.nextToPlay = (starter == 0 ? 0 : 1);
 
         switch (mod) {
+            default:
             case HUMAN_VS_HUMAN:
                 this.players.add(new Human('O'));
                 this.players.add(new Human('X'));
                 break;
             case HUMAN_VS_AI:
-                this.players.add(new AI('O', true));
+                this.players.add(new AI('O'));
                 this.players.add(new Human('X'));
                 break;
             case AI_VS_AI:
-                this.players.add(new AI('O', true));
-                this.players.add(new AI('X', false));
+                this.players.add(new AI('O'));
+                this.players.add(new AI('X'));
                 break;
         }
 

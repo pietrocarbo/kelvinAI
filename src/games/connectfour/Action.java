@@ -1,5 +1,7 @@
 package games.connectfour;
 
+import main.MovesOrdering;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,15 +18,6 @@ public class Action {
         this.seed = seed;
     }
 
-    public Action(int column, char seed) {
-        this.column = column;
-        this.seed = seed;
-    }
-
-    public Action(char seed) {
-        this.seed = seed;
-    }
-
     public int getColumn() {
         return column;
     }
@@ -37,50 +30,40 @@ public class Action {
         return seed;
     }
 
-    public void setColumn(int column) {
-        this.column = column;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public void setSeed(char seed) {
-        this.seed = seed;
-    }
-
-    public static List<Action> getActions(char[][] board, char startingPlayer, int order) {
+    public static List<Action> getActions(char[][] board, char seed, MovesOrdering order) {
         List<Action> result = new ArrayList<Action>();
-        char nextPlayer = Util.getNextPlayer(board, startingPlayer);
 
         switch (order) {
-            case 0:         // left to right
+
+            case STANDARD:
                 for (int j = 0; j < 7; j++) {
                     for (int i = 0; i < 6; i++) {
                         if (board[i][j] == '_') {
-                            result.add(new Action(i, j, nextPlayer));
+                            result.add(new Action(i, j, seed));
                             break;
                         }
                     }
                 }
                 break;
-            case 1:         // random ordering
+
+            case RANDOM:
                 for (int j = 0; j < 7; j++) {
                     for (int i = 0; i < 6; i++) {
                         if (board[i][j] == '_') {
-                            result.add(new Action(i, j, nextPlayer));
+                            result.add(new Action(i, j, seed));
                             break;
                         }
                     }
                 }
                 Collections.shuffle(result);
                 break;
-            case 2:        // first middle columns
+
+            case MIDDLE_FIRST:
                 int[] middleColumnsFirst = new int[]{3, 2, 4, 1, 5, 0, 6};
                 for (int j = 0; j < 7; j++) {
                     for (int i = 0; i < 6; i++) {
                         if (board[i][middleColumnsFirst[j]] == '_') {
-                            result.add(new Action(i, middleColumnsFirst[j], nextPlayer));
+                            result.add(new Action(i, middleColumnsFirst[j], seed));
                             break;
                         }
                     }

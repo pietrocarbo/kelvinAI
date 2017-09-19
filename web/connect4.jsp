@@ -42,7 +42,7 @@
 </select>
 
 <script>
-    var player, starter, row, column;
+    var player, row, column;
     var boardIndexes = [
         ["50", "51", "52", "53", "54", "55", "56"],
         ["40", "41", "42", "43", "44", "45", "46"],
@@ -81,24 +81,22 @@
         $('#starterSelect').html("<p><input type=\"button\" value=\"Nuova partita\" onClick=\"window.location.reload()\"><\p>");
 
         if (startingPlayer == 'ai') {
-            starter = "O";
             player = "O";
-            getAiMove(starter);
+            getAiMove();
 
         } else {
-            starter = "X";
             player = "X";
             setBoardButtonsDisabled(false);
 
         }
     }
 
-    function getAiMove (starter) {
+    function getAiMove () {
         var depth = $('select[name=depthSelected]').val();
         $.ajax({
             url : 'aimC4',
             type: 'GET',
-            data : {depth: depth, starter: starter, gridValues: getBoardValues()},
+            data : {depth: depth, gridValues: getBoardValues()},
             dataType : 'text',
             success: function (data) {
                 console.log("AI chosen move " + data.charAt(0) + "," + data.charAt(1));
@@ -193,7 +191,7 @@
                         }, 1000);
 
                     } else if (player == "O") {        // AI have to continue the game
-                        getAiMove(starter);
+                        getAiMove();
                     }
                 },
                 error: function(jqxhr,textStatus,errorThrown)

@@ -51,7 +51,10 @@ public class Util {
         return -2;
     }
 
-    public static Action minMaxAlgorithm(char[][] grid, char mySeed, char oppositeSeed, boolean maximize) {
+    public static Action minMaxAlgorithm(char[][] grid, char mySeed) {
+
+        // if (Util.getTurn(grid) == 0)    return new Action(1, 1, mySeed);
+
         nodes = 1;
 
         Action bestMove = null;
@@ -60,21 +63,15 @@ public class Util {
 
         for (Action action : Action.getActions(grid, mySeed)) {
 
-            double value = minMaxRecursiveFunction(getResult(grid, action), mySeed, oppositeSeed, !maximize);
+            double value = minMaxRecursiveFunction(getResult(grid, action), mySeed, toggle(mySeed), false);
 
             LOGGER.fine("action " + action.getRow() + "," + action.getColumn() + " scored " + value);
 
-            if (maximize) {
-                if (value > resultValue) {
-                    bestMove = action;
-                    resultValue = value;
-                }
-            } else {
-                if (value < resultValue) {
-                    bestMove = action;
-                    resultValue = value;
-                }
+            if (value > resultValue) {
+                bestMove = action;
+                resultValue = value;
             }
+
 
         }
         LOGGER.fine("move selected is " + bestMove.getRow() + "," + bestMove.getColumn() + " with highest score of " + resultValue + " (nodes visited " + nodes + ")");
@@ -92,17 +89,21 @@ public class Util {
 
         if (maximize) {
             value = Double.NEGATIVE_INFINITY;
-            for (Action action : Action.getActions(board, player)) {
-                value = Math.max(value, minMaxRecursiveFunction(getResult(board, action), player, playing == 'O' ? 'X' : 'O', false));
+            for (Action action : Action.getActions(board, playing)) {
+                value = Math.max(value, minMaxRecursiveFunction(getResult(board, action), player, toggle(playing), false));
             }
         } else {
             value = Double.POSITIVE_INFINITY;
-            for (Action action : Action.getActions(board, player)) {
-                value = Math.min(value, minMaxRecursiveFunction(getResult(board, action), player, playing == 'O' ? 'X' : 'O', true));
+            for (Action action : Action.getActions(board, playing)) {
+                value = Math.min(value, minMaxRecursiveFunction(getResult(board, action), player, toggle(playing), true));
             }
         }
 
         return value;
+    }
+
+    public static char toggle (char actualPlayer) {
+        return (actualPlayer ==  'O' ? 'X' : 'O');
     }
 
     public static int getTurn(char[][] board) {
@@ -118,10 +119,10 @@ public class Util {
     }
 
     public static double getUtility(char[][] board, char mySeed) {
-        LOGGER.finer("utility evaluation of terminal board");
+        LOGGER.finer("utility evaluation (" + mySeed + " POV) of terminal board");
         LOGGER.finer(stringifyBoard(board));
 
-        char opponentSeed = (mySeed == 'O' ? 'X' : 'O');
+        char opponentSeed = toggle(mySeed);
         int turnsPlayed = getTurn(board);
 
         double draw = 0.0, win = 10.0 - turnsPlayed, loss = -10.0 + turnsPlayed;

@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.util.logging.Logger;
 
 abstract class Player {
+
     char seed;
 
     public Player(char seed) {
@@ -16,15 +17,13 @@ abstract class Player {
 class AI extends Player {
 
     private static final Logger LOGGER = Logger.getLogger(AI.class.getName());
-    private boolean maximize;
 
-    public AI(char seed, boolean maximize) {
+    public AI(char seed) {
         super(seed);
-        this.maximize = maximize;
     }
 
     public Action play(char[][] grid) {
-        return Util.minMaxAlgorithm(grid, seed, seed == 'O' ? 'X' : 'O', maximize);
+        return Util.minMaxAlgorithm(grid, seed);
     }
 }
 

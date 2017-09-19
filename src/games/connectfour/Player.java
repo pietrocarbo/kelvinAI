@@ -1,101 +1,87 @@
 package games.connectfour;
 
+import main.MovesOrdering;
+
 import java.util.Scanner;
 import java.util.logging.Logger;
 
 
-class Player {
+abstract class Player {
+
     char mySeed;
     char starterSeed;
-    final Logger LOGGER = Logger.getLogger(this.getClass().getName());
 
-    public Player() {
+    public Player(char mySeed, char starterSeed) {
+        this.mySeed = mySeed;
+        this.starterSeed = starterSeed;
     }
 
     public char getMySeed() {
         return mySeed;
     }
 
-    public void setStarterSeed(char starterSeed) {
-        this.starterSeed = starterSeed;
-    }
-
-    public Action play(char grid[][]) {
-        return null;
-    }
+    abstract Action play(char grid[][]);
 }
 
 class AI extends Player {
-    private int depth;
-    private int movesOrdering;
 
-    public AI(char mySeed, int depth, int movesOrdering) {
-        this.mySeed = mySeed;
+    private static final Logger LOGGER = Logger.getLogger(AI.class.getName());
+
+    private boolean maximize;
+    private int depth;
+    private MovesOrdering movesOrdering;
+
+    public AI(char mySeed, char starterSeed, boolean maximize, int depth, MovesOrdering movesOrdering) {
+        super(mySeed, starterSeed);
+        this.maximize = maximize;
         this.depth = depth;
         this.movesOrdering = movesOrdering;
     }
 
-    public void setDepth(int depth) {
-        this.depth = depth;
-    }
-
     @Override
     public Action play(char[][] grid) {
-        Action nextMove;
+        Action chosenAction = Util.heuristicMinMaxAlgorithm(grid, mySeed, depth, movesOrdering);
 
-        while (true) {
-            int[] aiMove = Util.heuristicMinMax(grid, depth, starterSeed, mySeed, movesOrdering);
-            int row = aiMove[0];
-            int column = aiMove[1];
-
-            if (Util.isLegalMove(grid, column, row)) {
-                nextMove = new Action(row, column, mySeed);
-                break;
-            }
-
-            LOGGER.warning("Wrong AI input value '" + aiMove + "' repeat please");
+        if (!Util.isLegalMove(grid, chosenAction.getColumn(), chosenAction.getRow())) {
+            LOGGER.severe("Wrong AI input value '" + chosenAction.getRow() + "," + chosenAction.getColumn() + "' repeat please");
         }
 
-        return nextMove;
+        return chosenAction;
     }
 }
 
 class AIMCTS extends Player {
 
-    private int iterations;
-    private int movesOrdering;
 
-    public AIMCTS(char mySeed, int iterations, int movesOrdering) {
-        this.mySeed = mySeed;
+    private static final Logger LOGGER = Logger.getLogger(AIMCTS.class.getName());
+
+    private int iterations;
+    private MovesOrdering movesOrdering;
+
+    public AIMCTS(char mySeed, char starterSeed, int iterations, MovesOrdering movesOrdering) {
+        super(mySeed, starterSeed);
         this.iterations = iterations;
         this.movesOrdering = movesOrdering;
     }
 
     @Override
     public Action play(char[][] grid) {
-        Action nextMove;
+        Action chosenAction = MonteCarloTreeSearch.mcts(grid, mySeed, iterations, movesOrdering);
 
-        while (true) {
-            int[] aiMove = MonteCarloTreeSearch.mcts(grid, 'O', iterations);
-            int row = aiMove[0];
-            int column = aiMove[1];
-
-            if (Util.isLegalMove(grid, column, row)) {
-                nextMove = new Action(row, column, mySeed);
-                break;
-            }
-
-            LOGGER.warning("Wrong AI input value '" + aiMove + "' repeat please");
+        if (!Util.isLegalMove(grid, chosenAction.getColumn(), chosenAction.getRow())) {
+            LOGGER.severe("Wrong AIMCTS input value '" + chosenAction.getRow() + "," + chosenAction.getColumn() + "' repeat please");
         }
 
-        return nextMove;
+        return chosenAction;
     }
 }
 
 class Human extends Player {
 
-    public Human(char mySeed) {
-        this.mySeed = mySeed;
+    private static final Logger LOGGER = Logger.getLogger(Human.class.getName());
+
+    public Human(char mySeed, char starterSeed) {
+        super(mySeed, starterSeed);
     }
 
     @Override
@@ -120,10 +106,11 @@ class Human extends Player {
                 if (Util.isLegalMove(grid, column, row)) {
                     nextMove = new Action(row, column, mySeed);
                     break;
+                } else {
+                    LOGGER.warning("Wrong player X input value '" + input + "' repeat please");
                 }
             }
-
-            LOGGER.warning("Wrong player X input value '" + input + "' repeat please");
+            LOGGER.warning("Wrong player X input form '" + input + "' repeat please");
         }
 
         return nextMove;

@@ -1,5 +1,7 @@
 package games.connectfour;
 
+import main.MovesOrdering;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -7,48 +9,40 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Logger;
 
 @WebServlet(name = "AIMoveConnect4Servlet", urlPatterns = {"/aimC4"})
 public class AIMoveConnect4Servlet extends HttpServlet {
+
+    private static final Logger LOGGER = Logger.getLogger(AIMoveConnect4Servlet.class.getName());
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        char[][] boardElements = new char[6][7];
-        int counter = 0;
-
-        for (String key : request.getParameterMap().keySet()) {
-            System.out.print("key " + key + " (lenght " + request.getParameterMap().get(key).length + ")\t");
-            for (String ar : request.getParameterMap().get(key)) {
-                System.out.print("*"  + ar + "*,");
-            }
-            System.out.println();
-        }
-
         int depth = Integer.parseInt(request.getParameterMap().get("depth")[0]);
-        char starter = request.getParameterMap().get("starter")[0].charAt(0);
+        LOGGER.finest("request parameters: depth " + depth);
 
-        System.out.println("aim servlet: depth " + depth + " starter " + starter + " board...");
+        int counter = 0;
+        char[][] boardElements = new char[6][7];
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 7; j++) {
                 boardElements[i][j] = request.getParameterMap().get("gridValues[]")[counter++].charAt(0);
                 boardElements[i][j] = (boardElements[i][j] == '-' ? '_' : boardElements[i][j]);
-                System.out.print(boardElements[i][j] + "\t");
+                LOGGER.finest("board[" + i + "][" + j +"] = " + boardElements[i][j] + "\t");
             }
-            System.out.println();
+            LOGGER.finest("\n");
         }
 
+        Action move = Util.heuristicMinMaxAlgorithm(boardElements, 'O',  depth, MovesOrdering.MIDDLE_FIRST);
 
-        int[] aiMove = Util.heuristicMinMax(boardElements, depth, starter, 'O', 2);
-
-        String strToReturn = aiMove[0] + "" + aiMove[1];
+        String strToReturn = move.getRow() + "" + move.getColumn();
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
 
-        PrintWriter out = response.getWriter();
-        out.write(strToReturn);
-        System.out.println("aimTTT servlet sent " + strToReturn);
+        response.getWriter().write(strToReturn);
+        LOGGER.finest("AI move connect4 servlet sent " + strToReturn);
     }
 }

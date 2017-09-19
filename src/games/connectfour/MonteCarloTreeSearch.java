@@ -1,11 +1,13 @@
 package games.connectfour;
 
+import main.MovesOrdering;
+
 import java.util.*;
 import java.util.logging.Logger;
 
 class Node {
 
-    private final Logger LOGGER = Logger.getLogger(MonteCarloTreeSearch.class.getName());
+    private final Logger LOGGER = Logger.getLogger(Node.class.getName());
 
     private int numberOfVisit;
     private double totalReward;
@@ -18,7 +20,7 @@ class Node {
     private int row;
     private int column;
     char[][] gameState;
-    private char nextSeed;
+    private char nextPlayerSeed;
 
     public int getNumberOfVisit() {
         return numberOfVisit;
@@ -36,8 +38,8 @@ class Node {
         return terminalNode;
     }
 
-    public char getNextSeed() {
-        return nextSeed;
+    public char getNextPlayerSeed() {
+        return nextPlayerSeed;
     }
 
     public char[][] getGameState() {
@@ -68,18 +70,18 @@ class Node {
         this.totalReward = totalReward;
     }
 
-    public Node(int numberOfVisit, int totalReward, Node parent, char[][] gameState, boolean terminalNode, char nextSeed, int row, int column) {
+    public Node(int numberOfVisit, int totalReward, Node parent, char[][] gameState, boolean terminalNode, char nextPlayerSeed, int row, int column) {
         this.numberOfVisit = numberOfVisit;
         this.totalReward = totalReward;
         this.parent = parent;
         this.gameState = gameState;
         this.terminalNode = terminalNode;
-        this.nextSeed = nextSeed;
+        this.nextPlayerSeed = nextPlayerSeed;
         this.row = row;
         this.column = column;
     }
 
-    public List<Node> produceChildrens() {
+    public List<Node> produceChildrens(MovesOrdering ordering) {
         if (expanded) {
             LOGGER.severe("expansion called on a non leaf node, i.e. an already EXPANDED node");
         }
@@ -87,12 +89,15 @@ class Node {
         expanded = true;
         childrens = new ArrayList<Node>();
 
-        List<Action> possibleAction = Action.getActions(gameState, 'O', 1);
+        List<Action> possibleAction = Action.getActions(gameState, nextPlayerSeed, ordering);
+
         for (Action action : possibleAction) {
             char[][] resultingBoard = Util.getResult(gameState, action);
-            childrens.add(new Node(0, 0, this, resultingBoard,
-                    Util.gameOverChecks(resultingBoard, Util.calculateTurn(resultingBoard), 'O', 'X') != -1 ? true : false,
-                    nextSeed == 'O' ? 'X' : 'O', action.getRow(), action.getColumn()));
+
+            childrens.add(
+                    new Node(0, 0, this, resultingBoard,
+                    Util.isGameOver(resultingBoard, Util.getTurn(resultingBoard), 'O', 'X') != -1,
+                    Util.toggle(nextPlayerSeed), action.getRow(), action.getColumn()));
         }
 
         if (childrens.size() == 0) {
@@ -107,56 +112,55 @@ public class MonteCarloTreeSearch {
 
     private static final Logger LOGGER = Logger.getLogger(MonteCarloTreeSearch.class.getName());
 
-    public static int[] mcts (char[][] initialBoard, char aiSeed, int iterations) {
+    public static Action mcts (char[][] initialBoard, char aiSeed, int iterations, MovesOrdering expansionMovesOrdering) {
 
-        LOGGER.info("MCTS (" + iterations + " iteration) started on board \n" + Util.boardToString(initialBoard));
+        LOGGER.info("MCTS with" + iterations + " iterations started on board \n" + Util.boardToString(initialBoard));
 
         // Create root node
         Node root = new Node(0, 0, null, initialBoard, false, aiSeed, -1, -1);
-        root.produceChildrens();
+        root.produceChildrens(expansionMovesOrdering);
 
         for (int i = 0; i < iterations; i++) {
 
             Node current = root;
-            LOGGER.info("iteration: " + i + " root score " + current.getTotalReward() + ", visits " + current.getNumberOfVisit());
+            LOGGER.info("iteration: " + i + " root (score " + current.getTotalReward() + ", visits " + current.getNumberOfVisit() + ")");
 
             // Select
             while (current.isExpanded() && !current.isTerminalNode()) {
                 double maxUCT = -1;
                 int currentVisits = current.getNumberOfVisit();
-                // LOGGER.info("inside selection: current visits " + current.getNumberOfVisit());
+                LOGGER.finer("selection: parent visits " + current.getNumberOfVisit());
 
                 for (Node child : current.getChildrens()) {
                     double childUCT = UCT(currentVisits, child.getTotalReward(), child.getNumberOfVisit());
-                    // LOGGER.info("inside selection: current child UCT " + childUCT + " (best " + maxUCT + ")");
+                    LOGGER.finer("selection: current child UCT " + childUCT + " (actual best " + maxUCT + ")");
 
                     if (childUCT >= maxUCT) {
-                        // LOGGER.info("inside selection: found better UCT (old " + maxUCT + ", new " + childUCT + ")");
+                        LOGGER.finer("selection: found better UCT (old " + maxUCT + ", new " + childUCT + ")");
                         maxUCT = childUCT;
                         current = child;
                     }
                 }
-
             }
 
-            LOGGER.info("selection completed, current -> visit " + current.getNumberOfVisit() + " score " + current.getTotalReward());
+            LOGGER.finer("selected node with visits: " + current.getNumberOfVisit() + " and score: " + current.getTotalReward());
 
             // Expand
             if (current.getNumberOfVisit() > 0 && !current.isExpanded() && !current.isTerminalNode()) {
-                List<Node> currentChildrens = current.produceChildrens();
+                List<Node> currentChildrens = current.produceChildrens(expansionMovesOrdering);
                 if (currentChildrens.size() == 0) {
-                    LOGGER.severe("attempt to expand terminal node (flag " + current.isTerminalNode() + ") w/ board\n" + Util.boardToString(current.getGameState()));
+                    LOGGER.severe("ERROR attempt to expand terminal node (isTerminal = " + current.isTerminalNode() + ") with board\n" + Util.boardToString(current.getGameState()));
                     System.exit(-1);
                 }
                 current = currentChildrens.get(0);
             }
 
-            LOGGER.info("expansion completed, current -> visit " + current.getNumberOfVisit() + " score " + current.getTotalReward());
+            LOGGER.finer("expansion completed, current node -> visits: " + current.getNumberOfVisit() + ", score: " + current.getTotalReward());
 
-            // Simulate (randomly)
-            double reward = simulatePlayout(current.getGameState(), current.getNextSeed());
+            // Simulate
+            double reward = simulatePlayout(current.getGameState(), current.getNextPlayerSeed(), aiSeed);
 
-            LOGGER.info("simulation completed, current -> reward " + reward);
+            LOGGER.finer("simulation completed, current node -> reward: " + reward);
 
             // Backpropagate
             while(current.getParent() != null) {
@@ -167,49 +171,52 @@ public class MonteCarloTreeSearch {
             current.setNumberOfVisit(current.getNumberOfVisit() + 1);
             current.setTotalReward(current.getTotalReward() + reward);
 
-            LOGGER.info("backpropagation completed");
+            LOGGER.finer("backpropagation and iteration " + i + " completed");
 
         }
 
-        Node bestAction = new Node(-1, 0, null, null, false,  '_', -1, -1);
+        Node bestChildNode = new Node(-1, 0, null, null, false,  '_', -1, -1);
         for (Node rootChild: root.childrens) {
-            if (rootChild.getNumberOfVisit() > bestAction.getNumberOfVisit()) {
-                bestAction = rootChild;
+            if (rootChild.getNumberOfVisit() > bestChildNode.getNumberOfVisit()) {
+                bestChildNode = rootChild;
             }
         }
 
-        LOGGER.info("MCTS choosed move " + bestAction.getRow() + "," + bestAction.getColumn());
-        return new int[] {bestAction.getRow(), bestAction.getColumn()};
+        LOGGER.info("MCTS choosed move " + bestChildNode.getRow() + "," + bestChildNode.getColumn() + " visited " + bestChildNode.getNumberOfVisit() + " times");
+
+        return new Action(bestChildNode.getRow(), bestChildNode.getColumn(), bestChildNode.getNextPlayerSeed());
     }
 
     public static double UCT(int parentVisits, double nodeScore, int nodeVisits) {
         if (nodeVisits == 0) {
             return Double.MAX_VALUE;
         }
-        return ((double) nodeScore / (double) nodeVisits) + 1.41 * Math.sqrt(Math.log(parentVisits) / (double) nodeVisits);
+        return (nodeScore / (double) nodeVisits) + 1.41 * Math.sqrt(Math.log(parentVisits) / (double) nodeVisits);
     }
 
-    public static double simulatePlayout(char[][] board, char nextSeed) {
+    public static double simulatePlayout(char[][] board, char nextPlayerSeed, char aiSeed) {
 
-        int endgame = Util.gameOverChecks(board, Util.calculateTurn(board), 'O', 'X');
+        int endgame = Util.isGameOver(board, Util.getTurn(board), aiSeed, Util.toggle(aiSeed));
+
         while (endgame == -1) {
-
-            Action randomAction = randomMove(board);
+            Action randomAction = randomMove(board, nextPlayerSeed);
             board = Util.getResult(board, randomAction);
-            endgame = Util.gameOverChecks(board, Util.calculateTurn(board), 'O', 'X');
-            nextSeed = nextSeed == 'O' ? 'X' : 'O';
+
+            nextPlayerSeed = Util.toggle(nextPlayerSeed);
+            endgame = Util.isGameOver(board, Util.getTurn(board), aiSeed, Util.toggle(aiSeed));
         }
 
-        if      (endgame == 0)      return 1;      //seedP1 win, ai win
-        else if (endgame == 1)      return -1;      //seedP2 win, ai loss
-        else /*if(endgame == 2)*/   return 0;    //draw
+        if      (endgame == 0)      return 1;      //seedP1 win, return ai win
+        else if (endgame == 1)      return -1;     //seedP2 win, return ai loss
+        else                        return 0;      //draw
     }
 
-    public static Action randomMove(char[][] board) {
+    public static Action randomMove(char[][] board, char nextSeed) {
 
-        List<Action> actions = Action.getActions(board, 'O',1);
+        List<Action> actions = Action.getActions(board, nextSeed, MovesOrdering.RANDOM);
         if (actions.size() == 0) {
-            LOGGER.severe("no action is possible from terminal board\n" + Util.boardToString(board));
+            LOGGER.severe("ERROR during simulation: no action is possible from terminal board\n" + Util.boardToString(board));
+            System.exit(-1);
         }
         return actions.get(0);
     }
