@@ -1,9 +1,7 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
 
 public class Main {
@@ -58,53 +56,60 @@ public class Main {
 
         globalLoggingConfig(Level.FINE);
 
-        int gameToPlay = 4;
+        int gameToPlay = 6;
         switch (gameToPlay) {
 
             /*  ---------- Tic Tac Toe ---------- */
             case 0:
-                tictactoe.playNewGame(0, GameType.HUMAN_VS_HUMAN);
+                tictactoe.playNewGame(0, GameType.HUMAN__VS__HUMAN);
                 break;
 
             case 1:
-                tictactoe.playNewGame(1, GameType.HUMAN_VS_AI); // if(starter == 0) then AI start else Human start //
+                tictactoe.playNewGame(1, GameType.HUMAN__VS__AI_MINMAX); // if(starter == 0) then AI start else Human start //
                 break;
 
             case 2:
-                tictactoe.playNewGame(0, GameType.AI_VS_AI);
+                tictactoe.playNewGame(0, GameType.AI_MINMAX__VS__AI_MINMAX);
                 break;
 
 
             /*  ---------- Connect 4 ---------- */
             case 3:
-                connect4.playNewGame(0, GameType.HUMAN_VS_HUMAN, depthsOfSearch, movesOrderings);
+                connect4.playNewGame(0, GameType.HUMAN__VS__HUMAN, depthsOfSearch, movesOrderings);
                 break;
 
             case 4:
                 movesOrderings.add(MovesOrdering.MIDDLE_FIRST);
                 depthsOfSearch.add(5);
 
-                connect4.playNewGame(0, GameType.HUMAN_VS_AI, depthsOfSearch, movesOrderings);
+                connect4.playNewGame(0, GameType.HUMAN__VS__AI_MINMAX, depthsOfSearch, movesOrderings);
                 break;
 
             case 5:
                 movesOrderings.add(MovesOrdering.RANDOM);
-                movesOrderings.add(MovesOrdering.MIDDLE_FIRST);
-                depthsOfSearch.add(5);
-                depthsOfSearch.add(3);
+                depthsOfSearch.add(1000);  // Monte Carlo iterations
 
-                connect4.playNewGame(0, GameType.AI_VS_AI, depthsOfSearch, movesOrderings);
+                connect4.playNewGame(0, GameType.HUMAN__VS__AI_MCTS, depthsOfSearch, movesOrderings);
                 break;
 
             case 6:
-                movesOrderings.add(MovesOrdering.RANDOM);
                 movesOrderings.add(MovesOrdering.STANDARD);
-                depthsOfSearch.add(350);  // Monte Carlo iterations
                 depthsOfSearch.add(3);
+                movesOrderings.add(MovesOrdering.MIDDLE_FIRST);
+                depthsOfSearch.add(5);
 
-                connect4.playNewGame(0, GameType.MCTS_VS_AI, depthsOfSearch, movesOrderings);
+                connect4.playNewGame(1, GameType.AI_MINMAX__VS__AI_MINMAX, depthsOfSearch, movesOrderings);
                 break;
 
+            case 7:
+                movesOrderings.add(MovesOrdering.RANDOM);
+                depthsOfSearch.add(1000);
+
+                movesOrderings.add(MovesOrdering.STANDARD);
+                depthsOfSearch.add(0);
+
+                connect4.playNewGame(0, GameType.AI_MCTS__VS__AI_MINMAX, depthsOfSearch, movesOrderings);
+                break;
 
                 /*  ---------- Briscola ---------- */
 //            case 7:

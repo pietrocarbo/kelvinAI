@@ -41,22 +41,22 @@ public class Game {
 
         switch (mod) {
             default:
-            case HUMAN_VS_HUMAN:
+            case HUMAN__VS__HUMAN:
                 players.add(new Human('O'));
                 players.add(new Human('X'));
                 break;
 
-                case HUMAN_VS_AI:
+                case HUMAN__VS__AI_MINMAX:
                     players.add(new AI('O', depthsOfSearch.get(0), movesOrdering.get(0)));
                     players.add(new Human('X'));
                 break;
 
-            case AI_VS_AI:
+            case AI_MINMAX__VS__AI_MINMAX:
                 players.add(new AI('O', depthsOfSearch.get(0), movesOrdering.get(0)));
                 players.add(new AI('X', depthsOfSearch.get(1), movesOrdering.get(1)));
                 break;
 
-            case MCTS_VS_AI:
+            case AI_MCTS__VS__AI_MINMAX:
                 players.add(new AIMCTS('O', depthsOfSearch.get(0), movesOrdering.get(0)));
                 players.add(new AI('X', depthsOfSearch.get(1), movesOrdering.get(1)));
                 break;

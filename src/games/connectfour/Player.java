@@ -48,7 +48,6 @@ class AI extends Player {
 
 class AIMCTS extends Player {
 
-
     private static final Logger LOGGER = Logger.getLogger(AIMCTS.class.getName());
 
     private int iterations;

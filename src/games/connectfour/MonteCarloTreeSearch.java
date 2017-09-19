@@ -87,7 +87,7 @@ class Node {
         }
 
         expanded = true;
-        childrens = new ArrayList<Node>();
+        childrens = new ArrayList<>();
 
         List<Action> possibleAction = Action.getActions(gameState, nextPlayerSeed, ordering);
 
@@ -114,7 +114,7 @@ public class MonteCarloTreeSearch {
 
     public static Action mcts (char[][] initialBoard, char aiSeed, int iterations, MovesOrdering expansionMovesOrdering) {
 
-        LOGGER.info("MCTS with" + iterations + " iterations started on board \n" + Util.boardToString(initialBoard));
+        LOGGER.info("MCTS with " + iterations + " iterations for player " + aiSeed + " started on board \n" + Util.boardToString(initialBoard));
 
         // Create root node
         Node root = new Node(0, 0, null, initialBoard, false, aiSeed, -1, -1);
@@ -184,7 +184,7 @@ public class MonteCarloTreeSearch {
 
         LOGGER.info("MCTS choosed move " + bestChildNode.getRow() + "," + bestChildNode.getColumn() + " visited " + bestChildNode.getNumberOfVisit() + " times");
 
-        return new Action(bestChildNode.getRow(), bestChildNode.getColumn(), bestChildNode.getNextPlayerSeed());
+        return new Action(bestChildNode.getRow(), bestChildNode.getColumn(), 'O');
     }
 
     public static double UCT(int parentVisits, double nodeScore, int nodeVisits) {
@@ -199,26 +199,25 @@ public class MonteCarloTreeSearch {
         int endgame = Util.isGameOver(board, Util.getTurn(board), aiSeed, Util.toggle(aiSeed));
 
         while (endgame == -1) {
-            Action randomAction = randomMove(board, nextPlayerSeed);
+
+            List<Action> actions = Action.getActions(board, nextPlayerSeed, MovesOrdering.RANDOM);
+            if (actions.size() == 0) {
+                LOGGER.severe("ERROR during simulation: no action is possible from terminal board\n" + Util.boardToString(board));
+                System.exit(-1);
+            }
+
+            Action randomAction = actions.get(0);
+
             board = Util.getResult(board, randomAction);
 
-            nextPlayerSeed = Util.toggle(nextPlayerSeed);
             endgame = Util.isGameOver(board, Util.getTurn(board), aiSeed, Util.toggle(aiSeed));
+
+            nextPlayerSeed = Util.toggle(nextPlayerSeed);
         }
 
         if      (endgame == 0)      return 1;      //seedP1 win, return ai win
         else if (endgame == 1)      return -1;     //seedP2 win, return ai loss
         else                        return 0;      //draw
-    }
-
-    public static Action randomMove(char[][] board, char nextSeed) {
-
-        List<Action> actions = Action.getActions(board, nextSeed, MovesOrdering.RANDOM);
-        if (actions.size() == 0) {
-            LOGGER.severe("ERROR during simulation: no action is possible from terminal board\n" + Util.boardToString(board));
-            System.exit(-1);
-        }
-        return actions.get(0);
     }
 
 }
