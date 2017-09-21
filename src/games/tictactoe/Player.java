@@ -38,10 +38,10 @@ class Human extends Player {
     @Override
     public Action play(char[][] grid) {
         Scanner scanner = new Scanner(System.in);
-
         int row, column;
 
         while (true) {
+            LOGGER.info("Enter your move in format 0,1");
             String input = scanner.next();
 
             if (!input.matches("^\\d,\\d$")) {

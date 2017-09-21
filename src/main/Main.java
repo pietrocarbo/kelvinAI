@@ -55,37 +55,43 @@ public class Main {
         List<MovesOrdering> movesOrderings = new ArrayList<>();
         List<Integer> searchParameters = new ArrayList<>();
 
-        globalLoggingConfig(Level.INFO);
+        globalLoggingConfig(Level.ALL);
 
-        int numberOfGames = 100, gameToPlay = 17;
+        int numberOfGames = -1, gameToPlay = -1;
 
-//        Scanner scanner = new Scanner(System.in);
-//        do {
-//            System.out.println("Enter the number of the game modality you want to play from this list: \n" +
-//                    "0. Human vs Human (Tic Tac Toe) \n" +
-//                    "1. Human vs AI minmax (Tic Tac Toe) \n" +
-//                    "2. AI minmax vs AI minmax (Tic Tac Toe) \n" +
-//                    "3. Human vs Human (Connect 4) \n" +
-//                    "4. Human vs AI minmax (Connect 4) \n" +
-//                    "5. Human vs AI Monte Carlo tree search (Connect 4) \n" +
-//                    "6. AI minmax vs AI minmax with different depth and move ordering (Connect 4) \n" +
-//                    "7. AI Monte Carlo tree search vs AI minmax (Connect 4) \n" +
-//                    "8. Human vs Human (Briscola) \n" +
-//                    "9. Human vs AI rule-based (Briscola) \n" +
-//                    "10. Human vs AI minmax (Briscola) \n" +
-//                    "11. AI minmax vs AI rule-based (Briscola) \n" +
-//                    "12. AI minmax vs AI random choice (Briscola) \n" +
-//                    "13. AI hybrid vs AI minmax (Briscola) \n" +
-//                    "14. AI hybrid vs AI rule-based (Briscola) \n" +
-//                    "15. AI hybrid vs AI random choice (Briscola) \n" +
-//                    "16. AI hybrid vs AI hybrid with different depth and determinated deals (Briscola) \n" +
-//                    "17. AI hybrid vs Human (Briscola)");
-//
-//            gameToPlay = scanner.nextInt();
-//        } while (gameToPlay < 0 || gameToPlay > 17);
-//
-//        System.out.println("Enter the number of matches to play: ");
-//        numberOfGames = scanner.nextInt();
+        Scanner scanner = new Scanner(System.in);
+        do {
+            System.out.println("Enter the number of the game modality you want to play from this list: \n" +
+                    "0. Human vs Human (Tic Tac Toe) \n" +
+                    "1. Human vs AI minmax (Tic Tac Toe) \n" +
+                    "2. AI minmax vs AI minmax (Tic Tac Toe) \n" +
+                    "3. Human vs Human (Connect 4) \n" +
+                    "4. Human vs AI minmax (Connect 4) \n" +
+                    "5. Human vs AI Monte Carlo tree search (Connect 4) \n" +
+                    "6. AI minmax vs AI minmax with different depth and move ordering (Connect 4) \n" +
+                    "7. AI Monte Carlo tree search vs AI minmax (Connect 4) \n" +
+                    "8. Human vs Human (Briscola) \n" +
+                    "9. Human vs AI rule-based (Briscola) \n" +
+                    "10. Human vs AI minmax (Briscola) \n" +
+                    "11. AI minmax vs AI rule-based (Briscola) \n" +
+                    "12. AI minmax vs AI random choice (Briscola) \n" +
+                    "13. AI hybrid vs AI minmax (Briscola) \n" +
+                    "14. AI hybrid vs AI rule-based (Briscola) \n" +
+                    "15. AI hybrid vs AI random choice (Briscola) \n" +
+                    "16. AI hybrid vs AI hybrid with different depth and determinated deals (Briscola) \n" +
+                    "17. AI hybrid vs Human (Briscola)");
+            String input = scanner.next();
+            if (!input.matches("^\\d$"))
+                continue;
+            gameToPlay = Integer.parseInt(input);
+        } while (gameToPlay < 0 || gameToPlay > 17);
+
+        do {
+            System.out.println("Enter the number of matches to play: ");
+            String input = scanner.next();
+            if (!input.matches("^\\d$")) continue;
+            numberOfGames = Integer.parseInt(input);
+        } while (numberOfGames < 1);
 
         int player0Victories = 0, player1Victories = 0, draws = 0, winner = -2;
         TimeWatch timer = TimeWatch.start();
@@ -106,15 +112,14 @@ public class Main {
                     winner = tictactoe.playNewGame(0, GameType.AI_MINMAX__VS__AI_MINMAX);
                     break;
 
-
                 /*  ---------- Connect 4 ---------- */
                 case 3:
                     winner = connect4.playNewGame(0, GameType.HUMAN__VS__HUMAN, searchParameters, movesOrderings);
                     break;
 
                 case 4:
+                    searchParameters.add(7);  // depth of minmax tree
                     movesOrderings.add(MovesOrdering.MIDDLE_FIRST);
-                    searchParameters.add(7);
 
                     winner = connect4.playNewGame(0, GameType.HUMAN__VS__AI_MINMAX, searchParameters, movesOrderings);
                     break;
@@ -128,9 +133,9 @@ public class Main {
 
                 case 6:
                     movesOrderings.add(MovesOrdering.STANDARD);
-                    searchParameters.add(3);
+                    searchParameters.add(3);   // depth of minmax tree
                     movesOrderings.add(MovesOrdering.MIDDLE_FIRST);
-                    searchParameters.add(5);
+                    searchParameters.add(5);   // depth of minmax tree
 
                     winner = connect4.playNewGame(1, GameType.AI_MINMAX__VS__AI_MINMAX, searchParameters, movesOrderings);
                     break;
@@ -140,7 +145,7 @@ public class Main {
                     searchParameters.add(1000);  // Monte Carlo iterations
 
                     movesOrderings.add(MovesOrdering.STANDARD);
-                    searchParameters.add(0);
+                    searchParameters.add(1);  // depth of minmax tree
 
                     winner = connect4.playNewGame(0, GameType.AI_MCTS__VS__AI_MINMAX, searchParameters, movesOrderings);
                     break;

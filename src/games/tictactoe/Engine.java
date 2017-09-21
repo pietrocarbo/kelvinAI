@@ -26,9 +26,9 @@ public class Engine {
         LOGGER.info("Game ended with board " + game.toString());
 
         if (result == -1) {
-            System.out.println("Game ended in a DRAW.");
+            LOGGER.info("Game ended in a DRAW.");
         } else {
-            System.out.println("Player " + result + " won the game.");
+            LOGGER.info("Player " + result + " won the game.");
         }
 
         return result;

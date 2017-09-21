@@ -86,10 +86,13 @@ class Human extends Player {
         Action nextMove;
 
         while (true) {
+
+            LOGGER.info("Enter the number of column you want to play");
             String input = scanner.next();
 
             if (input.matches("^\\d$")) {
                 int column = Integer.parseInt(input);
+                if (column < 0 || column > 6) continue;
                 int row = -1;
                 for (int i = 0; i < 6; i++) {
                     if (grid[i][column] == '_') {

@@ -52,7 +52,7 @@ public class Game {
 
     public void doNextTurn() {
 
-        LOGGER.fine("Next to play is player " + nextToPlay);
+        LOGGER.info("Next to play is player " + nextToPlay);
 
         Action nextMove = players.get(nextToPlay).play(grid);
 
