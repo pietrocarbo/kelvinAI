@@ -3,8 +3,11 @@ package decks.forty;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Hand {
+
+    private static final Logger LOGGER = Logger.getLogger(Hand.class.getName());
 
     private Integer cardsLeft;
     private List<Card> hand = new ArrayList<>();
@@ -22,7 +25,6 @@ public class Hand {
 
     public Hand shuffle(){
         Collections.shuffle(hand);
-
         return this;
     }
 
@@ -31,19 +33,25 @@ public class Hand {
         return this;
     }
 
-    public void removeOne (Card toRemove) {
+    public boolean removeOne(Card toRemove) {
         if (!hand.remove(toRemove)) {
-            try{
+            try {
                 for (int i = 0; i < hand.size(); i++) {
                     if (hand.get(i).getRank() == toRemove.getRank() && hand.get(i).getSuit() == toRemove.getSuit()) {
                         hand.remove(i);
+                        return true;
                     }
                 }
-            }catch (Exception e) {
-                System.err.println("Request to remove card '" + toRemove + "' not in the hand");
+                return false;
+
+            } catch (Exception e) {
+                LOGGER.severe("ERROR while requested to remove card '" + toRemove + "'");
                 System.exit(-1);
             }
+        } else {
+            return true;
         }
+        return false;
     }
 
     public List<Card> getHand() {

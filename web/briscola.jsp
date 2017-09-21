@@ -362,7 +362,7 @@
         var cardToRemoveID = mapCardToImage(caller, card);
         var cardIndex = mapCardToHandArray(caller, card);
 
-        var nextPlayer = (caller == "ai" ? "human" : "ai");
+        var nextPlayerIndex = (caller == "ai" ? "human" : "ai");
         var boardPositionID = (board.length == 0 ? '#imgT0' : '#imgT1');
 
         console.log("move() called by " + caller + ": n. carte sul tavolo " + board.length + " indice carta giocata " + cardIndex + " cardToRemoveID " + cardToRemoveID + " boardPositionID " + boardPositionID);
@@ -393,19 +393,19 @@
                     secondHandPlayer = caller;
                     secondHandPlayerCardIndex = cardIndex;
 
-                    nextPlayer = (chooseWinner(board[0], board[1]) == 0 ? firstHandPlayer : secondHandPlayer);
-                    console.log("collecting phase: player " + nextPlayer + " won this turn");
+                    nextPlayerIndex = (chooseWinner(board[0], board[1]) == 0 ? firstHandPlayer : secondHandPlayer);
+                    console.log("collecting phase: player " + nextPlayerIndex + " won this turn");
 
                     // collecting
                     updateCardDisplay(['#imgT0', '#imgT1']);
-                    if (nextPlayer == 'ai') {
+                    if (nextPlayerIndex == 'ai') {
                         collectedKelvin.push(board.pop());
                         collectedKelvin.push(board.pop());
-                    } else if (nextPlayer == 'human') {
+                    } else if (nextPlayerIndex == 'human') {
                         collectedHuman.push(board.pop());
                         collectedHuman.push(board.pop());
                     } else {
-                        console.log("ERROR wrong nextPlayer found during collecting: " + nextPlayer);
+                        console.log("ERROR wrong nextPlayerIndex found during collecting: " + nextPlayerIndex);
                     }
 
                     // dealing
@@ -432,7 +432,7 @@
                         // deal new cards in the respective handKelvin/handHuman positions removing them from the top the deck
                         var indexToDeal = -1;
 
-                        if (nextPlayer == 'ai') {
+                        if (nextPlayerIndex == 'ai') {
 
                             indexToDeal = (firstHandPlayer == 'ai' ? firstHandPlayerCardIndex : secondHandPlayerCardIndex);
                             handKelvin[indexToDeal] = deck.shift();
@@ -440,7 +440,7 @@
                             indexToDeal = (indexToDeal == firstHandPlayerCardIndex ? secondHandPlayerCardIndex : firstHandPlayerCardIndex);
                             handHuman[indexToDeal] = deck.shift();
 
-                        } else if (nextPlayer == 'human') {
+                        } else if (nextPlayerIndex == 'human') {
 
                             indexToDeal = (firstHandPlayer == 'human' ? firstHandPlayerCardIndex : secondHandPlayerCardIndex);
                             handHuman[indexToDeal] = deck.shift();
@@ -449,7 +449,7 @@
                             handKelvin[indexToDeal] = deck.shift();
 
                         } else {
-                            console.log("ERROR wrong winner(i.e. nextPlayer) found " + nextPlayer);
+                            console.log("ERROR wrong winner(i.e. nextPlayerIndex) found " + nextPlayerIndex);
                         }
 
                         if (turnsLeft == 3) { // "cancellare" graficamente il mazzo e la briscola
@@ -516,16 +516,16 @@
                     $('#kelvinTurn').css('display', 'none');
                     $('#humanTurn').css('display', 'none');
                     console.log("game over");
-                } else if (nextPlayer == 'human') {
+                } else if (nextPlayerIndex == 'human') {
                     $('#humanTurn').css('display', 'block');
                     $('#kelvinTurn').css('display', 'none');
                     humanButtonsDisabled(false);
-                } else if (nextPlayer == 'ai') {
+                } else if (nextPlayerIndex == 'ai') {
                     $('#kelvinTurn').css('display', 'block');
                     $('#humanTurn').css('display', 'none');
                     move('ai', getAiMove());
                 } else {
-                    console.log("ERROR wrong nextPlayer " + nextPlayer);
+                    console.log("ERROR wrong nextPlayerIndex " + nextPlayerIndex);
                 }
 
             }, 1500); // let the user see the winning card of the board

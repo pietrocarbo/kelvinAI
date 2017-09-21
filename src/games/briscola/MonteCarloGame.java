@@ -76,14 +76,14 @@ public class MonteCarloGame {
 
     public MonteCarloGame(MonteCarloGame oldGame){
         this.whoIam = oldGame.getWhoIam();
-        this.mazzo = new Deck(new Hand(new ArrayList<Card>(oldGame.getMazzo().getCards())));
+        this.mazzo = new Deck(new Hand(new ArrayList<>(oldGame.getMazzo().getCards())));
         this.briscola = new Card(oldGame.getBriscola());
         this.p1Point = oldGame.getP1Point();
         this.p2Point = oldGame.getP2Point();
         this.nextPlayer = oldGame.getNextPlayer();
-        this.p1Hand = new Hand(new ArrayList<Card>(oldGame.getP1Hand().getHand()));
-        this.p2Hand = new Hand(new ArrayList<Card>(oldGame.getP2Hand().getHand()));
-        this.tavolo = new Hand(new ArrayList<Card>(oldGame.getTavolo().getHand()));
+        this.p1Hand = new Hand(new ArrayList<>(oldGame.getP1Hand().getHand()));
+        this.p2Hand = new Hand(new ArrayList<>(oldGame.getP2Hand().getHand()));
+        this.tavolo = new Hand(new ArrayList<>(oldGame.getTavolo().getHand()));
     }
 
     public static MonteCarloGame getResult (MonteCarloGame game, Action move) {
@@ -94,26 +94,22 @@ public class MonteCarloGame {
 
     public void play1Turn (Action move) {
 
-        tavolo.addOne(move.getCards().getHand().get(0));
-        tavolo.addOne(move.getCards().getHand().get(1));
+        tavolo.addOne(move.getCardsPlayed().getHand().get(0));
+        tavolo.addOne(move.getCardsPlayed().getHand().get(1));
 
         if (move.getFirstPlayer() == 0) {
-            p1Hand.removeOne(move.getCards().getHand().get(0));
-            p2Hand.removeOne(move.getCards().getHand().get(1));
+            p1Hand.removeOne(move.getCardsPlayed().getHand().get(0));
+            p2Hand.removeOne(move.getCardsPlayed().getHand().get(1));
         } else {
-            p1Hand.removeOne(move.getCards().getHand().get(1));
-            p2Hand.removeOne(move.getCards().getHand().get(0));
+            p1Hand.removeOne(move.getCardsPlayed().getHand().get(1));
+            p2Hand.removeOne(move.getCardsPlayed().getHand().get(0));
         }
-
         collectAndDeal();
     }
 
     public void playUntilEnd (int depth, boolean pruning) {
         if (tavolo.getHand().size() == 2) {
-
             collectAndDeal();
-
-
         }
 
         if (nextPlayer == whoIam) {
@@ -121,17 +117,15 @@ public class MonteCarloGame {
                 gameVal = minMaxCalc(this, true, depth, -10000, 10000);
             } else {
                 gameVal = minMaxCalc(this, true, depth);
-
             }
+
         } else {
             if (pruning) {
                 gameVal = minMaxCalc(this, false, depth, -10000, 10000);
             } else {
                 gameVal = minMaxCalc(this, false, depth);
-
             }
         }
-
     }
 
     private static int minMaxCalc (MonteCarloGame game, boolean maximize, int depth, int alpha, int beta) {
@@ -147,13 +141,13 @@ public class MonteCarloGame {
         }
 
         int value = 0;
-        List<Action> moves = Action.getAction(game.getP1Hand(), game.getP2Hand(), game.getNextPlayer());
+        List<Action> moves = Action.getActions(game.getP1Hand(), game.getP2Hand(), game.getNextPlayer());
 
 
         for (Action move : moves) {
             if (maximize) {
                 value = -1000;
-                value = Math.max(value, minMaxCalc(MonteCarloGame.getResult(game, move), false, depth - 1, alpha, beta));
+                value = Math.max(value, minMaxCalc(getResult(game, move), false, depth - 1, alpha, beta));
 
                 if(value >= beta){
                     return value;
@@ -162,7 +156,7 @@ public class MonteCarloGame {
 
             } else {
                 value = +1000;
-                value = Math.min(value, minMaxCalc(MonteCarloGame.getResult(game, move), true, depth - 1, alpha, beta));
+                value = Math.min(value, minMaxCalc(getResult(game, move), true, depth - 1, alpha, beta));
 
                 if(value <= alpha){
                     return value;
@@ -174,40 +168,14 @@ public class MonteCarloGame {
         return value;
     }
 
-    private static int minMaxCalc(MonteCarloGame game, boolean maximize, int depth) {
-
-        nodes++;
-
-        if (game.ENDED || depth == 0) {
-            return game.p1Point - game.p2Point;
-        }
-
-        int value = 0;
-        List<Action> moves = Action.getAction(game.getP1Hand(), game.getP2Hand(), game.getNextPlayer());
-
-
-        for(Action move : moves) {
-
-            if (maximize) {
-                value = -1000;
-                value = Math.max(value, minMaxCalc(MonteCarloGame.getResult(game, move), false, depth -1));
-            } else {
-                value = +1000;
-                value = Math.min(value, minMaxCalc(MonteCarloGame.getResult(game, move), true, depth -1));
-            }
-        }
-
-        return value;
-    }
-
     private void collectAndDeal(){
   /*      int handWinner = Util.getHandWinner(tavolo, briscola.getSuit());
 
         if (handWinner == 0) {
-            nextPlayer = nextPlayer == 0 ? 1 : 0;
+            nextPlayerIndex = nextPlayerIndex == 0 ? 1 : 0;
         }
 */
-        nextPlayer = Util.getHandWinner(tavolo, briscola.getSuit(), nextPlayer);
+        // nextPlayer = Util.getHandWinner(tavolo, briscola.getSuit(), nextPlayer);
 
         if (nextPlayer == 1) {
             p1Point += Util.calculatePoints(tavolo);
@@ -230,6 +198,32 @@ public class MonteCarloGame {
         if((p1Hand.getHand().size() == 0 && p2Hand.getHand().size() == 0) || p1Point > 60 || p2Point > 60){
             ENDED = true;
         }
+    }
+
+    private static int minMaxCalc(MonteCarloGame game, boolean maximize, int depth) {
+
+        nodes++;
+
+        if (game.ENDED || depth == 0) {
+            return game.p1Point - game.p2Point;
+        }
+
+        int value = 0;
+        List<Action> moves = Action.getActions(game.getP1Hand(), game.getP2Hand(), game.getNextPlayer());
+
+
+        for (Action move : moves) {
+
+            if (maximize) {
+                value = -1000;
+                value = Math.max(value, minMaxCalc(MonteCarloGame.getResult(game, move), false, depth - 1));
+            } else {
+                value = +1000;
+                value = Math.min(value, minMaxCalc(MonteCarloGame.getResult(game, move), true, depth - 1));
+            }
+        }
+
+        return value;
     }
 
 }

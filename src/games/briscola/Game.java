@@ -1,6 +1,7 @@
 package games.briscola;
 
 import decks.forty.*;
+import main.GameType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,50 +9,66 @@ import java.util.logging.Logger;
 
 public class Game {
 
-    private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
-    private Card briscola;
-    private Deck mazzo;
+    private static final Logger LOGGER = Logger.getLogger(Game.class.getName());
+
     private int turns;
-    private List<Player> players = new ArrayList<Player>();
-    private Integer nextPlayer;
+    private Deck mazzo;
     private Hand tavolo;
+    private Card briscola;
+    private Integer nextPlayer;
+    private List<Player> players = new ArrayList<Player>();
 
-    public Game(int starter, int gameType) {
+    public Game(int starter, GameType mod, List<Integer> searchParameters) {
 
-        mazzo = new Deck();
-        briscola = mazzo.shuffle().peekLast();
         turns = 0;
+        mazzo = new Deck();
         nextPlayer = starter;
+        briscola = mazzo.shuffle().peekLast();
+        tavolo = new Hand(new ArrayList<>());
 
-        switch (gameType){
+        switch (mod) {
             default:
-            case 1:
-                players.add(new Human("Mirco", new Hand(mazzo.deal(3))));
-                players.add(new Human("Pietro", new Hand(mazzo.deal(3))));
+            case HUMAN__VS__HUMAN:
+                players.add(new Human(0, "Mirco", new Hand(mazzo.deal(3))));
+                players.add(new Human(0, "Pietro", new Hand(mazzo.deal(3))));
                 break;
-            case 2:
-                players.add(new Human("Mirco", new Hand(mazzo.deal(3))));
-                players.add(new AI("Kelvin", new Hand(mazzo.deal(3)), 1));
-                players.get(1).setMinMaxParameter( 8, true , 50);
 
+            case HUMAN__VS__AI_RULE:
+                players.add(new AI(0, "Kelvin", new Hand(mazzo.deal(3)), -1, false, -1));
+                players.add(new Human(1, "Pietro", new Hand(mazzo.deal(3))));
                 break;
-            case 3:
-                players.add(new AI("Smith", new Hand(mazzo.deal(3)), 0));
-                players.get(0).setMinMaxParameter(3, true, 100);
 
-                players.add(new AI("Kelvin", new Hand(mazzo.deal(3)), 1));
-                players.get(1).setMinMaxParameter(3, true, 100);
+            case HUMAN__VS__AI_MINMAX:
+                players.add(new AI(0, "Kelvin", new Hand(mazzo.deal(3)), searchParameters.get(0), false, searchParameters.get(1)));
+                players.add(new Human(1, "Mirco", new Hand(mazzo.deal(3))));
+                break;
+
+            case AI_MINMAX__VS__AI_RULE:
+                players.add(new AI(0, "Kelvin-MM", new Hand(mazzo.deal(3)), searchParameters.get(0), false, searchParameters.get(1)));
+                players.add(new AI(1, "Kelvin-RULE", new Hand(mazzo.deal(3)), -1, false, -1));
+                break;
+
+            case AI_MINMAX__VS__AI_RANDOM:
+                players.add(new AI(0, "Kelvin-MM", new Hand(mazzo.deal(3)), searchParameters.get(0), false, searchParameters.get(1)));
+                players.add(new AI(1, "Kelvin-RANDOM", new Hand(mazzo.deal(3)), -1, true, -1));
+                break;
+
+            case AI_HYBRID__VS__AI_MINMAX:
+                players.add(new AI(0, "Kelvin-Hybrid", new Hand(mazzo.deal(3)), searchParameters.get(0), false, searchParameters.get(1)));
+                players.get(0).setHybridStrategy(true);
+                players.add(new AI(1, "Kelvin-MM", new Hand(mazzo.deal(3)), searchParameters.get(2), false, searchParameters.get(3)));
                 break;
         }
 
-        tavolo = new Hand(new ArrayList<Card>());
     }
 
-    public int getNextPlayer(){
-        if(turns < 20)
-            return nextPlayer;
-        else
-            return -1;
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public int getNextPlayer() {
+        if (turns < 20) return nextPlayer;
+        else return -1;
     }
 
     public void doNextTurn() {
@@ -62,17 +79,18 @@ public class Game {
 
         if (players.get(nextPlayer) instanceof AI) {
 
-            Hand unseenCards = new Hand(new ArrayList<Card>(mazzo.getCards()));
-            unseenCards.addAll(players.get(nextPlayer == 0 ? 1 : 0).getCards().getHand());
+            Hand unseenCards = new Hand(new ArrayList<>(mazzo.getCards()));
+            unseenCards.addAll(players.get(Util.toggle(nextPlayer)).getCards().getHand());
             unseenCards.removeOne(briscola);
+
             nextCard = players.get(nextPlayer).play(
-                    new Hand(new ArrayList<Card>(tavolo.getHand())),
+                    tavolo,
                     briscola,
                     unseenCards,
-                    Util.calculatePoints(players.get(nextPlayer == 0 ? 1 : 0).getCardsCollected()),
                     turns,
-                    players.get(nextPlayer == 0 ? 1 : 0).getCards().getHand().size(),
-                    nextPlayer);
+                    players.get(Util.toggle(nextPlayer)).getCardsCollected(),
+                    players.get(Util.toggle(nextPlayer)).getCards().getHand().size());
+
         } else {
             nextCard = players.get(nextPlayer).play();
         }
@@ -91,39 +109,37 @@ public class Game {
     public void collectAndDeal() {
 
         if (tavolo.getHand().size() == 2) {
-            LOGGER.finest("Collecting from " + tavolo.getHand().size() + " elements on the board " + tavolo.getHand());
+            LOGGER.info("Collecting from " + tavolo.getHand().size() + " elements on the board " + tavolo.getHand());
 
             int handWinner = Util.getHandWinner(tavolo, briscola.getSuit());
 
-            if (handWinner == 0) {
-                nextPlayer = nextPlayer == 0 ? 1 : 0;
+            if (handWinner == 0) {  // first hand player win
+                nextPlayer = Util.toggle(nextPlayer);
             }
 
-            LOGGER.finest("Player " + nextPlayer + " won this turn");
+            LOGGER.info("Player " + nextPlayer + " - " + players.get(nextPlayer).getName() + " won this turn");
 
             players.get(nextPlayer).collectCards(tavolo);
 
             tavolo.getHand().clear();
 
-            if ((20 - turns) > 3) {
+            if ((20 - turns) > 3) {  // i.e. turns >= 16
                 players.get(nextPlayer).addNewCardToHand(mazzo.deal(1).get(0));
-                players.get(1 - nextPlayer).addNewCardToHand(mazzo.deal(1).get(0));
+                players.get(Util.toggle(nextPlayer)).addNewCardToHand(mazzo.deal(1).get(0));
             }
             turns++;
 
         } else {
-            nextPlayer = nextPlayer == 0 ? 1 : 0;
+            nextPlayer = Util.toggle(nextPlayer);
         }
     }
-
-    public List<Player> getPlayers() { return players; }
 
     @Override
     public String toString() {
         return players.get(0).getName() + " (" + Util.calculatePoints(players.get(0).getCardsCollected()) + " pts)" + players.get(0).getCards() + "\n" +
                 "\n" +
                 "board " + tavolo.getHand() + "   " +
-                "(turns left " + (20 - turns) + " , nextPlayer " + nextPlayer + ", briscola " + briscola + ")\t\t\t" +
+                "(turns left " + (20 - turns) + " , nextPlayerIndex " + nextPlayer + ", briscola " + briscola + ")\t\t\t" +
                 "\n\n" +
                 players.get(1).getName() + " (" + Util.calculatePoints(players.get(1).getCardsCollected()) + " pts) " + players.get(1).getCards() +
                 "\n-------------------------------------------------------------------------------------------------------------------------------------------------\n";

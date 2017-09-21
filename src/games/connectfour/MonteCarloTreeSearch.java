@@ -184,7 +184,7 @@ public class MonteCarloTreeSearch {
 
         LOGGER.info("MCTS choosed move " + bestChildNode.getRow() + "," + bestChildNode.getColumn() + " visited " + bestChildNode.getNumberOfVisit() + " times");
 
-        return new Action(bestChildNode.getRow(), bestChildNode.getColumn(), 'O');
+        return new Action(bestChildNode.getRow(), bestChildNode.getColumn(), aiSeed);
     }
 
     public static double UCT(int parentVisits, double nodeScore, int nodeVisits) {

@@ -6,9 +6,441 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+class GameStateDetermination {
+
+    public Hand board;
+    public Deck deck;
+    public Card briscola;
+    public Hand[] hands;
+    public int[] points;
+    public Hand[] collectedCards;
+    public int turn;
+    public int nextPlayerIndex;
+
+    public GameStateDetermination(Hand board, Deck deck, Card briscola, Hand[] hands, int[] points, Hand[] collectedCards, int turn, int nextPlayerIndex) {
+        this.board = board;
+        this.deck = deck;
+        this.briscola = briscola;
+        this.hands = hands;
+        this.points = points;
+        this.collectedCards = collectedCards;
+        this.turn = turn;
+        this.nextPlayerIndex = nextPlayerIndex;
+    }
+
+    public GameStateDetermination(GameStateDetermination oldGameStateDetermination) {
+        this.board = new Hand(new ArrayList<>(oldGameStateDetermination.board.getHand()));
+        this.deck = new Deck(new Hand(new ArrayList<>(oldGameStateDetermination.deck.getCards())));
+        this.briscola = oldGameStateDetermination.briscola;
+        this.hands = new Hand[2];
+        this.hands[0] = new Hand(new ArrayList<>(oldGameStateDetermination.hands[0].getHand()));
+        this.hands[1] = new Hand(new ArrayList<>(oldGameStateDetermination.hands[1].getHand()));
+        this.points = new int[2];
+        this.points[0] = oldGameStateDetermination.points[0];
+        this.points[1] = oldGameStateDetermination.points[1];
+        this.collectedCards = new Hand[2];
+        this.collectedCards[0] = new Hand(new ArrayList<>(oldGameStateDetermination.collectedCards[0].getHand()));
+        this.collectedCards[1] = new Hand(new ArrayList<>(oldGameStateDetermination.collectedCards[1].getHand()));
+        this.turn = oldGameStateDetermination.turn;
+        this.nextPlayerIndex = oldGameStateDetermination.nextPlayerIndex;
+    }
+
+}
+
 public class Util {
 
     private static final Logger LOGGER = Logger.getLogger(Util.class.getName());
+
+    public static int getIndexOfLessValueCard(Hand cards, Suit briscola) {
+        int i, lessValueFound = 11, indexLessValueCard = -1;
+
+        for (i = 0; i < cards.getHand().size(); i++) {
+            if (cards.getHand().get(i).getSuit() != briscola
+                    && cards.getHand().get(i).getRank().getBriscolaValue() <= 5 // no points card
+                    && lessValueFound > cards.getHand().get(i).getRank().getBriscolaValue()) {
+                lessValueFound = cards.getHand().get(i).getRank().getBriscolaValue();
+                indexLessValueCard = i;
+            }
+        }
+        if (indexLessValueCard != -1) return indexLessValueCard;
+
+
+        for (i = 0; i < cards.getHand().size(); i++) {
+            if (cards.getHand().get(i).getSuit() != briscola
+                    && cards.getHand().get(i).getRank().getBriscolaValue() <= 8  // no 11/10 points card
+                    && lessValueFound > cards.getHand().get(i).getRank().getBriscolaValue()) {
+                lessValueFound = cards.getHand().get(i).getRank().getBriscolaValue();
+                indexLessValueCard = i;
+            }
+        }
+        if (indexLessValueCard != -1) return indexLessValueCard;
+
+
+        for (i = 0; i < cards.getHand().size(); i++) {
+            if (cards.getHand().get(i).getSuit() != briscola
+                    && lessValueFound > cards.getHand().get(i).getRank().getBriscolaValue()) {
+                lessValueFound = cards.getHand().get(i).getRank().getBriscolaValue();
+                indexLessValueCard = i;
+            }
+        }
+        if (indexLessValueCard != -1) return indexLessValueCard;
+
+
+        for (i = 0; i < cards.getHand().size(); i++) {
+            if (lessValueFound > cards.getHand().get(i).getRank().getBriscolaValue()) {
+                lessValueFound = cards.getHand().get(i).getRank().getBriscolaValue();
+                indexLessValueCard = i;
+            }
+        }
+        return indexLessValueCard;
+    }
+
+    public static int getIndexOfLessValueWinningCardOtherwiseLessValue(Hand cards, Suit briscola, Card tableCard) {
+        List<Card> winningCards = new ArrayList<>();
+        List<Integer> winningCardsIndices = new ArrayList<>();
+
+        for (int i = 0; i < cards.getHand().size(); i++) {
+
+            Hand newTable = new Hand(new ArrayList<>());
+            newTable.addOne(tableCard);
+            newTable.addOne(cards.getHand().get(i));
+
+            if (getHandWinner(newTable, briscola) == 1) {
+                winningCards.add(cards.getHand().get(i));
+                winningCardsIndices.add(i);
+            }
+        }
+
+        if (winningCards.size() > 1) {
+            return winningCardsIndices.get(getIndexOfLessValueCard(new Hand(winningCards), briscola));
+        } else if (winningCards.size() == 1) {
+            return winningCardsIndices.get(0);
+        } else {
+            return getIndexOfLessValueCard(cards, briscola);
+        }
+    }
+
+    public static Card monteCarloApproximation(String name, int search_depth, int numberOfRandomDeals,
+                                               Hand myHand, Card briscola, Hand board, Hand unseenCards,
+                                               Hand myCollectedCards, Hand opponentCollectedCards,
+                                               int turn, int opponentNOfCard) {
+
+        LOGGER.fine("Monte Carlo approximation based on minmax started (player " + name + ", depth " + search_depth + ", deals " + numberOfRandomDeals + ")");
+
+        int[] cardConfidenceValues = new int[myHand.getHand().size()];
+
+        int dealsSearchedCounter = 0;
+
+        List<int[]> dealsSearchedSerialization = new ArrayList<>();
+        long totalUnseenCardsPermutations = factorial(unseenCards.getHand().size());
+
+        List<Deck> randomizedDecks = new ArrayList<>();
+
+        while (dealsSearchedCounter < numberOfRandomDeals && dealsSearchedCounter != totalUnseenCardsPermutations) {
+
+            Deck randomDeck;
+            int[] randomDeckSerialization;
+
+            do {
+                randomDeck = new Deck(unseenCards.shuffle());
+                randomDeckSerialization = serializeCards(randomDeck);
+            } while (alreadyExist(dealsSearchedSerialization, randomDeckSerialization));
+
+            dealsSearchedSerialization.add(randomDeckSerialization);
+
+            randomDeck.getCards().add(briscola);
+
+            randomizedDecks.add(randomDeck);
+
+            dealsSearchedCounter++;
+        }
+
+        LOGGER.fine("Randomized decks list created (length " + randomizedDecks.size() + ")");
+
+        Hand[] hands = new Hand[2];
+        hands[0] = new Hand(new ArrayList<>(myHand.getHand()));
+
+        int[] points = new int[]{calculatePoints(myCollectedCards), calculatePoints(opponentCollectedCards)};
+
+        Hand[] collectedCards = new Hand[2];
+        collectedCards[0] = new Hand(new ArrayList<>(myCollectedCards.getHand()));
+        collectedCards[1] = new Hand(new ArrayList<>(opponentCollectedCards.getHand()));
+
+        List<Card> legalActions = getActions(myHand);
+
+        for (int i = 0; i < randomizedDecks.size(); i++) {
+
+            hands[1] = new Hand(new ArrayList<>(randomizedDecks.get(i).deal(opponentNOfCard)));
+            GameStateDetermination initialGSD = new GameStateDetermination(new Hand(new ArrayList<>(board.getHand())), randomizedDecks.get(i), briscola, hands, points, collectedCards, turn, 0);
+
+
+            int bestCardIndexCurrentGDS = 0;
+            double resultValue = Double.NEGATIVE_INFINITY;
+            for (int j = 0; j < legalActions.size(); j++) {
+
+                double value = heuristicMinMaxAlphaBeta(getResult(initialGSD, legalActions.get(j)), Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, search_depth);
+
+                LOGGER.finer("card " + legalActions.get(j) + " scored " + value + " in GSD n." + i);
+
+                if (value > resultValue) {
+                    bestCardIndexCurrentGDS = j;
+                    resultValue = value;
+                }
+
+            }
+            LOGGER.finer("best card index in GSD n." + i + " is " + bestCardIndexCurrentGDS);
+            cardConfidenceValues[bestCardIndexCurrentGDS] += 1;
+        }
+
+        int bestCardIndex = 0;
+        for (int i = 0; i < myHand.getHand().size(); i++) {
+            if (cardConfidenceValues[i] > cardConfidenceValues[bestCardIndex]) {
+                bestCardIndex = i;
+            }
+            LOGGER.info("Card n." + i + " scored " + cardConfidenceValues[i]);
+        }
+        LOGGER.info("Chosen card with index " + bestCardIndex + " (confidence " + cardConfidenceValues[bestCardIndex] + ")");
+
+        return myHand.getHand().get(bestCardIndex);
+    }
+
+    public static double heuristicMinMaxAlphaBeta(GameStateDetermination gsd, double alpha, double beta, int depth) {
+        double value = (gsd.nextPlayerIndex == 0 ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY);
+
+        if (gsd.turn == 19 || depth <= 0) {
+            return (gsd.points[0] - gsd.points[1]);
+        }
+
+        for (Card action : getActions(gsd.hands[gsd.nextPlayerIndex])) {
+
+            if (gsd.nextPlayerIndex == 0) {  // maximize
+                value = Math.max(value, heuristicMinMaxAlphaBeta(getResult(gsd, action), alpha, beta, depth - 1));
+
+                if (value >= beta) {
+                    LOGGER.finest("subtree pruned by beta (value: " + value + " >= beta: " + beta + ")");
+                    return value;
+                }
+                alpha = Math.max(alpha, value);
+
+            } else {  // minimize
+
+                value = Math.min(value, heuristicMinMaxAlphaBeta(getResult(gsd, action), alpha, beta, depth - 1));
+
+                if (value <= alpha) {
+                    LOGGER.finest("subtree pruned by alpha (value: " + value + " <= alpha: " + alpha + ")");
+                    return value;
+                }
+                beta = Math.min(beta, value);
+            }
+        }
+
+        LOGGER.finest("value " + value + " returned from depth " + depth);
+
+        return value;
+    }
+
+    public static GameStateDetermination getResult(GameStateDetermination gsd, Card cardPlayed) {
+        GameStateDetermination resultGSD = new GameStateDetermination(gsd);
+
+        if (!resultGSD.hands[gsd.nextPlayerIndex].removeOne(cardPlayed)) {
+            LOGGER.severe("ERROR impossible to transition to new game state, card played not in hand");
+            System.exit(-1);
+        }
+
+        resultGSD.board.addOne(cardPlayed);
+
+        if (resultGSD.board.getHand().size() == 2) {
+
+            int winner = getHandWinner(resultGSD.board, resultGSD.briscola.getSuit());
+            resultGSD.nextPlayerIndex = (winner != 1 ? toggle(resultGSD.nextPlayerIndex) : resultGSD.nextPlayerIndex);
+
+            resultGSD.collectedCards[resultGSD.nextPlayerIndex].addAll(resultGSD.board.getHand());
+            resultGSD.board.getHand().clear();
+
+            resultGSD.points[resultGSD.nextPlayerIndex] = calculatePoints(resultGSD.collectedCards[resultGSD.nextPlayerIndex]);
+
+            resultGSD.turn++;
+
+            if (resultGSD.turn < 17) {
+                if (resultGSD.nextPlayerIndex == 0) {
+                    resultGSD.hands[0].addOne(resultGSD.deck.deal(1).get(0));
+                    resultGSD.hands[1].addOne(resultGSD.deck.deal(1).get(0));
+                } else {
+                    resultGSD.hands[1].addOne(resultGSD.deck.deal(1).get(0));
+                    resultGSD.hands[0].addOne(resultGSD.deck.deal(1).get(0));
+                }
+            }
+
+        } else {
+            resultGSD.nextPlayerIndex = toggle(resultGSD.nextPlayerIndex);
+        }
+
+        return resultGSD;
+    }
+
+    public static List<Card> getActions(Hand cards) {
+        return cards.getHand();
+    }
+
+//    public static Card oldMonteCarloApproximation (int id, int depth, boolean pruning, int numberOfRandomDeals,
+//                                                Hand hand, Card briscola, Hand board, Hand unseenCards,
+//                                                int turn, int myPoints, int opponentPoints, int opponentNOfCard) {
+//
+//        LOGGER.info("Monte Carlo approximation based on minmax started (id " + id + ", depth " + depth + ", deals " + numberOfRandomDeals + ")");
+//
+//        int opponentId = toggle(id);
+//
+//        long nodes = 0;
+//        int dealsSearchedCounter = 0;
+//
+//        int[] cardValues = new int[hand.getHand().size()];
+//
+//        List<int[]> dealsSearched = new ArrayList<>();
+//
+//        while(dealsSearchedCounter < numberOfRandomDeals) {
+//
+//            // se ho esaurito le combinazioni esco dal ciclo
+//            if (unseenCards.getHand().size() < 5) {  // se siamo alla mano prima di pescare la briscola
+//                // e devo giocare l'ultima carta oppure
+//                if (unseenCards.getHand().size() == 0 || dealsSearched.size() == factorial(unseenCards.getHand().size())) {
+//                    break;
+//                }
+//            }
+//
+//            Deck randomDeck;
+//            int[] randomDeckSerialization;
+//            do {
+//                randomDeck = new Deck(unseenCards.shuffle());
+//                randomDeckSerialization = serializeCards(randomDeck);
+//            } while (alreadyExist(dealsSearched, randomDeckSerialization));
+//
+//            dealsSearched.add(randomDeckSerialization);
+//
+//            randomDeck.getCards().add(briscola);
+//
+//            if (board.getHand().size() == 1) {
+//
+//                //Se sono il secondo a giocare
+//                for (int i = 0; i < hand.getHand().size(); i++) {
+//
+//                    Hand myCards = new Hand(new ArrayList<>(hand.getHand()));
+//
+//                    //Aggiorno il board con la corrente carta giocata sul board
+//                    board.addOne(hand.getHand().get(i));
+//
+//                    myCards.removeOne(hand.getHand().get(i));
+//
+//                    //Creo la mano dell'avversario con 3 carte ipotetiche
+//                    Hand oppositeHandCard = new Hand(new ArrayList<>(randomDeck.deal(opponentNOfCard)));
+//
+//                    //Creo il gioco
+//                    MonteCarloGame game = new MonteCarloGame(new Deck(new Hand(new ArrayList<>(randomDeck.getCards()))), briscola, myCards,
+//                            oppositeHandCard, myPoints, opponentPoints, new Hand(new ArrayList<Card>(board.getHand())), nextPlayer);
+//                    game.setWhoIam(id);
+//
+//                    randomDeck.getCards().addAll(oppositeHandCard.getHand());
+//
+//                    board.removeOne(hand.getHand().get(i));
+//
+//                    //Lo faccio giocare con il metodo minmax fino alla fine
+//                    game.playUntilEnd(depth, pruning);
+//
+//                    //Prendo i punti finali del mio giocatore (i player hanno giocato con minmax algorithm)
+//                    cardValues[i] += game.getGameVal();
+//                    nodes += MonteCarloGame.nodes;
+//                }
+//                dealsSearchedCounter++;
+//
+//            } else {
+//
+//                //Se sono il primo a giocare
+//                for (int i = 0; i < hand.getHand().size(); i++) {
+//                    int tmp = 0;
+//                    for (int j = 0; j < opponentNOfCard; j++) {
+//                        Hand oppositeHandCard = new Hand(new ArrayList<>(randomDeck.deal(opponentNOfCard)));
+//                        Hand myCards = new Hand(new ArrayList<>(hand.getHand()));
+//
+//                        Action nextAction = new Action(nextPlayer);
+//
+//                        board.addOne(myCards.getHand().get(i));
+//                        board.addOne(oppositeHandCard.getHand().get(j));
+//
+//                        myCards.removeOne(myCards.getHand().get(i));
+//                        oppositeHandCard.removeOne(oppositeHandCard.getHand().get(j));
+//
+//                        MonteCarloGame game =
+//                                new MonteCarloGame(new Deck(new Hand(new ArrayList<>(randomDeck.getCards()))), briscola, myCards,
+//                                        oppositeHandCard, myPoints, opponentPoints, new Hand(new ArrayList<Card>(board.getHand())), nextPlayer);
+//
+//                        game.setWhoIam(id);
+//
+//                        game.playUntilEnd(depth - 1, pruning);
+//
+//                        randomDeck.getCards().addAll(oppositeHandCard.getHand());
+//                        randomDeck.getCards().add(board.getHand().get(1));
+//                        board.removeOne(board.getHand().get(0));
+//                        board.removeOne(board.getHand().get(0));
+//
+//                        tmp += game.getGameVal();
+//                        nodes += MonteCarloGame.nodes;
+//                    }
+//
+//                    cardValues[i] += tmp;
+//                }
+//                dealsSearchedCounter++;
+//            }
+//
+//        }
+//
+//        int bestCardIndex = 0;
+//        for (int i = 0; i < cardValues.length; i++){
+//            if(cardValues[i]/numberOfRandomDeals > cardValues[bestCardIndex]/numberOfRandomDeals){
+//                bestCardIndex = i;
+//            }
+//            LOGGER.info("Card n." + i + " scored " + cardValues[i]/numberOfRandomDeals);
+//        }
+//        LOGGER.info("Chosen card with index " + bestCardIndex + " (nodes visited: " + nodes + ")");
+//
+//        MonteCarloGame.nodes = 0;
+//
+//        return hand.getHand().get(bestCardIndex);
+//    }
+
+    // returns the INDEX of the BOARD winning card
+    public static Integer getHandWinner(Hand tavolo, Suit semeBriscola) {
+        Card c1 = tavolo.getHand().get(0);
+        Suit s1 = c1.getSuit();
+        Rank r1 = c1.getRank();
+
+        Card c2 = tavolo.getHand().get(1);
+        Suit s2 = c2.getSuit();
+        Rank r2 = c2.getRank();
+
+        LOGGER.finest("Choosing winner between cards " + c1 + " (value " + r1.getBriscolaValue() + ") and " + c2 + " ( value " + r2.getBriscolaValue() + ")");
+
+        if (s1 == semeBriscola && s1 != s2) return 0;
+        if (s2 == semeBriscola && s1 != s2) return 1;
+
+        if (s1 == s2) return r1.getBriscolaValue() > r2.getBriscolaValue() ? 0 : 1;
+
+        return 0;  // non c'è briscola e le due carte sono di semi diversi: vince la prima carta
+    }
+
+    public static int getGameWinner(List<Player> players) {
+        int winnerPlayerIndex = 0, pointsMax = 0;
+
+        for (int i = 0; i < players.size(); i++) {
+            int points = calculatePoints(players.get(i).getCardsCollected());
+            if (points > pointsMax) {
+                pointsMax = points;
+                winnerPlayerIndex = i;
+            } else if (points == pointsMax) {
+                winnerPlayerIndex = -1;
+            }
+        }
+
+        return winnerPlayerIndex;
+    }
 
     public static Integer calculatePoints (Hand cards) {
         Integer counter = 0;
@@ -36,230 +468,20 @@ public class Util {
         return counter;
     }
 
-    public static Integer getHandWinner (Hand tavolo, Suit semeBriscola) { //TODO controllare tutti gli utilizzi e vericare se l'indice della carta vincente ritornato venga usato per trovare il player vincente!
-        Card c1 = tavolo.getHand().get(0);
-        Suit s1 = c1.getSuit();
-        Rank r1 = c1.getRank();
-
-        Card c2 = tavolo.getHand().get(1);
-        Suit s2 = c2.getSuit();
-        Rank r2 = c2.getRank();
-
-        LOGGER.finest("Choosing winner between cards " + c1 + "(value " + r1.getBriscolaValue() + ") and " + c2 + "( value " + r2.getBriscolaValue() + ")");
-
-        if (s1 == semeBriscola && s1 != s2) return 0;
-        if (s2 == semeBriscola && s1 != s2) return 1;
-
-        if (s1 == s2) return r1.getBriscolaValue() > r2.getBriscolaValue() ? 0 : 1;
-
-        return 0;  // non c'è briscola e le due carte sono di semi diversi: vince la prima carta
-    }
-
-    public static Integer getHandWinner (Hand tavolo, Suit semeBriscola, int lastPlayer) {
-        Card c1 = tavolo.getHand().get(0);
-        Suit s1 = c1.getSuit();
-        Rank r1 = c1.getRank();
-
-        Card c2 = tavolo.getHand().get(1);
-        Suit s2 = c2.getSuit();
-        Rank r2 = c2.getRank();
-
-        LOGGER.finest("Choosing winner between cards " + c1 + "(" + r1.getBriscolaValue() + ") and " + c2 + "(" + r2.getBriscolaValue() + ")");
-
-        if (s1 == semeBriscola && s1 != s2) return 0;
-        if (s2 == semeBriscola && s1 != s2) return 1;
-
-        if (s1 == s2) return r1.getBriscolaValue() > r2.getBriscolaValue() ? (lastPlayer == 0 ? 1 : 0) : lastPlayer;
-
-        return lastPlayer == 0 ? 1 : 0;  // non c'è briscola e le due carte sono di semi diversi: vince la prima carta
-    }
-
-    public static int getGameWinner (List<Player> players) {
-        int points, winner = 0, ptsMax = 0;
-
-        for (int i = 0; i < players.size(); i++) {
-            points = Util.calculatePoints(players.get(i).getCardsCollected());
-            if (points > ptsMax) {
-                ptsMax = points;
-                winner = i;
-            } else if (Util.calculatePoints(players.get(i).getCardsCollected()) == ptsMax) {
-                winner = -1;
-            }
-        }
-
-        return winner;
-    }
-
-    public static int getIndexOfLessValueCard(Hand cards, Suit briscola){
-        int lessVal = 11, ID = -1;
-        for (int i = 0; i < cards.getHand().size(); i++) {
-            if (lessVal > cards.getHand().get(i).getRank().getBriscolaValue() && cards.getHand().get(i).getSuit() != briscola) {
-                lessVal = cards.getHand().get(i).getRank().getBriscolaValue();
-                ID = i;
-            }
-        }
-
-        if (ID == -1) {
-            for (int i = 0; i < cards.getHand().size(); i++) {
-                if (lessVal > cards.getHand().get(i).getRank().getBriscolaValue()) {
-                    lessVal = cards.getHand().get(i).getRank().getBriscolaValue();
-                    ID = i;
-                }
-            }
-        }
-
-        return ID == -1 ? 0 : ID;
-    }
-
-    public static int getIndexOfLessValueWinningCardOtherwiseLessValue (Hand cards, Suit briscola, Card tableCard) {
-        List<Card> winnerCards = new ArrayList<>();
-        List<Integer> winnerCardsID = new ArrayList<>();
-
-        for (int i = 0; i < cards.getHand().size(); i++){
-            Hand newTable = new Hand(new ArrayList<Card>());
-            newTable.addOne(tableCard);
-            newTable.addOne(cards.getHand().get(i));
-            if (getHandWinner(newTable, briscola) == 1) {
-                winnerCards.add(cards.getHand().get(i));
-                winnerCardsID.add(i);
-            }
-        }
-
-        if (winnerCards.size() > 0) {
-            return winnerCardsID.get(getIndexOfLessValueCard(new Hand(winnerCards), briscola));
-        } else {
-            return getIndexOfLessValueCard(cards, briscola);
-        }
-
-    }
-
-    public static Card monteCarloMethod (int myID, int depth, boolean pruning, int numberOfRandomDeals,
-                                         Hand cards, Card briscola, Hand tavolo, Hand unkownCards,
-                                         int p1Point, int p2Point, int oppositeNoOfCard, int nextPlayer) {
-
-        LOGGER.info("Monte Carlo approximation based on minmax started...");
-
-        int[] cardValues = new int[cards.getHand().size()];
-
-        int k = 0;
-        long nodes = 0;
-
-        List<int[]> dealsToSearch = new ArrayList<>();
-
-        while(k < numberOfRandomDeals) {
-            //Se ho finito le combinazioni esco dal ciclo dei numberOfRandomDeals
-            if (unkownCards.getHand().size() < 5){
-                if(unkownCards.getHand().size() == 0 || dealsToSearch.size() == factorial(unkownCards.getHand().size())) {
-                    break;
-                }
-            }
-
-            Deck randomDeck;
-
-            do {
-                randomDeck = new Deck(unkownCards.shuffle());
-            } while (alreadyExist(dealsToSearch, serializeCards(randomDeck)));
-
-            dealsToSearch.add(serializeCards(randomDeck));
-
-            randomDeck.getCards().add(briscola);
-
-            if (tavolo.getHand().size() == 1) {
-                //Se sono il secondo a giocare
-                for (int i = 0; i < cards.getHand().size(); i++) {
-
-                    Hand myCards = new Hand(new ArrayList<Card>(cards.getHand()));
-
-                    //Aggiorno il tavolo con la corrente carta giocata sul tavolo
-                    tavolo.addOne(cards.getHand().get(i));
-
-                    myCards.removeOne(cards.getHand().get(i));
-
-                    //Creo la mano dell'avversario con 3 carte ipotetiche
-                    Hand oppositeHandCard = new Hand(new ArrayList<Card>(randomDeck.deal(oppositeNoOfCard)));
-
-                    //Creo il gioco
-                    MonteCarloGame game = new MonteCarloGame(new Deck(new Hand(new ArrayList<>(randomDeck.getCards()))), briscola, myCards,
-                            oppositeHandCard, p1Point, p2Point, new Hand(new ArrayList<Card>(tavolo.getHand())), nextPlayer);
-                    game.setWhoIam(myID);
-
-                    randomDeck.getCards().addAll(oppositeHandCard.getHand());
-
-                    tavolo.removeOne(cards.getHand().get(i));
-
-                    //Lo faccio giocare con il metodo minmax fino alla fine
-                    game.playUntilEnd(depth, pruning);
-
-                    //Prendo i punti finali del mio giocatore (i player hanno giocato con minmax algorithm)
-                    cardValues[i] += game.getGameVal();
-                    nodes += MonteCarloGame.nodes;
-                }
-                k++;
-            } else {
-                //Se sono il primo a giocare
-                for (int i = 0; i < cards.getHand().size(); i++) {
-                    int tmp = 0;
-                    for (int j = 0; j < oppositeNoOfCard; j++) {
-                        Hand oppositeHandCard = new Hand(new ArrayList<Card>(randomDeck.deal(oppositeNoOfCard)));
-                        Hand myCards = new Hand(new ArrayList<Card>(cards.getHand()));
-
-                        Action nextAction = new Action(nextPlayer);
-
-                        tavolo.addOne(myCards.getHand().get(i));
-                        tavolo.addOne(oppositeHandCard.getHand().get(j));
-
-                        myCards.removeOne(myCards.getHand().get(i));
-                        oppositeHandCard.removeOne(oppositeHandCard.getHand().get(j));
-
-                        MonteCarloGame game = new MonteCarloGame(new Deck(new Hand(new ArrayList<>(randomDeck.getCards()))), briscola, myCards,
-                                oppositeHandCard, p1Point, p2Point, new Hand(new ArrayList<Card>(tavolo.getHand())), nextPlayer);
-                        game.setWhoIam(myID);
-
-                        game.playUntilEnd(depth - 1, pruning);
-
-                        randomDeck.getCards().addAll(oppositeHandCard.getHand());
-                        randomDeck.getCards().add(tavolo.getHand().get(1));
-                        tavolo.removeOne(tavolo.getHand().get(0));
-                        tavolo.removeOne(tavolo.getHand().get(0));
-
-                        tmp += game.getGameVal();
-                        nodes += MonteCarloGame.nodes;
-                    }
-
-                    cardValues[i] += tmp;
-                }
-                k++;
-            }
-        }
-
-        int maxIndex = 0;
-        for (int i = 0; i < cardValues.length; i++){
-            if(cardValues[i]/numberOfRandomDeals > cardValues[maxIndex]/numberOfRandomDeals){
-                maxIndex = i;
-            }
-            LOGGER.info("Card n." + i + " scored " + cardValues[i]/numberOfRandomDeals);
-        }
-        LOGGER.info("Total nodes created during the search: " + nodes);
-
-        MonteCarloGame.nodes = 0;
-
-        return cards.getHand().get(maxIndex);
-    }
-
     public static int[] serializeCards (Deck mazzo) {
         int[] cardCodes = new int[mazzo.getCards().size()];
-
         for (int i = 0; i < mazzo.getCards().size(); i++) {
-            cardCodes[i] = mazzo.getCards().get(i).getRank().getBriscolaValue();
+
+            cardCodes[i] = mazzo.getCards().get(i).getRank().getBriscolaValue();  // [1-10]
             switch (mazzo.getCards().get(i).getSuit()) {
                 case COPPE:
-                    cardCodes[i] += 10;
+                    cardCodes[i] += 10;  // [11-20]
                     break;
                 case SPADE:
-                    cardCodes[i] += 20;
+                    cardCodes[i] += 20;  // [21-30]
                     break;
                 case DENARI:
-                    cardCodes[i] += 30;
+                    cardCodes[i] += 30;  // [31-40]
             }
         }
 
@@ -268,13 +490,14 @@ public class Util {
 
     public static boolean alreadyExist (List<int[]> oldDecks, int[] newDeck) {
         for (int i = 0; i < oldDecks.size(); i++) {
-            boolean sameCard = true;
+
+            boolean sameDecks = true;
             for (int j = 0; j < oldDecks.get(i).length; j++) {
-                if (oldDecks.get(i)[j] !=  newDeck[j]){
-                    sameCard = false;
+                if (oldDecks.get(i)[j] != newDeck[j]) {
+                    sameDecks = false;
                 }
             }
-            if(sameCard == true){
+            if (sameDecks) {
                 return true;
             }
         }
@@ -282,10 +505,13 @@ public class Util {
     }
 
     public static long factorial (int n) {
-        if (n == 1) {
-            return 1;
-        } else {
-            return factorial(n - 1) * n;
-        }
+        if (n >= 19) return Long.MAX_VALUE;
+
+        if (n == 0 || n == 1) return 1;
+        else return factorial(n - 1) * n;
+    }
+
+    public static int toggle(int actualPlayerID) {
+        return (actualPlayerID == 0 ? 1 : 0);
     }
 }

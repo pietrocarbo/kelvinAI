@@ -2,6 +2,8 @@ package main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.*;
 
 public class Main {
@@ -52,89 +54,124 @@ public class Main {
 
 
         List<MovesOrdering> movesOrderings = new ArrayList<>();
-        List<Integer> depthsOfSearch = new ArrayList<>();
+        List<Integer> searchParameters = new ArrayList<>();
 
-        globalLoggingConfig(Level.FINE);
-
-        int gameToPlay = 6;
-        switch (gameToPlay) {
-
-            /*  ---------- Tic Tac Toe ---------- */
-            case 0:
-                tictactoe.playNewGame(0, GameType.HUMAN__VS__HUMAN);
-                break;
-
-            case 1:
-                tictactoe.playNewGame(1, GameType.HUMAN__VS__AI_MINMAX); // if(starter == 0) then AI start else Human start //
-                break;
-
-            case 2:
-                tictactoe.playNewGame(0, GameType.AI_MINMAX__VS__AI_MINMAX);
-                break;
+        globalLoggingConfig(Level.WARNING);
 
 
-            /*  ---------- Connect 4 ---------- */
-            case 3:
-                connect4.playNewGame(0, GameType.HUMAN__VS__HUMAN, depthsOfSearch, movesOrderings);
-                break;
+        int numberOfGames = 500, gameToPlay = 13;
+        int player0Victories = 0, player1Victories = 0, draws = 0, winner = -2;
+        TimeWatch timer = TimeWatch.start();
 
-            case 4:
-                movesOrderings.add(MovesOrdering.MIDDLE_FIRST);
-                depthsOfSearch.add(5);
+        for (int i = 0; i < numberOfGames; i++) {
+            switch (gameToPlay) {
 
-                connect4.playNewGame(0, GameType.HUMAN__VS__AI_MINMAX, depthsOfSearch, movesOrderings);
-                break;
+                /*  ---------- Tic Tac Toe ---------- */
+                case 0:
+                    winner = tictactoe.playNewGame(0, GameType.HUMAN__VS__HUMAN);
+                    break;
 
-            case 5:
-                movesOrderings.add(MovesOrdering.RANDOM);
-                depthsOfSearch.add(1000);  // Monte Carlo iterations
+                case 1:
+                    winner = tictactoe.playNewGame(1, GameType.HUMAN__VS__AI_MINMAX); // if(starter == 0) then AI start else Human start //
+                    break;
 
-                connect4.playNewGame(0, GameType.HUMAN__VS__AI_MCTS, depthsOfSearch, movesOrderings);
-                break;
+                case 2:
+                    winner = tictactoe.playNewGame(0, GameType.AI_MINMAX__VS__AI_MINMAX);
+                    break;
 
-            case 6:
-                movesOrderings.add(MovesOrdering.STANDARD);
-                depthsOfSearch.add(3);
-                movesOrderings.add(MovesOrdering.MIDDLE_FIRST);
-                depthsOfSearch.add(5);
 
-                connect4.playNewGame(1, GameType.AI_MINMAX__VS__AI_MINMAX, depthsOfSearch, movesOrderings);
-                break;
+                /*  ---------- Connect 4 ---------- */
+                case 3:
+                    winner = connect4.playNewGame(0, GameType.HUMAN__VS__HUMAN, searchParameters, movesOrderings);
+                    break;
 
-            case 7:
-                movesOrderings.add(MovesOrdering.RANDOM);
-                depthsOfSearch.add(1000);
+                case 4:
+                    movesOrderings.add(MovesOrdering.MIDDLE_FIRST);
+                    searchParameters.add(5);
 
-                movesOrderings.add(MovesOrdering.STANDARD);
-                depthsOfSearch.add(0);
+                    winner = connect4.playNewGame(0, GameType.HUMAN__VS__AI_MINMAX, searchParameters, movesOrderings);
+                    break;
 
-                connect4.playNewGame(0, GameType.AI_MCTS__VS__AI_MINMAX, depthsOfSearch, movesOrderings);
-                break;
+                case 5:
+                    movesOrderings.add(MovesOrdering.RANDOM);
+                    searchParameters.add(1000);  // Monte Carlo iterations
 
-                /*  ---------- Briscola ---------- */
-//            case 7:
-//                int nOfGames = 50, winAI0 = 0, winAI1 = 0, draws = 0, depthAI0 = 500, depthAI1 = 3;
-//                TimeWatch timer = TimeWatch.start();
-//
-//                for(int i = 0; i < nOfGames; i++) {
-//                    connect4.playNewGame(0, 4, Arrays.asList(depthAI0, depthAI1), MovesOrdering.MIDDLE_FIRST);
-//
-//                    switch (connect4.getGameOverChecks()) {
-//                        case 0: winAI0++;   break;
-//                        case 1: winAI1++;   break;
-//                        case 2: draws++;    break;
-//                    }
-//                }
-//                LOGGER.severe("\n" + ANSI_BLUE + "AI 0 (depth " + depthAI0 + ") won " + winAI0 + " games, ratio:  " + (winAI0*100.0)/nOfGames +
-//                                            "%\nAI 1 (depth " + depthAI1 + ") won " + winAI1 + " games, ratio:  " + (winAI1*100.0)/nOfGames +
-//                                            "%\nDraws: " + draws + ", ratio: " +  (draws*100.0)/nOfGames + "%" +
-//                                            "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds" + ANSI_NO_COLOR);
-//                break;
-//
-//            case 8:
-//                briscola.playNewGame(3, 50);
-//                break;
+                    winner = connect4.playNewGame(0, GameType.HUMAN__VS__AI_MCTS, searchParameters, movesOrderings);
+                    break;
+
+                case 6:
+                    movesOrderings.add(MovesOrdering.STANDARD);
+                    searchParameters.add(3);
+                    movesOrderings.add(MovesOrdering.MIDDLE_FIRST);
+                    searchParameters.add(5);
+
+                    winner = connect4.playNewGame(1, GameType.AI_MINMAX__VS__AI_MINMAX, searchParameters, movesOrderings);
+                    break;
+
+                case 7:
+                    movesOrderings.add(MovesOrdering.RANDOM);
+                    searchParameters.add(1000);  // Monte Carlo iterations
+
+                    movesOrderings.add(MovesOrdering.STANDARD);
+                    searchParameters.add(0);
+
+                    winner = connect4.playNewGame(0, GameType.AI_MCTS__VS__AI_MINMAX, searchParameters, movesOrderings);
+                    break;
+
+                    /*  ---------- Briscola ---------- */
+                case 8:
+                    winner = briscola.playNewGame(0, GameType.HUMAN__VS__HUMAN, searchParameters);
+                    break;
+
+                case 9:
+                    winner = briscola.playNewGame(0, GameType.HUMAN__VS__AI_RULE, searchParameters);
+                    break;
+
+                case 10:
+                    searchParameters.add(7);  // depth
+                    searchParameters.add(200);  // random deals to search
+                    winner = briscola.playNewGame(0, GameType.HUMAN__VS__AI_MINMAX, searchParameters);
+                    break;
+
+                case 11:
+                    searchParameters.add(5);  // depth
+                    searchParameters.add(100);  // random deals to search
+                    winner = briscola.playNewGame(0, GameType.AI_MINMAX__VS__AI_RULE, searchParameters);
+                    break;
+
+                case 12:
+                    searchParameters.add(5);  // depth
+                    searchParameters.add(100);  // random deals to search
+                    winner = briscola.playNewGame(0, GameType.AI_MINMAX__VS__AI_RANDOM, searchParameters);
+                    break;
+
+                case 13:
+                    searchParameters.add(5);  // depth
+                    searchParameters.add(100);  // random deals to search
+                    searchParameters.add(5);  // depth
+                    searchParameters.add(100);  // random deals to search
+                    winner = briscola.playNewGame(0, GameType.AI_HYBRID__VS__AI_MINMAX, searchParameters);
+                    break;
+            }
+
+            LOGGER.warning("Game n." + i + " ended with winner " + winner);
+            switch (winner) {
+                case 0:
+                    player0Victories++;
+                    break;
+                case 1:
+                    player1Victories++;
+                    break;
+                default:
+                    draws++;
+                    break;
+            }
+
         }
-    }
 
+        LOGGER.severe("\n" + ANSI_BLUE + "Player 0 won: " + player0Victories + " games (ratio  " + (player0Victories * 100.0) / numberOfGames + "%)" +
+                "\nPlayer 1 won: " + player1Victories + " games (ratio " + (player1Victories * 100.0) / numberOfGames + "%)" +
+                "\nDraws: " + draws + " (ratio " + draws + "%)" +
+                "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds" + ANSI_NO_COLOR);
+    }
 }

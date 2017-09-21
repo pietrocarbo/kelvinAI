@@ -9,36 +9,38 @@ import java.util.List;
 public class Action {
 
     /*
-    ** Per Action si intende l'insieme delle mosse per completare un turno, nel caso di due giocatori una action contiene due carte e l'ID di chi sta giocando per primo
+    ** E' l'insieme di tutte le combinazioni possibili di carte per completare un turno
+     *  (contiene due carte e l'ID del primo di mano)
      */
 
+    private Hand cardsPlayed;
     private int firstPlayer;
-    private Hand cards;
 
-    public Action(int player) {
-        this.firstPlayer = player;
-        this.cards = new Hand(new ArrayList<>());
+    public Action(int firstPlayer) {
+        this.firstPlayer = firstPlayer;
+        this.cardsPlayed = new Hand(new ArrayList<>());
     }
 
-    public Hand getCards() {
-        return cards;
+    public Hand getCardsPlayed() {
+        return cardsPlayed;
     }
 
     public int getFirstPlayer() {
         return firstPlayer;
     }
 
-    public Action addOne (Card card) {
-        cards.getHand().add(card);
+    public Action addOne(Card card) {
+        cardsPlayed.getHand().add(card);
         return this;
     }
 
-    public static List<Action> getAction (Hand p1Hand, Hand p2Hand, int nextToPlay) {
-        List<Action> actions = new ArrayList<>();
+    public static List<Action> getActions(Hand p1Hand, Hand p2Hand, int nextToPlay) {
+        List<Action> result = new ArrayList<>();
 
         for (int i = 0; i < p1Hand.getHand().size(); i++) {
             for (int j = 0; j < p2Hand.getHand().size(); j++) {
                 Action oneAction = new Action(nextToPlay);
+
                 if (nextToPlay == 0) {
                     oneAction.addOne(p1Hand.getHand().get(i));
                     oneAction.addOne(p2Hand.getHand().get(j));
@@ -46,9 +48,10 @@ public class Action {
                     oneAction.addOne(p2Hand.getHand().get(j));
                     oneAction.addOne(p1Hand.getHand().get(i));
                 }
-                actions.add(oneAction);
+                result.add(oneAction);
             }
         }
-        return actions;
+
+        return result;
     }
 }

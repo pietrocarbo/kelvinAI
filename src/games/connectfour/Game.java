@@ -46,9 +46,14 @@ public class Game {
                 players.add(new Human('X'));
                 break;
 
-                case HUMAN__VS__AI_MINMAX:
-                    players.add(new AI('O', depthsOfSearch.get(0), movesOrdering.get(0)));
-                    players.add(new Human('X'));
+            case HUMAN__VS__AI_MINMAX:
+                players.add(new AI('O', depthsOfSearch.get(0), movesOrdering.get(0)));
+                players.add(new Human('X'));
+                break;
+
+            case HUMAN__VS__AI_MCTS:
+                players.add(new AIMCTS('O', depthsOfSearch.get(0), movesOrdering.get(0)));
+                players.add(new Human('X'));
                 break;
 
             case AI_MINMAX__VS__AI_MINMAX:

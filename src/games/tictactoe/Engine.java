@@ -8,7 +8,7 @@ public class Engine {
 
     private static final Logger LOGGER = Logger.getLogger(Engine.class.getName());
 
-    public void playNewGame(int starter, GameType mod) {
+    public int playNewGame(int starter, GameType mod) {
 
         LOGGER.info("Starting new game of tictactoe");
 
@@ -30,5 +30,7 @@ public class Engine {
         } else {
             System.out.println("Player " + result + " won the game.");
         }
+
+        return result;
     }
 }

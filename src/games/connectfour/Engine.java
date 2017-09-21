@@ -10,7 +10,7 @@ public class Engine {
 
     private static final Logger LOGGER = Logger.getLogger(Engine.class.getName());
 
-    public void playNewGame(int starter, GameType mod, List<Integer> depthsOfSearch, List<MovesOrdering> movesOrdering) {
+    public int playNewGame(int starter, GameType mod, List<Integer> depthsOfSearch, List<MovesOrdering> movesOrdering) {
 
         LOGGER.info("Starting new game of connect 4");
 
@@ -29,8 +29,11 @@ public class Engine {
 
         if (gameOverChecks == 2) {
             LOGGER.info("Game ended in a DRAW.");
+            gameOverChecks = -1;
         } else {
             LOGGER.info("Player " + game.getPlayers().get(gameOverChecks).getMySeed() + " won the game.");
         }
+
+        return gameOverChecks;
     }
 }
