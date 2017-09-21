@@ -34,11 +34,11 @@
     <button id="aiStart" type="button" onclick="startGame('ai')">Kelvin</button>
     <button id="humanStart" type="button" onclick="startGame('human')">Io</button>
 </div>
-<p>Scegli l'abilità di Kelvin</p>
+<p>Scegli il grado di abilità di Kelvin</p>
 <select name="depthSelected" id="depthSelected">
     <option value="2">Principiante</option>
-    <option value="6">Moderata</option>
-    <option value="10">Professionista</option>
+    <option value="4">Moderato</option>
+    <option value="7">Esperto</option>
 </select>
 
 <script>

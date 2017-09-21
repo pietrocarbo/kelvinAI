@@ -105,6 +105,12 @@
     <button id="aiStart" type="button" onclick="startGame('ai')">Kelvin</button>
     <button id="humanStart" type="button" onclick="startGame('human')">Io</button>
 </div>
+<p>Scegli il grado di abilità di Kelvin</p>
+<select name="depthSelected" id="depthSelected">
+    <option value="1">Principiante</option>
+    <option value="2">Moderato</option>
+    <option value="3">Esperto</option>
+</select>
 
 <script>
     var deck, briscola, board = [], handKelvin = [], handHuman = [], collectedKelvin = [], collectedHuman = [],
@@ -113,7 +119,6 @@
         kelvinCardsID = ['#imgK0', '#imgK1', '#imgK2'], humanButtonIDs = ["#btnH0", "#btnH1", "#btnH2"];
     var returnedAiMoveCard, firstHandPlayer, firstHandPlayerCardIndex, secondHandPlayer, secondHandPlayerCardIndex;
 
-    $.ajaxSetup({async: false});
     $(document).ready(function () {
         for (var i = 0; i < 3; i++) {
             $(humanButtonIDs[i]).click(humanClick(i));
@@ -137,7 +142,7 @@
             humanButtonsDisabled(true);
             $('#kelvinTurn').css('display', 'block');
             setupGame();
-            move('ai', getAiMove());
+            getAiMove();
 
         } else {
             $('#humanTurn').css('display', 'block');
@@ -155,7 +160,7 @@
 
         updateCardDisplay(briscolaID, briscola);
         updateCardDisplay(humanCardsID, handHuman);
-        updateCardDisplay(kelvinCardsID, handKelvin);  // TO REMOVE
+//        updateCardDisplay(kelvinCardsID, handKelvin);
         $('#turnsLeft').text('Mani rimanenti ' + turnsLeft);
     }
 
@@ -345,12 +350,19 @@
         for (var i = 0; i < imageCardsID.length; i++) {
 
             if ($(imageCardsID[i]).attr('src') != 'cards/noCard.png') {
-                var cardImage = $(imageCardsID[i]).attr('src').split("di");
-                cardImage[0] = cardImage[0].substring(6);
-                cardImage[1] = cardImage[1].substring(0, cardImage[1].indexOf(".jpg"));
-                if (cardImage[0] == cardChosen.name && cardImage[1] == cardChosen.suit) {
+
+                if (caller == 'human') {
+                    var cardImage = $(imageCardsID[i]).attr('src').split("di");
+                    cardImage[0] = cardImage[0].substring(6);
+                    cardImage[1] = cardImage[1].substring(0, cardImage[1].indexOf(".jpg"));
+                    if (cardImage[0] == cardChosen.name && cardImage[1] == cardChosen.suit) {
+                        return imageCardsID[i];
+                    }
+
+                } else {
                     return imageCardsID[i];
                 }
+
             }
         }
 
@@ -459,7 +471,11 @@
                         }
 
                         updateCardDisplay(humanCardsID, handHuman);
-                        updateCardDisplay(kelvinCardsID, handKelvin);  // TO REMOVE
+                        var arrayCardImageKelvin = [];
+                        for (var i = 0; i < kelvinCardsID.length; i++) {
+                            arrayCardImageKelvin.push('RetroCarteNapoletaneNormale.jpg');
+                        }
+                        updateCardDisplay(kelvinCardsID, arrayCardImageKelvin);
                         for (var i = 0; i < 3; i++) {
                             $(humanCardsID[i]).css({
                                 "border-width": "2px",
@@ -523,13 +539,13 @@
                 } else if (nextPlayerIndex == 'ai') {
                     $('#kelvinTurn').css('display', 'block');
                     $('#humanTurn').css('display', 'none');
-                    move('ai', getAiMove());
+                    getAiMove();
                 } else {
                     console.log("ERROR wrong nextPlayerIndex " + nextPlayerIndex);
                 }
 
             }, 1500); // let the user see the winning card of the board
-        }, 1500); // let the user see the card moved into the board
+        }, 500); // let the user see the card moved into the board
     }
 
     function updateCardDisplay(ids, cards) {
@@ -560,20 +576,40 @@
         }
     }
 
+    async
     function getAiMove() {
-        console.log("entered getAiMove(): turnsLeft " + turnsLeft + " board length " + board.length + " deck length " + deck.length);
+        var depth = $('select[name=depthSelected]').val();
+        console.log("entered getAiMove(): turnsLeft " + turnsLeft + " board length " + board.length + " deck length " + deck.length + ", depth " + depth);
+        var randomDeals = -1, searchDepth = -1;
+        if (depth == 1) {
+            randomDeals = 50;
+            searchDepth = 2;
+        } else if (depth == 2) {
+            randomDeals = 100;
+            searchDepth = 5;
+        } else if (depth == 3) {
+            randomDeals = 250;
+            searchDepth = 9;
+        } else {
+            console.log("ERROR impossible to recognize depth of search");
+        }
+
         var unknownCards = deck.slice(0, deck.length - 1).concat(handHuman);
         $.ajax({
             url: 'aimBRI',
             type: 'GET',
             dataType: 'text',
             data: {
+                depth: searchDepth,
+                numberOfRandomDeals: randomDeals,
                 nOppCards: handHuman.length,
                 nMyCards: handKelvin.length,
                 nBoardCards: board.length,
                 nUnknownCards: unknownCards.length,
                 turns: (20 - turnsLeft),
                 myCards: handKelvin,
+                nHumanCollected: collectedHuman.length,
+                humanCollected: collectedHuman,
                 briscola: briscola,
                 board: board,
                 unknownCards: unknownCards
@@ -585,13 +621,13 @@
                 for (var i = 0; i < handKelvin.length; i++) {
                     if (chosenCardData[0] == handKelvin[i].name && chosenCardData[1] == handKelvin[i].suit) {
                         found = true;
-//                        returnedAiMoveCardIndex = i;
                         returnedAiMoveCard = handKelvin[i];
                     }
                 }
                 if (!found) {
                     console.log("ERRORE il server ha ritornato una carta non esistente: " + data);
                 }
+                move('ai', returnedAiMoveCard);
             },
             error: function (jqxhr, textStatus, errorThrown) {
                 console.log(jqxhr);

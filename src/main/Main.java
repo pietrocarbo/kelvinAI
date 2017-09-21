@@ -52,14 +52,41 @@ public class Main {
         games.connectfour.Engine connect4 = new games.connectfour.Engine();
         games.briscola.Engine briscola = new games.briscola.Engine();
 
-
         List<MovesOrdering> movesOrderings = new ArrayList<>();
         List<Integer> searchParameters = new ArrayList<>();
 
-        globalLoggingConfig(Level.WARNING);
+        globalLoggingConfig(Level.INFO);
 
+        int numberOfGames = 100, gameToPlay = 17;
 
-        int numberOfGames = 500, gameToPlay = 13;
+//        Scanner scanner = new Scanner(System.in);
+//        do {
+//            System.out.println("Enter the number of the game modality you want to play from this list: \n" +
+//                    "0. Human vs Human (Tic Tac Toe) \n" +
+//                    "1. Human vs AI minmax (Tic Tac Toe) \n" +
+//                    "2. AI minmax vs AI minmax (Tic Tac Toe) \n" +
+//                    "3. Human vs Human (Connect 4) \n" +
+//                    "4. Human vs AI minmax (Connect 4) \n" +
+//                    "5. Human vs AI Monte Carlo tree search (Connect 4) \n" +
+//                    "6. AI minmax vs AI minmax with different depth and move ordering (Connect 4) \n" +
+//                    "7. AI Monte Carlo tree search vs AI minmax (Connect 4) \n" +
+//                    "8. Human vs Human (Briscola) \n" +
+//                    "9. Human vs AI rule-based (Briscola) \n" +
+//                    "10. Human vs AI minmax (Briscola) \n" +
+//                    "11. AI minmax vs AI rule-based (Briscola) \n" +
+//                    "12. AI minmax vs AI random choice (Briscola) \n" +
+//                    "13. AI hybrid vs AI minmax (Briscola) \n" +
+//                    "14. AI hybrid vs AI rule-based (Briscola) \n" +
+//                    "15. AI hybrid vs AI random choice (Briscola) \n" +
+//                    "16. AI hybrid vs AI hybrid with different depth and determinated deals (Briscola) \n" +
+//                    "17. AI hybrid vs Human (Briscola)");
+//
+//            gameToPlay = scanner.nextInt();
+//        } while (gameToPlay < 0 || gameToPlay > 17);
+//
+//        System.out.println("Enter the number of matches to play: ");
+//        numberOfGames = scanner.nextInt();
+
         int player0Victories = 0, player1Victories = 0, draws = 0, winner = -2;
         TimeWatch timer = TimeWatch.start();
 
@@ -87,7 +114,7 @@ public class Main {
 
                 case 4:
                     movesOrderings.add(MovesOrdering.MIDDLE_FIRST);
-                    searchParameters.add(5);
+                    searchParameters.add(7);
 
                     winner = connect4.playNewGame(0, GameType.HUMAN__VS__AI_MINMAX, searchParameters, movesOrderings);
                     break;
@@ -152,6 +179,32 @@ public class Main {
                     searchParameters.add(100);  // random deals to search
                     winner = briscola.playNewGame(0, GameType.AI_HYBRID__VS__AI_MINMAX, searchParameters);
                     break;
+
+                case 14:
+                    searchParameters.add(5);  // depth
+                    searchParameters.add(100);  // random deals to search
+                    winner = briscola.playNewGame(0, GameType.AI_HYBRID__VS__AI_RULE, searchParameters);
+                    break;
+
+                case 15:
+                    searchParameters.add(5);  // depth
+                    searchParameters.add(100);  // random deals to search
+                    winner = briscola.playNewGame(0, GameType.AI_HYBRID__VS__AI_RANDOM, searchParameters);
+                    break;
+
+                case 16:
+                    searchParameters.add(8);  // depth
+                    searchParameters.add(200);  // random deals to search
+                    searchParameters.add(3);  // depth
+                    searchParameters.add(100);  // random deals to search
+                    winner = briscola.playNewGame(0, GameType.AI_HYBRID__VS__AI_HYBRID, searchParameters);
+                    break;
+
+                case 17:
+                    searchParameters.add(10);  // depth
+                    searchParameters.add(250);  // random deals to search
+                    winner = briscola.playNewGame(0, GameType.HUMAN__VS__AI_HYBRID, searchParameters);
+                    break;
             }
 
             LOGGER.warning("Game n." + i + " ended with winner " + winner);
@@ -169,7 +222,7 @@ public class Main {
 
         }
 
-        LOGGER.severe("\n" + ANSI_BLUE + "Player 0 won: " + player0Victories + " games (ratio  " + (player0Victories * 100.0) / numberOfGames + "%)" +
+        System.out.println("\n" + ANSI_BLUE + "Player 0 won: " + player0Victories + " games (ratio  " + (player0Victories * 100.0) / numberOfGames + "%)" +
                 "\nPlayer 1 won: " + player1Victories + " games (ratio " + (player1Victories * 100.0) / numberOfGames + "%)" +
                 "\nDraws: " + draws + " (ratio " + draws + "%)" +
                 "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds" + ANSI_NO_COLOR);

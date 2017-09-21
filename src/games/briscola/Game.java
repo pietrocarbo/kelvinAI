@@ -30,7 +30,7 @@ public class Game {
             default:
             case HUMAN__VS__HUMAN:
                 players.add(new Human(0, "Mirco", new Hand(mazzo.deal(3))));
-                players.add(new Human(0, "Pietro", new Hand(mazzo.deal(3))));
+                players.add(new Human(1, "Pietro", new Hand(mazzo.deal(3))));
                 break;
 
             case HUMAN__VS__AI_RULE:
@@ -57,6 +57,31 @@ public class Game {
                 players.add(new AI(0, "Kelvin-Hybrid", new Hand(mazzo.deal(3)), searchParameters.get(0), false, searchParameters.get(1)));
                 players.get(0).setHybridStrategy(true);
                 players.add(new AI(1, "Kelvin-MM", new Hand(mazzo.deal(3)), searchParameters.get(2), false, searchParameters.get(3)));
+                break;
+
+            case AI_HYBRID__VS__AI_RULE:
+                players.add(new AI(0, "Kelvin-Hybrid", new Hand(mazzo.deal(3)), searchParameters.get(0), false, searchParameters.get(1)));
+                players.get(0).setHybridStrategy(true);
+                players.add(new AI(1, "Kelvin-RULE", new Hand(mazzo.deal(3)), -1, false, -1));
+                break;
+
+            case AI_HYBRID__VS__AI_RANDOM:
+                players.add(new AI(0, "Kelvin-Hybrid", new Hand(mazzo.deal(3)), searchParameters.get(0), false, searchParameters.get(1)));
+                players.get(0).setHybridStrategy(true);
+                players.add(new AI(1, "Kelvin-RANDOM", new Hand(mazzo.deal(3)), -1, true, -1));
+                break;
+
+            case AI_HYBRID__VS__AI_HYBRID:
+                players.add(new AI(0, "Kelvin-Hybrid (depth maggiore)", new Hand(mazzo.deal(3)), searchParameters.get(0), false, searchParameters.get(1)));
+                players.get(0).setHybridStrategy(true);
+                players.add(new AI(1, "Kelvin-Hybrid (depth minore)", new Hand(mazzo.deal(3)), searchParameters.get(0), false, searchParameters.get(1)));
+                players.get(0).setHybridStrategy(true);
+                break;
+
+            case HUMAN__VS__AI_HYBRID:
+                players.add(new AI(0, "Kelvin-Hybrid", new Hand(mazzo.deal(3)), searchParameters.get(0), false, searchParameters.get(1)));
+                players.get(0).setHybridStrategy(true);
+                players.add(new Human(1, "Mirco", new Hand(mazzo.deal(3))));
                 break;
         }
 
