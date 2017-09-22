@@ -15,7 +15,7 @@
 
 <div class="container-fluid">
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: lightgrey;">
-        <a class="navbar-brand" href="/">Home</a>
+        <a class="navbar-brand" href="/kelvin/index.jsp">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -24,14 +24,14 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/tictactoe.jsp">Tris</a>
+                    <a class="nav-link" href="/kelvin/tictactoe.jsp">Tris</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="#" style="background-color: gray">Forza 4<span
                             class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="/briscola.jsp">Briscola</a>
+                    <a class="nav-link " href="/kelvin/briscola.jsp">Briscola</a>
                 </li>
             </ul>
         </div>

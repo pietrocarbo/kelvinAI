@@ -15,7 +15,7 @@
 
 <div class="container-fluid">
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: lightgrey;">
-        <a class="navbar-brand" href="/">Home</a>
+        <a class="navbar-brand" href="/kelvin/index.jsp">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -28,10 +28,10 @@
                             class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/connect4.jsp">Forza 4</a>
+                    <a class="nav-link" href="/kelvin/connect4.jsp">Forza 4</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="/briscola.jsp">Briscola</a>
+                    <a class="nav-link " href="/kelvin/briscola.jsp">Briscola</a>
                 </li>
             </ul>
         </div>

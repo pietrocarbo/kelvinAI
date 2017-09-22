@@ -22,17 +22,17 @@
         <div class="col">
             <h3>Tris</h3>
             <p>Chiamato anche Tris. Sarai il giocatore 'X'.</p>
-            <a href="/tictactoe.jsp" class="btn btn-success" role="button">Gioca</a>
+            <a href="/kelvin/tictactoe.jsp" class="btn btn-success" role="button">Gioca</a>
         </div>
         <div class="col">
             <h3>Forza 4</h3>
             <p>Chiamato anche Connect 4. Sarai il giocatore 'X'.</p>
-            <a href="/connect4.jsp" class="btn btn-success" role="button">Gioca</a>
+            <a href="/kelvin/connect4.jsp" class="btn btn-success" role="button">Gioca</a>
         </div>
         <div class="col">
             <h3>Briscola</h3>
             <p>Il famoso gioco di carte. Usando il mazzo piacentino.</p>
-            <a href="/briscola.jsp" class="btn btn-success" role="button">Gioca</a>
+            <a href="/kelvin/briscola.jsp" class="btn btn-success" role="button">Gioca</a>
         </div>
     </div>
 </div>
