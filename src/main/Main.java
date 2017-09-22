@@ -76,38 +76,43 @@ public class Main {
         }
         globalLoggingConfig(logLevel);
 
+        System.out.println("Enter the number of the game modality you want to play from this list: \n" +
+                "0. Human vs Human (Tic Tac Toe) \n" +
+                "1. Human vs AI minmax (Tic Tac Toe) \n" +
+                "2. AI minmax vs AI minmax (Tic Tac Toe) \n" +
+                "3. Human vs Human (Connect 4) \n" +
+                "4. Human vs AI minmax (Connect 4) \n" +
+                "5. Human vs AI Monte Carlo tree search (Connect 4) \n" +
+                "6. AI minmax vs AI minmax with different depth and move ordering (Connect 4) \n" +
+                "7. AI Monte Carlo tree search vs AI minmax (Connect 4) \n" +
+                "8. Human vs Human (Briscola) \n" +
+                "9. Human vs AI rule-based (Briscola) \n" +
+                "10. Human vs AI minmax (Briscola) \n" +
+                "11. AI minmax vs AI rule-based (Briscola) \n" +
+                "12. AI minmax vs AI random choice (Briscola) \n" +
+                "13. AI hybrid vs AI minmax (Briscola) \n" +
+                "14. AI hybrid vs AI rule-based (Briscola) \n" +
+                "15. AI hybrid vs AI random choice (Briscola) \n" +
+                "16. AI hybrid vs AI hybrid with different depth and determinated deals (Briscola) \n" +
+                "17. AI hybrid vs Human (Briscola)");
         do {
-            System.out.println("Enter the number of the game modality you want to play from this list: \n" +
-                    "0. Human vs Human (Tic Tac Toe) \n" +
-                    "1. Human vs AI minmax (Tic Tac Toe) \n" +
-                    "2. AI minmax vs AI minmax (Tic Tac Toe) \n" +
-                    "3. Human vs Human (Connect 4) \n" +
-                    "4. Human vs AI minmax (Connect 4) \n" +
-                    "5. Human vs AI Monte Carlo tree search (Connect 4) \n" +
-                    "6. AI minmax vs AI minmax with different depth and move ordering (Connect 4) \n" +
-                    "7. AI Monte Carlo tree search vs AI minmax (Connect 4) \n" +
-                    "8. Human vs Human (Briscola) \n" +
-                    "9. Human vs AI rule-based (Briscola) \n" +
-                    "10. Human vs AI minmax (Briscola) \n" +
-                    "11. AI minmax vs AI rule-based (Briscola) \n" +
-                    "12. AI minmax vs AI random choice (Briscola) \n" +
-                    "13. AI hybrid vs AI minmax (Briscola) \n" +
-                    "14. AI hybrid vs AI rule-based (Briscola) \n" +
-                    "15. AI hybrid vs AI random choice (Briscola) \n" +
-                    "16. AI hybrid vs AI hybrid with different depth and determinated deals (Briscola) \n" +
-                    "17. AI hybrid vs Human (Briscola)");
-            input = scanner.next();
-            if (!input.matches("^\\d$"))
+            input = scanner.nextLine();
+            if (!input.matches("^\\d{1,2}$")) {
+                System.out.println("Not a valid choice. Enter a number from 0 to 17: ");
                 continue;
+            }
             gameToPlay = Integer.parseInt(input);
         } while (gameToPlay < 0 || gameToPlay > 17);
 
         do {
             System.out.println("Enter the number of matches to play: ");
-            input = scanner.next();
-            if (!input.matches("^\\d$")) continue;
+            input = scanner.nextLine();
+            if (!input.matches("^\\d$")) {
+                System.out.println("Not a valid choice. Enter a number from 1 to 1000000: ");
+                continue;
+            }
             numberOfGames = Integer.parseInt(input);
-        } while (numberOfGames < 1);
+        } while (numberOfGames < 1 || numberOfGames > 1000000);
 
         int player0Victories = 0, player1Victories = 0, draws = 0, winner = -2;
         TimeWatch timer = TimeWatch.start();
@@ -228,7 +233,7 @@ public class Main {
                     break;
             }
 
-            LOGGER.warning("Game n." + i + " ended with winner " + winner);
+            System.out.println("Game n." + i + " ended with winner " + winner);
             switch (winner) {
                 case 0:
                     player0Victories++;

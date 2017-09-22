@@ -77,7 +77,7 @@ public class Util {
 
 
         for (i = 0; i < cards.getHand().size(); i++) {
-            if (cards.getHand().get(i).getSuit() != briscola
+            if (cards.getHand().get(i).getRank().getBriscolaValue() <= 8
                     && lessValueFound > cards.getHand().get(i).getRank().getBriscolaValue()) {
                 lessValueFound = cards.getHand().get(i).getRank().getBriscolaValue();
                 indexLessValueCard = i;
