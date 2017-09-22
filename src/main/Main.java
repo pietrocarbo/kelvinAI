@@ -40,13 +40,21 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) {
+    private static Level mapIntegerToLogLevels(int level) {
+        switch (level) {
+            default:
+            case 1:
+                return Level.INFO;
+            case 2:
+                return Level.FINE;
+            case 3:
+                return Level.FINER;
+            case 4:
+                return Level.ALL;
+        }
+    }
 
-        String ANSI_RESET = "\u001B[0m";
-        String ANSI_RED = "\u001B[31m";
-        String ANSI_GREEN = "\u001B[32m";
-        String ANSI_BLUE = "\u001B[34m";
-        String ANSI_NO_COLOR = "\u001B[0m";
+    public static void main(String[] args) {
 
         games.tictactoe.Engine tictactoe = new games.tictactoe.Engine();
         games.connectfour.Engine connect4 = new games.connectfour.Engine();
@@ -55,11 +63,19 @@ public class Main {
         List<MovesOrdering> movesOrderings = new ArrayList<>();
         List<Integer> searchParameters = new ArrayList<>();
 
-        globalLoggingConfig(Level.ALL);
+        Scanner scanner = new Scanner(System.in);
+        String input;
 
+        Level logLevel = Level.INFO;
         int numberOfGames = -1, gameToPlay = -1;
 
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("Hello, welcome to Kelvin-AI game application. Press ENTER (to get more verbose logs type 2, 3 or 4 and then ENTER).");
+        input = scanner.nextLine();
+        if (input.matches("^\\d$")) {
+            logLevel = mapIntegerToLogLevels(Integer.parseInt(input));
+        }
+        globalLoggingConfig(logLevel);
+
         do {
             System.out.println("Enter the number of the game modality you want to play from this list: \n" +
                     "0. Human vs Human (Tic Tac Toe) \n" +
@@ -80,7 +96,7 @@ public class Main {
                     "15. AI hybrid vs AI random choice (Briscola) \n" +
                     "16. AI hybrid vs AI hybrid with different depth and determinated deals (Briscola) \n" +
                     "17. AI hybrid vs Human (Briscola)");
-            String input = scanner.next();
+            input = scanner.next();
             if (!input.matches("^\\d$"))
                 continue;
             gameToPlay = Integer.parseInt(input);
@@ -88,7 +104,7 @@ public class Main {
 
         do {
             System.out.println("Enter the number of matches to play: ");
-            String input = scanner.next();
+            input = scanner.next();
             if (!input.matches("^\\d$")) continue;
             numberOfGames = Integer.parseInt(input);
         } while (numberOfGames < 1);
@@ -227,9 +243,9 @@ public class Main {
 
         }
 
-        System.out.println("\n" + ANSI_BLUE + "Player 0 won: " + player0Victories + " games (ratio  " + (player0Victories * 100.0) / numberOfGames + "%)" +
+        System.out.println("\nPlayer 0 won: " + player0Victories + " games (ratio  " + (player0Victories * 100.0) / numberOfGames + "%)" +
                 "\nPlayer 1 won: " + player1Victories + " games (ratio " + (player1Victories * 100.0) / numberOfGames + "%)" +
                 "\nDraws: " + draws + " (ratio " + draws + "%)" +
-                "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds" + ANSI_NO_COLOR);
+                "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds");
     }
 }
