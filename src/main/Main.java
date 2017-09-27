@@ -147,7 +147,7 @@ public class Main {
 
                 case 5:
                     movesOrderings.add(MovesOrdering.RANDOM);
-                    searchParameters.add(1000);  // Monte Carlo iterations
+                    searchParameters.add(80000);  // Monte Carlo iterations
 
                     winner = connect4.playNewGame(0, GameType.HUMAN__VS__AI_MCTS, searchParameters, movesOrderings);
                     break;
@@ -250,7 +250,7 @@ public class Main {
 
         System.out.println("\nPlayer 0 won: " + player0Victories + " games (ratio  " + (player0Victories * 100.0) / numberOfGames + "%)" +
                 "\nPlayer 1 won: " + player1Victories + " games (ratio " + (player1Victories * 100.0) / numberOfGames + "%)" +
-                "\nDraws: " + draws + " (ratio " + draws + "%)" +
+                "\nDraws: " + draws + " games (ratio " + draws + "%)" +
                 "\nTime elapsed: " + timer.time(TimeUnit.SECONDS) + " seconds");
     }
 }

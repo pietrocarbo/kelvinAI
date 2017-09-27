@@ -72,7 +72,6 @@ public class Util {
                 resultValue = value;
             }
 
-
         }
         LOGGER.fine("move selected is " + bestMove.getRow() + "," + bestMove.getColumn() + " with highest score of " + resultValue + " (nodes visited " + nodes + ")");
         return new Action(bestMove.getRow(), bestMove.getColumn(), mySeed);
@@ -102,7 +101,7 @@ public class Util {
         return value;
     }
 
-    public static char toggle (char actualPlayer) {
+    public static char toggle(char actualPlayer) {
         return (actualPlayer ==  'O' ? 'X' : 'O');
     }
 

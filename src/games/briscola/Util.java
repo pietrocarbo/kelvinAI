@@ -55,7 +55,7 @@ public class Util {
         int i, lessValueFound = 11, indexLessValueCard = -1;
 
         for (i = 0; i < cards.getHand().size(); i++) {
-            if (cards.getHand().get(i).getSuit() != briscola
+            if (cards.getHand().get(i).getSuit() != briscola                     // no briscola
                     && cards.getHand().get(i).getRank().getBriscolaValue() <= 5 // no points card
                     && lessValueFound > cards.getHand().get(i).getRank().getBriscolaValue()) {
                 lessValueFound = cards.getHand().get(i).getRank().getBriscolaValue();
@@ -66,7 +66,7 @@ public class Util {
 
 
         for (i = 0; i < cards.getHand().size(); i++) {
-            if (cards.getHand().get(i).getSuit() != briscola
+            if (cards.getHand().get(i).getSuit() != briscola                     // no briscola
                     && cards.getHand().get(i).getRank().getBriscolaValue() <= 8  // no 11/10 points card
                     && lessValueFound > cards.getHand().get(i).getRank().getBriscolaValue()) {
                 lessValueFound = cards.getHand().get(i).getRank().getBriscolaValue();
@@ -77,7 +77,7 @@ public class Util {
 
 
         for (i = 0; i < cards.getHand().size(); i++) {
-            if (cards.getHand().get(i).getRank().getBriscolaValue() <= 8
+            if (cards.getHand().get(i).getRank().getBriscolaValue() <= 8      // no 11/10 points card
                     && lessValueFound > cards.getHand().get(i).getRank().getBriscolaValue()) {
                 lessValueFound = cards.getHand().get(i).getRank().getBriscolaValue();
                 indexLessValueCard = i;
@@ -105,7 +105,7 @@ public class Util {
             newTable.addOne(tableCard);
             newTable.addOne(cards.getHand().get(i));
 
-            if (getHandWinner(newTable, briscola) == 1) {
+            if (getHandWinner(newTable, briscola) == 1 && Util.calculatePoints(newTable) > 0) {
                 winningCards.add(cards.getHand().get(i));
                 winningCardsIndices.add(i);
             }
